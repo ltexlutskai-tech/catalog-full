@@ -77,13 +77,13 @@ body{font-family:'Open Sans',sans-serif;background:#f0f0f8;color:var(--text);min
 .pm{font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:800;color:var(--purple)}
 .pa{font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:800;color:#e74c3c}
 .po{text-decoration:line-through;color:#bbb;font-size:.88rem}
-.c-acts{display:flex;gap:6px;padding:8px 10px 10px;border-top:1px solid #f0f0f8}
-.btn-yt{flex:0 0 auto;background:linear-gradient(135deg,#ff0000,#cc0000);color:#fff;border:none;border-radius:9px;padding:9px 10px;font-size:.78rem;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:3px;white-space:nowrap;min-height:44px;transition:.2s}
+.c-acts{display:flex;gap:5px;padding:8px 10px 10px;border-top:1px solid #f0f0f8;min-width:0}
+.btn-yt{flex:0 0 auto;background:linear-gradient(135deg,#ff0000,#cc0000);color:#fff;border:none;border-radius:9px;padding:9px 8px;font-size:.75rem;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:2px;white-space:nowrap;min-height:44px;min-width:64px;transition:.2s}
 .btn-yt.off{opacity:.3;pointer-events:none}
-.btn-wl{flex:1;background:#f0f0f8;color:#666;border:2px solid var(--border);border-radius:9px;padding:8px 6px;font-size:.75rem;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap;min-height:44px;-webkit-appearance:none}
+.btn-wl{flex:1 1 0;min-width:0;background:#f0f0f8;color:#666;border:2px solid var(--border);border-radius:9px;padding:8px 4px;font-size:.73rem;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:2px;white-space:nowrap;min-height:44px;-webkit-appearance:none;overflow:hidden;text-overflow:ellipsis}
 .btn-wl:active{border-color:var(--purple);color:var(--purple)}
 .btn-wl.added{background:rgba(39,174,96,.1);border-color:#27ae60;color:#27ae60}
-.btn-ord{flex:1;background:var(--grad);color:#fff;border:none;border-radius:9px;padding:9px 6px;font-size:.75rem;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap;min-height:44px;-webkit-appearance:none}
+.btn-ord{flex:1 1 0;min-width:0;background:var(--grad);color:#fff;border:none;border-radius:9px;padding:9px 4px;font-size:.73rem;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:2px;white-space:nowrap;min-height:44px;-webkit-appearance:none;overflow:hidden}
 .btn-ord:active{opacity:.85}
 .empty{text-align:center;padding:60px 20px;color:#aaa}
 .empty .ic{font-size:3.5rem;margin-bottom:10px}
@@ -473,28 +473,28 @@ function renderGrid(){
   document.getElementById('emptyState').style.display=total===0?'block':'none';
   filtered.slice((curPage-1)*PAGE,curPage*PAGE).forEach(function(p){
     var inWl=wishlist.some(function(w){return w.id===p.id;});
-    var bc=p.sort==='\u0421\u0442\u043e\u043a'?'bs':p.sort==='\u0415\u043a\u0441\u0442\u0440\u0430'?'be':p.sort==='\u041a\u0440\u0435\u043c'?'bk':
-           p.sort==='1\u0439 \u0441\u043e\u0440\u0442'?'b1':p.sort==='2\u0439 \u0441\u043e\u0440\u0442'?'b2':
-           (p.sort.includes('+')&&!p.sort.includes('\u041c\u0456\u043a\u0441'))?'bc':'bm';
+    var bc=p.sort==='Сток'?'bs':p.sort==='Екстра'?'be':p.sort==='Крем'?'bk':
+           p.sort==='1й сорт'?'b1':p.sort==='2й сорт'?'b2':
+           (p.sort.includes('+')&&!p.sort.includes('Мікс'))?'bc':'bm';
     var prStr=p.akciya
       ?'<span class="pa">&#128293; '+p.akciya+' EUR/'+p.unit+'</span><span class="po">'+p.price+'</span>'
       :p.price?'<span class="pm">'+p.price+' EUR/'+p.unit+'</span>'
-      :'<span style="color:#bbb;font-size:.82rem">\u041f\u043e \u0437\u0430\u043f\u0438\u0442\u0443</span>';
+      :'<span style="color:#bbb;font-size:.82rem">По запиту</span>';
     var tags='';
-    if(p.audience&&p.audience!=='\u041c\u0456\u043a\u0441')tags+='<span class="tag tp">'+p.audience+'</span>';
-    if(p.season&&p.season!=='\u0412\u0441\u0435\u0441\u0435\u0437\u043e\u043d\u043d\u0435')tags+='<span class="tag">'+p.season+'</span>';
+    if(p.audience&&p.audience!=='Мікс')tags+='<span class="tag tp">'+p.audience+'</span>';
+    if(p.season&&p.season!=='Всесезонне')tags+='<span class="tag">'+p.season+'</span>';
     if(p.country)tags+='<span class="tag tg">'+p.country+'</span>';
-    var wt=p.weight?'<div class="c-info"><span>&#9878;&#65039; '+p.weight+' \u043a\u0433</span></div>':'';
+    var wt=p.weight?'<div class="c-info"><span>&#9878;&#65039; '+p.weight+' кг</span></div>':'';
     var card=document.createElement('div');
     card.className='card'+(p.akciya?' akciya':'');
-    var ps=JSON.stringify(p).replace(/</g,'\\u003c');
     var ytBtn=p.youtube
-      ?'<a href="'+p.youtube+'" target="_blank" rel="noopener" class="btn-yt">&#9654; \u0412\u0456\u0434\u0435\u043e</a>'
+      ?'<a href="'+p.youtube+'" target="_blank" rel="noopener" class="btn-yt">&#9654; Відео</a>'
       :'<span class="btn-yt off">&#9654;</span>';
     card.innerHTML=
       '<div class="c-top">'+
         '<div class="c-name">'+p.name+'</div>'+
-        '<div class="c-meta"><span class="c-code">\u041a\u043e\u0434: '+p.id+'</span>'+(p.brand?'<span class="c-brand">'+p.brand+'</span>':'')+'</div>'+
+        '<div class="c-meta"><span class="c-code">Код: '+p.id+'</span>'+(p.brand?'<span class="c-brand">'+p.brand+'</span>':'')+
+        '</div>'+
         '<span class="sbadge '+bc+'">'+p.sort+'</span>'+
       '</div>'+
       '<div class="c-body">'+
@@ -505,13 +505,19 @@ function renderGrid(){
       '</div>'+
       '<div class="c-acts">'+
         ytBtn+
-        '<button class="btn-wl'+(inWl?' added':'')+'" id="wlb-'+p.id+'" onclick="toggleWish('+ps+')">'+(inWl?'&#10003; \u0412 \u0441\u043f\u0438\u0441\u043a\u0443':'&#9825; \u0421\u043f\u0438\u0441\u043e\u043a')+'</button>'+
-        '<button class="btn-ord" onclick="openMo('+ps+',’single’)">&#128233; \u0417\u0430\u043f\u0438\u0442</button>'+
+        '<button class="btn-wl'+(inWl?' added':'')+'" id="wlb-'+p.id+'">'+(inWl?'&#10003; В списку':'&#9825; Список')+'</button>'+
+        '<button class="btn-ord" id="mob-'+p.id+'">&#128233; Запит</button>'+
       '</div>';
+    /* Safe listeners — no inline JSON */
+    (function(prod){
+      card.querySelector('#wlb-'+prod.id).addEventListener('click',function(){toggleWish(prod);});
+      card.querySelector('#mob-'+prod.id).addEventListener('click',function(){openMo(prod,'single');});
+    })(p);
     grid.appendChild(card);
   });
   renderPag(total);
 }
+
 
 function renderPag(total){
   var pages=Math.ceil(total/PAGE),pag=document.getElementById('pag');
