@@ -669,15 +669,45 @@ function validate(){
 function doSend(){
   if(!validate())return;
   var msg=buildMsg();
+
+  // --- TELEGRAM ---
   if(curMsg==='tg'){
     window.open('https://t.me/L_TEX?text='+encodeURIComponent(msg),'_blank','noopener');
+    showSuccess();
     return;
   }
+
+  // --- VIBER ---
+  // Viber deep link does not support &text= parameter
+  // Copy message to clipboard, then open Viber
   if(curMsg==='viber'){
-    window.location.href='viber://chat?number=%2B380676710516&text='+encodeURIComponent(msg);
+    var copied=false;
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(msg).then(function(){}).catch(function(){});
+        copied=true;
+      }
+    }catch(e){}
+    if(!copied){
+      try{
+        var ta=document.createElement('textarea');
+        ta.value=msg;ta.style.cssText='position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta);ta.focus();ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copied=true;
+      }catch(e){}
+    }
+    // Show green notice
+    var err=document.getElementById('errMsg');
+    err.style.cssText='background:rgba(39,174,96,.1);border-left:3px solid #27ae60;color:#27ae60;padding:7px 11px;border-radius:8px;font-size:.82rem;margin-top:8px';
+    err.textContent='\u2705 \u041f\u043e\u0432\u0456\u0434\u043e\u043c\u043b\u0435\u043d\u043d\u044f \u0441\u043a\u043e\u043f\u0456\u0439\u043e\u0432\u0430\u043d\u043e! \u0412\u0456\u0434\u043a\u0440\u0438\u0454\u0442\u044c\u0441\u044f Viber \u2014 \u0437\u043d\u0430\u0439\u0434\u0456\u0442\u044c \u043d\u0430\u0448 \u043d\u043e\u043c\u0435\u0440 \u0456 \u0432\u0441\u0442\u0430\u0432\u0442\u0435 \u043f\u043e\u0432\u0456\u0434\u043e\u043c\u043b\u0435\u043d\u043d\u044f (\u0437\u0430\u0442\u0440\u0438\u043c\u0430\u0439\u0442\u0435 \u0456 \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u0438).';
+    err.style.display='block';
+    setTimeout(function(){window.location.href='viber://chat?number=%2B380676710516';},800);
     return;
   }
-  // Email via Formspree
+
+  // --- EMAIL via Formspree ---
   var name=document.getElementById('cName').value.trim();
   var phone=document.getElementById('cPhone').value.trim();
   var region=document.getElementById('cRegion').value.trim();
@@ -685,42 +715,67 @@ function doSend(){
   var comment=document.getElementById('cComment').value.trim();
   var typeLabel=reqType==='video'?'\u0412\u0456\u0434\u0435\u043e\u043e\u0433\u043b\u044f\u0434':'\u041a\u043e\u043d\u0441\u0443\u043b\u044c\u0442\u0430\u0446\u0456\u044f';
   var prodInfo='';
-  if(curProd){var pr2=curProd.akciya?curProd.akciya+' EUR/'+curProd.unit:curProd.price?curProd.price+' EUR/'+curProd.unit:'\u041f\u043e \u0437\u0430\u043f\u0438\u0442\u0443';prodInfo='\u0422\u043e\u0432\u0430\u0440: '+curProd.name+'\n\u041a\u043e\u0434: '+curProd.id+'\n\u0426\u0456\u043d\u0430: '+pr2;}
-  else if(wishlist.length){prodInfo='\u0421\u041f\u0418\u0421\u041e\u041a:\n'+wishlist.map(function(p,i){var pr=p.akciya?p.akciya+' EUR/'+p.unit:p.price+' EUR/'+p.unit;return(i+1)+'. '+p.name+' (\u041a\u043e\u0434: '+p.id+') \u2014 '+pr;}).join('\n');}
+  if(curProd){
+    var pr2=curProd.akciya?curProd.akciya+' EUR/'+curProd.unit:curProd.price?curProd.price+' EUR/'+curProd.unit:'\u041f\u043e \u0437\u0430\u043f\u0438\u0442\u0443';
+    prodInfo='\u0422\u043e\u0432\u0430\u0440: '+curProd.name+'\n\u041a\u043e\u0434: '+curProd.id+'\n\u0426\u0456\u043d\u0430: '+pr2;
+  }else if(wishlist.length){
+    prodInfo='\u0421\u041f\u0418\u0421\u041e\u041a:\n'+wishlist.map(function(p,i){
+      var pr=p.akciya?p.akciya+' EUR/'+p.unit:p.price+' EUR/'+p.unit;
+      return(i+1)+'. '+p.name+' (\u041a\u043e\u0434: '+p.id+') \u2014 '+pr;
+    }).join('\n');
+  }
+  var subjectName=curProd?curProd.name:'\u0421\u043f\u0438\u0441\u043e\u043a ('+wishlist.length+' \u043f\u043e\u0437.)';
   var btn=document.getElementById('btnSubmit');
   btn.disabled=true;
   document.getElementById('btnLabel').textContent='\u0412\u0456\u0434\u043f\u0440\u0430\u0432\u043b\u044f\u0454\u043c\u043e...';
   document.getElementById('spinner').classList.add('show');
-  var subjectName=curProd?curProd.name:'\u0421\u043f\u0438\u0441\u043e\u043a ('+wishlist.length+' \u043f\u043e\u0437.)';
-  fetch(FORMSPREE,{
-    method:'POST',
-    headers:{'Accept':'application/json','Content-Type':'application/json'},
-    body:JSON.stringify({
-      _subject:'['+typeLabel+'] L-TEX: '+subjectName,
-      '\u0422\u0438\u043f \u0437\u0430\u043f\u0438\u0442\u0443':typeLabel,
-      '\u0422\u043e\u0432\u0430\u0440':prodInfo,
-      '\u041a\u043b\u0456\u0454\u043d\u0442':name,
-      '\u0422\u0435\u043b\u0435\u0444\u043e\u043d':phone,
-      '\u0420\u0435\u0433\u0456\u043e\u043d':region,
-      'Email':email||'\u2014',
-      '\u041a\u043e\u043c\u0435\u043d\u0442\u0430\u0440':comment||'\u2014',
-      '_replyto':email||undefined,
-      message:msg
-    })
-  }).then(function(res){
+
+  // Use FormData — no JSON Content-Type, avoids CORS preflight issues
+  var fd=new FormData();
+  fd.append('_subject','['+typeLabel+'] L-TEX: '+subjectName);
+  fd.append('\u0422\u0438\u043f \u0437\u0430\u043f\u0438\u0442\u0443',typeLabel);
+  fd.append('\u0422\u043e\u0432\u0430\u0440',prodInfo||'\u2014');
+  fd.append('\u041a\u043b\u0456\u0454\u043d\u0442',name);
+  fd.append('\u0422\u0435\u043b\u0435\u0444\u043e\u043d',phone);
+  fd.append('\u0420\u0435\u0433\u0456\u043e\u043d',region);
+  fd.append('Email',email||'\u2014');
+  fd.append('\u041a\u043e\u043c\u0435\u043d\u0442\u0430\u0440',comment||'\u2014');
+  if(email)fd.append('_replyto',email);
+  fd.append('message',msg);
+
+  fetch(FORMSPREE,{method:'POST',headers:{'Accept':'application/json'},body:fd})
+  .then(function(res){
+    btn.disabled=false;
+    document.getElementById('spinner').classList.remove('show');
     if(res.ok){
-      btn.style.display='none';
-      document.getElementById('btnBackForm').style.display='none';
-      document.getElementById('successBox').style.display='block';
-    }else throw new Error(res.status);
+      showSuccess();
+    }else{
+      // Formspree error — fallback to mailto
+      mailtoFallback(typeLabel,subjectName,msg);
+    }
   }).catch(function(){
     btn.disabled=false;
-    document.getElementById('btnLabel').textContent='\ud83d\udce9 \u041d\u0430\u0434\u0456\u0441\u043b\u0430\u0442\u0438 Email';
     document.getElementById('spinner').classList.remove('show');
-    document.getElementById('errMsg').textContent='&#10060; \u041f\u043e\u043c\u0438\u043b\u043a\u0430. \u0421\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 Telegram \u0430\u0431\u043e Viber.';
-    document.getElementById('errMsg').style.display='block';
+    // Network error — fallback to mailto
+    mailtoFallback(typeLabel,subjectName,msg);
   });
 }
+
+function mailtoFallback(typeLabel,subjectName,msg){
+  var sub=encodeURIComponent('['+typeLabel+'] L-TEX: '+subjectName);
+  var body=encodeURIComponent(msg);
+  window.open('mailto:ltex.lutsk.ai@gmail.com?subject='+sub+'&body='+body,'_blank');
+  showSuccess();
+}
+
+function showSuccess(){
+  var btn=document.getElementById('btnSubmit');
+  if(btn)btn.style.display='none';
+  var back=document.getElementById('btnBackForm');
+  if(back)back.style.display='none';
+  document.getElementById('successBox').style.display='block';
+}
+
 
 document.getElementById('mo').addEventListener('pointerdown',function(e){if(e.target===this)closeMo();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeMo();closeWishlist();}});
