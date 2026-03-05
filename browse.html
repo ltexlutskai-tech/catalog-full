@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7c4dff">
+<title>Каталог L-TEX — Оберіть категорію</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --purple:#7c4dff;--purple-dark:#5e35b1;--purple-light:#f3f0ff;
+  --grad:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  --text:#1e293b;--text2:#64748b;--border:#e2e8f0;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--text);background:#f0f4f8;min-height:100vh}
+
+/* ── HEADER ── */
+.hd{background:var(--grad);position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.hd-in{max-width:900px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:#fff;letter-spacing:3px;text-decoration:none}
+.logo-sub{font-size:.65rem;color:rgba(255,255,255,.7);font-weight:500;letter-spacing:1px;margin-top:1px}
+.hd-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hd-phone{color:rgba(255,255,255,.9);font-size:.8rem;font-weight:600;text-decoration:none}
+.btn-hd{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.35);padding:7px 14px;border-radius:18px;font-size:.8rem;font-weight:700;text-decoration:none;transition:.2s;white-space:nowrap}
+.btn-hd:hover{background:rgba(255,255,255,.28)}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{max-width:900px;margin:0 auto;padding:16px 20px 0;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bc-step{font-size:.78rem;color:var(--text2);font-weight:500}
+.bc-step.active{color:var(--purple);font-weight:700}
+.bc-sep{font-size:.78rem;color:#cbd5e1}
+.bc-step.done{color:var(--purple);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.bc-step.done:hover{color:var(--purple-dark)}
+
+/* ── STEP INDICATOR ── */
+.steps-bar{max-width:900px;margin:0 auto;padding:20px 20px 0;display:flex;gap:8px;align-items:center}
+.step-item{display:flex;align-items:center;gap:8px;flex:1}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--text2);font-family:'Montserrat',sans-serif;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.3s}
+.step-num.active{background:var(--purple);color:#fff;box-shadow:0 4px 12px rgba(124,77,255,.35)}
+.step-num.done{background:#22c55e;color:#fff}
+.step-label{font-size:.78rem;font-weight:600;color:var(--text2);transition:.3s;line-height:1.3}
+.step-label.active{color:var(--purple);font-weight:700}
+.step-label.done{color:#16a34a}
+.step-line{height:2px;flex:1;background:var(--border);border-radius:2px;transition:.3s;max-width:40px}
+.step-line.done{background:#22c55e}
+
+/* ── MAIN ── */
+.main{max-width:900px;margin:0 auto;padding:24px 20px 60px}
+
+/* ── PANEL HEADER ── */
+.panel-hd{margin-bottom:20px}
+.panel-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);margin-bottom:6px}
+.panel-sub{font-size:.88rem;color:var(--text2);line-height:1.5}
+
+/* ── CATEGORY GRID ── */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:8px}
+.cat-card{background:#fff;border-radius:16px;padding:22px 16px;text-align:center;cursor:pointer;border:2px solid var(--border);transition:.22s;box-shadow:0 2px 8px rgba(0,0,0,.05);position:relative;overflow:hidden}
+.cat-card::before{content:'';position:absolute;inset:0;background:var(--grad);opacity:0;transition:.22s}
+.cat-card:hover{border-color:var(--purple);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,77,255,.18)}
+.cat-card:hover::before{opacity:.04}
+.cat-card.selected{border-color:var(--purple);background:var(--purple-light);box-shadow:0 4px 16px rgba(124,77,255,.2)}
+.cat-card.all-btn{border-style:dashed;border-color:#cbd5e1}
+.cat-card.all-btn:hover{border-color:var(--purple)}
+.cat-emoji{font-size:2.4rem;margin-bottom:10px;display:block;line-height:1;position:relative;z-index:1}
+.cat-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.88rem;color:var(--text);line-height:1.3;position:relative;z-index:1}
+.cat-count{font-size:.72rem;color:var(--text2);margin-top:4px;position:relative;z-index:1;font-weight:500}
+
+/* ── SUBCATEGORY GRID ── */
+.sub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.sub-card{background:#fff;border-radius:12px;padding:16px 18px;cursor:pointer;border:2px solid var(--border);transition:.2s;display:flex;align-items:center;gap:12px;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+.sub-card:hover{border-color:var(--purple);transform:translateY(-2px);box-shadow:0 6px 18px rgba(124,77,255,.15)}
+.sub-card.selected{border-color:var(--purple);background:var(--purple-light)}
+.sub-emoji{font-size:1.6rem;flex-shrink:0}
+.sub-info{flex:1;min-width:0}
+.sub-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.85rem;color:var(--text);line-height:1.3}
+.sub-count{font-size:.72rem;color:var(--text2);margin-top:2px}
+
+/* "Всі підкатегорії" card */
+.sub-card.all-sub{border-style:dashed;border-color:#cbd5e1}
+
+/* ── CONFIRM BUTTON ── */
+.confirm-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:2px solid var(--border);padding:14px 20px;z-index:90;display:none;box-shadow:0 -4px 20px rgba(0,0,0,.1)}
+.confirm-bar.show{display:block}
+.confirm-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.confirm-txt{font-size:.84rem;color:var(--text2);line-height:1.4}
+.confirm-txt strong{display:block;color:var(--text);font-size:.92rem;margin-bottom:2px}
+.btn-confirm{background:var(--grad);color:#fff;border:none;border-radius:24px;padding:13px 28px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:.2s;box-shadow:0 4px 14px rgba(124,77,255,.3)}
+.btn-confirm:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(124,77,255,.4)}
+.btn-back-step{background:none;border:2px solid var(--border);color:var(--text2);border-radius:20px;padding:11px 18px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:.2s;display:none}
+.btn-back-step.show{display:block}
+.btn-back-step:hover{border-color:var(--purple);color:var(--purple)}
+
+/* ── FOOTER ── */
+.footer{background:#1a2535;padding:24px 20px;text-align:center;margin-top:0}
+.footer-logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;letter-spacing:3px;color:var(--purple);margin-bottom:8px}
+.footer p{font-size:.78rem;color:#64748b;line-height:1.8}
+.footer a{color:#94a3b8;text-decoration:none}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.anim-in{animation:fadeSlideIn .3s ease both}
+
+@media(max-width:600px){
+  .cat-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+  .sub-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .panel-title{font-size:1.1rem}
+  .confirm-inner{flex-direction:column;align-items:stretch}
+  .btn-confirm{justify-content:center}
+  .hd-in{padding:10px 14px}
+}
+@media(max-width:380px){
+  .cat-grid{grid-template-columns:1fr 1fr}
+  .sub-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-in">
+    <div>
+      <div class="logo">L-TEX</div>
+      <div class="logo-sub">СЕКОНД-ХЕНД ГУРТОМ</div>
+    </div>
+    <div class="hd-right">
+      <a href="tel:+380676710516" class="hd-phone">&#128222; 067 671 05 16</a>
+      <a href="catalog.html" class="btn-hd">&#128247; Весь каталог</a>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumb" id="breadcrumb">
+  <span class="bc-step active" id="bc1">&#127968; Категорія</span>
+</div>
+
+<div class="steps-bar" id="stepsBar">
+  <div class="step-item">
+    <div class="step-num active" id="sn1">1</div>
+    <div class="step-label active" id="sl1">Категорія</div>
+  </div>
+  <div class="step-line" id="sl-line1"></div>
+  <div class="step-item">
+    <div class="step-num" id="sn2">2</div>
+    <div class="step-label" id="sl2">Підкатегорія</div>
+  </div>
+  <div class="step-line" id="sl-line2"></div>
+  <div class="step-item">
+    <div class="step-num" id="sn3">3</div>
+    <div class="step-label" id="sl3">Товари</div>
+  </div>
+</div>
+
+<div class="main" id="mainContent"></div>
+
+<div class="confirm-bar" id="confirmBar">
+  <div class="confirm-inner">
+    <div>
+      <button class="btn-back-step" id="btnBackStep" onclick="goBack()">&#8592; Назад</button>
+    </div>
+    <div class="confirm-txt" id="confirmTxt">
+      <strong id="confirmTitle">Оберіть категорію</strong>
+      <span id="confirmSub">щоб перейти до товарів</span>
+    </div>
+    <button class="btn-confirm" id="btnConfirm" onclick="goNext()">
+      <span id="btnConfirmTxt">Далі &#8594;</span>
+    </button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">L-TEX</div>
+  <p>
+    &#128205; с. Піддубці, Луцьк, Волинська обл.<br>
+    &#128222; <a href="tel:+380676710516">+38 067 671 05 16</a> &nbsp;|&nbsp;
+    <a href="tel:+380993584992">+38 099 358 49 92</a><br>
+    &#9993; <a href="mailto:ltex.lutsk.ai@gmail.com">ltex.lutsk.ai@gmail.com</a>
+  </p>
+</footer>
+
+<script>
+// ═══ DATA ═══
+const CATEGORIES = [
+  { id:'all',       name:'Всі товари',          emoji:'🛍️',  subs:[] },
+  { id:'Одяг',      name:'Одяг',                emoji:'👗',  subs:[
+    {id:'Вітровки та штормовки',  emoji:'🧥'},
+    {id:'Джинси',                 emoji:'👖'},
+    {id:'Колготки та легінси',    emoji:'🧦'},
+    {id:'Комбінезони',            emoji:'🦺'},
+    {id:'Кофти флісові',          emoji:'🧶'},
+    {id:'Купальники',             emoji:'🩱'},
+    {id:'Куртки та пальта',       emoji:'🧥'},
+    {id:'Нижня білизна',          emoji:'🩲'},
+    {id:'Одяг мікс',              emoji:'👕'},
+    {id:'Піджаки та жилети',      emoji:'🤵'},
+    {id:'Светри та кардигани',    emoji:'🧣'},
+    {id:'Сорочки та блузи',       emoji:'👔'},
+    {id:'Спортивний одяг',        emoji:'🏃'},
+    {id:'Спідниці та плаття',     emoji:'👗'},
+    {id:'Футболки',               emoji:'👕'},
+    {id:'Халати та піжами',       emoji:'🛌'},
+    {id:'Худі та світшоти',       emoji:'🧥'},
+    {id:'Шкарпетки',              emoji:'🧦'},
+    {id:'Шорти',                  emoji:'🩳'},
+    {id:'Штани та брюки',         emoji:'👖'},
+  ]},
+  { id:'Взуття',    name:'Взуття',              emoji:'👟',  subs:[
+    {id:'Взуття гумове',          emoji:'🥾'},
+    {id:'Взуття мікс',            emoji:'👟'},
+    {id:'Взуття робоче',          emoji:'🥿'},
+    {id:'Кросівки та кеди',       emoji:'👟'},
+    {id:'Тапочки та шльопанці',   emoji:'🩴'},
+    {id:'Туфлі та босоніжки',     emoji:'👠'},
+    {id:'Черевики та чоботи',     emoji:'🥾'},
+  ]},
+  { id:'Аксесуари', name:'Аксесуари',           emoji:'👜',  subs:[
+    {id:'Біжутерія',              emoji:'💍'},
+    {id:'Сумки та рюкзаки',       emoji:'👜'},
+    {id:'Шапки та головні убори', emoji:'🧢'},
+  ]},
+  { id:'Дім та побут', name:'Дім та побут',     emoji:'🏠',  subs:[
+    {id:'Килими та килимки',      emoji:'🪵'},
+    {id:'Ковдри та подушки',      emoji:'🛏️'},
+    {id:'Побутові товари',        emoji:'🍽️'},
+    {id:'Постільна білизна',      emoji:'🛌'},
+    {id:'Рушники',                emoji:'🛁'},
+    {id:'Товари для тварин',      emoji:'🐾'},
+  ]},
+  { id:'Іграшки',   name:'Іграшки',             emoji:'🧸',  subs:[
+    {id:"М'які іграшки",          emoji:'🧸'},
+    {id:'Тверді іграшки',         emoji:'🎮'},
+  ]},
+  { id:'Bric-a-Brac', name:'Bric-a-Brac',       emoji:'🎁',  subs:[
+    {id:'Bric-a-Brac',            emoji:'🎁'},
+  ]},
+  { id:'Косметика', name:'Косметика',            emoji:'💄',  subs:[
+    {id:'Косметика декоративна',  emoji:'💄'},
+  ]},
+];
+
+// ═══ STATE ═══
+let step = 1; // 1=category, 2=subcategory
+let selectedCat = null;
+let selectedSub = null;
+
+// ═══ STEP INDICATOR ═══
+function updateStepIndicator(){
+  for(let i=1;i<=3;i++){
+    const num = document.getElementById('sn'+i);
+    const lbl = document.getElementById('sl'+i);
+    if(i < step){ num.className='step-num done'; num.textContent='✓'; lbl.className='step-label done'; }
+    else if(i === step){ num.className='step-num active'; num.textContent=i; lbl.className='step-label active'; }
+    else{ num.className='step-num'; num.textContent=i; lbl.className='step-label'; }
+    if(i < 3){
+      const line = document.getElementById('sl-line'+i);
+      line.className = 'step-line' + (i < step ? ' done' : '');
+    }
+  }
+}
+
+// ═══ BREADCRUMB ═══
+function updateBreadcrumb(){
+  const bc = document.getElementById('breadcrumb');
+  let html = `<span class="bc-step ${step===1?'active':'done'}" ${step>1?'onclick="goToStep(1)"':''}>${step>1?'&#10003; ':''} ${selectedCat ? (selectedCat.emoji+' '+selectedCat.name) : '&#127968; Категорія'}</span>`;
+  if(step >= 2){
+    html += `<span class="bc-sep">›</span>`;
+    html += `<span class="bc-step active">Підкатегорія</span>`;
+  }
+  bc.innerHTML = html;
+}
+
+// ═══ CONFIRM BAR ═══
+function updateConfirmBar(){
+  const bar = document.getElementById('confirmBar');
+  const btnBack = document.getElementById('btnBackStep');
+  const btnConfirm = document.getElementById('btnConfirm');
+  const confirmTitle = document.getElementById('confirmTitle');
+  const confirmSub = document.getElementById('confirmSub');
+  const btnTxt = document.getElementById('btnConfirmTxt');
+
+  if(step === 1 && selectedCat){
+    bar.classList.add('show');
+    btnBack.classList.remove('show');
+    confirmTitle.textContent = selectedCat.emoji + ' ' + selectedCat.name;
+    if(selectedCat.id === 'all'){
+      confirmSub.textContent = 'Показати всі товари каталогу';
+      btnTxt.innerHTML = 'Показати всі &#8594;';
+    } else if(selectedCat.subs.length <= 1){
+      confirmSub.textContent = 'Перейти до товарів';
+      btnTxt.innerHTML = 'Показати товари &#8594;';
+    } else {
+      confirmSub.textContent = selectedCat.subs.length + ' підкатегорій';
+      btnTxt.innerHTML = 'Обрати підкатегорію &#8594;';
+    }
+  } else if(step === 2){
+    bar.classList.add('show');
+    btnBack.classList.add('show');
+    if(selectedSub){
+      confirmTitle.textContent = selectedSub.emoji + ' ' + selectedSub.id;
+      confirmSub.textContent = 'Перейти до товарів';
+      btnTxt.innerHTML = 'Показати товари &#8594;';
+    } else {
+      confirmTitle.textContent = '📦 Всі підкатегорії ' + selectedCat.name;
+      confirmSub.textContent = 'Показати всі товари категорії';
+      btnTxt.innerHTML = 'Показати всі &#8594;';
+    }
+  } else {
+    bar.classList.remove('show');
+    btnBack.classList.remove('show');
+  }
+}
+
+// ═══ RENDER STEP 1 — CATEGORIES ═══
+function renderStep1(){
+  step = 1; selectedSub = null;
+  updateStepIndicator(); updateBreadcrumb(); updateConfirmBar();
+  const content = document.getElementById('mainContent');
+  content.innerHTML = `
+    <div class="panel-hd anim-in">
+      <div class="panel-title">&#128247; Каталог товарів</div>
+      <div class="panel-sub">Оберіть категорію, яка вас цікавить</div>
+    </div>
+    <div class="cat-grid anim-in" id="catGrid"></div>
+  `;
+  const grid = document.getElementById('catGrid');
+  CATEGORIES.forEach(cat => {
+    const card = document.createElement('div');
+    card.className = 'cat-card' + (cat.id==='all'?' all-btn':'') + (selectedCat&&selectedCat.id===cat.id?' selected':'');
+    card.innerHTML = `<span class="cat-emoji">${cat.emoji}</span><div class="cat-name">${cat.name}</div>`;
+    card.addEventListener('click', () => selectCategory(cat));
+    grid.appendChild(card);
+  });
+  // Bottom padding so cards aren't hidden by confirm bar
+  content.style.paddingBottom = '90px';
+}
+
+// ═══ SELECT CATEGORY ═══
+function selectCategory(cat){
+  selectedCat = cat;
+  // Update visual selection
+  document.querySelectorAll('.cat-card').forEach((c,i) => {
+    c.classList.toggle('selected', CATEGORIES[i].id === cat.id);
+  });
+  updateConfirmBar(); updateBreadcrumb();
+}
+
+// ═══ RENDER STEP 2 — SUBCATEGORIES ═══
+function renderStep2(){
+  step = 2;
+  updateStepIndicator(); updateBreadcrumb(); updateConfirmBar();
+  const content = document.getElementById('mainContent');
+  content.innerHTML = `
+    <div class="panel-hd anim-in">
+      <div class="panel-title">${selectedCat.emoji} ${selectedCat.name}</div>
+      <div class="panel-sub">Оберіть підкатегорію або перегляньте всі товари</div>
+    </div>
+    <div class="sub-grid anim-in" id="subGrid"></div>
+  `;
+  const grid = document.getElementById('subGrid');
+
+  // "Всі" card first
+  const allCard = document.createElement('div');
+  allCard.className = 'sub-card all-sub' + (!selectedSub ? ' selected' : '');
+  allCard.innerHTML = `<span class="sub-emoji">📦</span><div class="sub-info"><div class="sub-name">Всі ${selectedCat.name.toLowerCase()}</div><div class="sub-count">Показати всі</div></div>`;
+  allCard.addEventListener('click', () => selectSub(null, allCard));
+  grid.appendChild(allCard);
+
+  selectedCat.subs.forEach(sub => {
+    const card = document.createElement('div');
+    card.className = 'sub-card' + (selectedSub&&selectedSub.id===sub.id?' selected':'');
+    card.innerHTML = `<span class="sub-emoji">${sub.emoji}</span><div class="sub-info"><div class="sub-name">${sub.id}</div></div>`;
+    card.addEventListener('click', () => selectSub(sub, card));
+    grid.appendChild(card);
+  });
+  content.style.paddingBottom = '90px';
+}
+
+// ═══ SELECT SUBCATEGORY ═══
+function selectSub(sub, cardEl){
+  selectedSub = sub;
+  document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('selected'));
+  cardEl.classList.add('selected');
+  updateConfirmBar();
+}
+
+// ═══ NAVIGATION ═══
+function goNext(){
+  if(step === 1 && selectedCat){
+    if(selectedCat.id === 'all'){
+      window.location.href = 'catalog.html';
+      return;
+    }
+    if(selectedCat.subs.length <= 1){
+      // Go straight to catalog with category filter
+      const url = selectedCat.subs.length === 1
+        ? `catalog.html?cat=${encodeURIComponent(selectedCat.id)}&sub=${encodeURIComponent(selectedCat.subs[0].id)}`
+        : `catalog.html?cat=${encodeURIComponent(selectedCat.id)}`;
+      window.location.href = url;
+      return;
+    }
+    renderStep2();
+  } else if(step === 2){
+    let url = `catalog.html?cat=${encodeURIComponent(selectedCat.id)}`;
+    if(selectedSub) url += `&sub=${encodeURIComponent(selectedSub.id)}`;
+    window.location.href = url;
+  }
+}
+
+function goBack(){
+  if(step === 2) renderStep1();
+}
+
+function goToStep(n){
+  if(n === 1) renderStep1();
+}
+
+// ═══ INIT ═══
+renderStep1();
+</script>
+</body>
+</html>
