@@ -426,16 +426,16 @@ body{font-family:'Open Sans',sans-serif;background:#f0f0f8;color:var(--text);min
 .fp-btn:hover{background:#ede7f6;border-color:#9575cd}
 .fp-clear{background:none;border:none;color:#cbd5e1;font-size:1rem;cursor:pointer;padding:2px 6px;line-height:1;transition:.15s}
 .fp-clear:hover{color:#ef4444}
-/* ── Filter copy-link row ── */
-.fil-actions-row{display:flex;justify-content:flex-end;padding:2px 0 4px}
-.btn-filter-copy-link{background:none;border:1.5px solid #c4b5fd;color:#5e35b1;font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:14px;cursor:pointer;font-family:inherit;transition:.15s}
-.btn-filter-copy-link:hover{background:#ede7f6}
-/* On desktop - show inside sort row */
+/* ── Filter copy-link (manager-only, desktop-only) ── */
 @media(min-width:901px){
-  .fil-actions-row{display:none}
   .sort-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .btn-filter-copy-link-desk{background:none;border:1.5px solid #c4b5fd;color:#5e35b1;font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:14px;cursor:pointer;font-family:inherit;transition:.15s;margin-left:auto}
+  .btn-filter-copy-link-desk{display:none;background:none;border:1.5px solid #c4b5fd;color:#5e35b1;font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:14px;cursor:pointer;font-family:inherit;transition:.15s;margin-left:auto}
   .btn-filter-copy-link-desk:hover{background:#ede7f6}
+  body.mgr-mode .btn-filter-copy-link-desk{display:inline-flex}
+}
+/* ── History presets — desktop only ── */
+@media(max-width:900px){
+  .filter-presets-bar{display:none!important}
 }
 /* ── Filter toast ── */
 .filter-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:#1e293b;color:#fff;padding:9px 18px;border-radius:20px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}
@@ -568,9 +568,6 @@ body{font-family:'Open Sans',sans-serif;background:#f0f0f8;color:var(--text);min
         <input type="number" id="pMax" placeholder="до" min="0" inputmode="numeric" oninput="applyFilters()">
       </div>
       <button class="btn-rst" onclick="resetFilters()">&#10005; Скинути</button>
-    </div>
-    <div class="fil-actions-row">
-      <button class="btn-filter-copy-link" id="btnFilterCopyLink" onclick="filterCopyLink()" title="Копіювати посилання з поточними фільтрами">&#128279; Скопіювати посилання</button>
     </div>
     <div class="sort-row" id="sortRow">
       <span class="sort-label">Ціна:</span>
@@ -7833,6 +7830,23 @@ function toggleFilters(){
   const open=r.classList.toggle('open');
   s.classList.toggle('open',open);
 }
+// Collapse filters on scroll start (mobile only)
+(function(){
+  var lastY = 0, scrollTimer = null;
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY || window.pageYOffset;
+    if(Math.abs(y - lastY) > 10) {
+      if(window.innerWidth <= 900) {
+        var r = document.getElementById('filRow'), s = document.getElementById('sortRow');
+        if(r && r.classList.contains('open')) {
+          r.classList.remove('open');
+          if(s) s.classList.remove('open');
+        }
+      }
+      lastY = y;
+    }
+  }, {passive: true});
+})();
 function updateSubs(){
   const cat=document.getElementById('fCat').value;
   const sub=document.getElementById('fSub');
@@ -9132,6 +9146,7 @@ function mgrPwdCheck() {
   var val = document.getElementById('mgrPwdInput').value;
   if(val === MGR_PWD) {
     sessionStorage.setItem(MGR_AUTH_KEY, '1');
+    document.body.classList.add('mgr-mode');
     document.getElementById('mgrPwdOv').classList.remove('open');
     document.body.style.overflow = '';
     // Show the button and open drawer
@@ -9187,10 +9202,11 @@ document.addEventListener('DOMContentLoaded', function() {
       // Normal navigation on tap 1-4 (let href work)
     });
   }
-  // If already auth in this session — show button
+  // If already auth in this session — show button + mgr-mode class
   if(sessionStorage.getItem(MGR_AUTH_KEY)) {
     var btn = document.getElementById('btnMgr');
     if(btn) btn.style.display = 'inline-flex';
+    document.body.classList.add('mgr-mode');
   }
   // Enter key in password input
   var inp = document.getElementById('mgrPwdInput');
