@@ -427,7 +427,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0f0f8;color:var(--text);min
     <a href="index.html" class="logo">L-TEX</a>
     <div class="hd-right">
       <span class="cnt" id="counter">792 позицій</span>
-      <button class="btn-wish" onclick="openWishlist()">&#9825; Список <span class="wish-badge" id="wishBadge">0</span></button>
+      <button class="btn-wish" onclick="openWishlist()">&#9825; Обране <span class="wish-badge" id="wishBadge">0</span></button>
       <button class="btn-cart-hd" onclick="cartOpen()">&#128666; Кошик <span class="cart-badge-hd" id="cartBadgeHd" style="display:none">0</span><span id="cartTotalHd" style="display:none;font-size:.75rem;font-weight:600;opacity:.85;margin-left:4px"></span></button>
       <button class="btn-mgr" id="btnMgr" onclick="mgrOpen()" title="Менеджер: підбірка позицій">&#128203;</button>
       <button class="btn-nav" onclick="openDirectContact()">&#9992;&#65039; Telegram</button>
@@ -1164,7 +1164,7 @@ function doSend(){
       return (i+1)+'. '+p.name+' (Код: '+p.id+') — '+pr;
     }).join('\n');
   }
-  var subjectName = curProd ? curProd.name : 'Список ('+wishlist.length+' поз.)';
+  var subjectName = curProd ? curProd.name : 'Обране ('+wishlist.length+' поз.)';
 
   var btn = document.getElementById('btnSubmit');
   btn.disabled = true;
@@ -1517,7 +1517,7 @@ document.addEventListener('DOMContentLoaded',function(){
     },
     {
       title: '♡ Список бажань',
-      text:  'Кнопка «Список» — додайте позиції у вибране і надішліть спільний запит менеджеру одним натиском.',
+      text:  'Кнопка «Обране» — додайте позиції у вибране і надішліть спільний запит менеджеру одним натиском.',
       target:'btn-wish',
       arrow: 'top',
       offset:{x:-20, y:14},
