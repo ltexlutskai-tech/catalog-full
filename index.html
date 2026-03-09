@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L-TEX — Секонд-хенд гуртом</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --purple:#7c4dff;
+  --purple-dark:#5e35b1;
+  --purple-light:#ede7f6;
+  --green:#1a7a3c;
+  --text:#1e293b;
+  --text-muted:#64748b;
+  --border:#e2e8f0;
+  --white:#fff;
+}
+body{font-family:'Open Sans',sans-serif;color:var(--text);background:#f8f7ff;min-height:100vh}
+
+/* HEADER */
+header{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(124,77,255,.08)}
+.header-inner{max-width:1100px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:var(--purple);text-decoration:none;letter-spacing:-1px}
+.logo span{color:var(--text);font-weight:400;font-size:0.9rem;margin-left:8px}
+.header-contacts{display:flex;gap:12px;align-items:center}
+.btn-tg{display:inline-flex;align-items:center;gap:6px;background:var(--purple);color:#fff;padding:8px 18px;border-radius:8px;text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;transition:background .2s}
+.btn-tg:hover{background:var(--purple-dark)}
+.phone-link{color:var(--text-muted);text-decoration:none;font-size:0.85rem;font-weight:600}
+.phone-link:hover{color:var(--purple)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#7c4dff 0%,#5e35b1 50%,#3d1e8f 100%);color:#fff;padding:72px 20px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-inner{max-width:700px;margin:0 auto;position:relative}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 16px;border-radius:20px;font-size:0.8rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
+.hero h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.2rem);line-height:1.15;margin-bottom:20px}
+.hero h1 span{color:#ffd54f}
+.hero p{font-size:1.1rem;opacity:.9;margin-bottom:36px;line-height:1.6}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-hero-main{background:#ffd54f;color:#1e293b;padding:14px 32px;border-radius:10px;text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:800;font-size:1rem;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.btn-hero-main:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.btn-hero-sec{background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.5);padding:14px 32px;border-radius:10px;text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;transition:background .2s}
+.btn-hero-sec:hover{background:rgba(255,255,255,.25)}
+.hero-stats{display:flex;gap:32px;justify-content:center;margin-top:48px;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:#ffd54f}
+.hero-stat-label{font-size:0.8rem;opacity:.8;margin-top:2px}
+
+/* CATEGORIES */
+.section{padding:64px 20px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.6rem;color:var(--text);margin-bottom:8px}
+.section-sub{color:var(--text-muted);margin-bottom:36px}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.cat-card{background:var(--white);border:2px solid var(--border);border-radius:14px;padding:24px 20px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:12px;transition:border-color .2s,transform .2s,box-shadow .2s;cursor:pointer}
+.cat-card:hover{border-color:var(--purple);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,77,255,.15)}
+.cat-card .cat-emoji{font-size:2.4rem}
+.cat-card .cat-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;text-align:center}
+
+/* ADVANTAGES */
+.advantages{background:var(--white);padding:64px 20px}
+.adv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px;max-width:1100px;margin:0 auto}
+.adv-card{display:flex;gap:16px;align-items:flex-start}
+.adv-icon{font-size:2rem;flex-shrink:0}
+.adv-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;margin-bottom:4px}
+.adv-text{color:var(--text-muted);font-size:0.9rem;line-height:1.5}
+
+/* LOTS SECTION */
+.lots-section{background:linear-gradient(135deg,#e8f5e9,#f1f8e9);padding:64px 20px;text-align:center}
+.lots-inner{max-width:700px;margin:0 auto}
+.lots-section .section-title{color:var(--green)}
+.btn-lots{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;padding:14px 32px;border-radius:10px;text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:800;font-size:1rem;margin-top:24px;transition:background .2s;box-shadow:0 4px 16px rgba(26,122,60,.25)}
+.btn-lots:hover{background:#145e2e}
+
+/* CONTACTS */
+.contacts{padding:64px 20px;background:var(--white)}
+.contacts-inner{max-width:700px;margin:0 auto;text-align:center}
+.contact-list{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:24px}
+.contact-item{display:flex;align-items:center;gap:8px;background:var(--purple-light);padding:12px 20px;border-radius:10px;text-decoration:none;color:var(--text);font-weight:600;font-size:0.9rem;transition:background .2s}
+.contact-item:hover{background:#d1c4e9}
+.contact-item .ci-icon{font-size:1.2rem}
+
+/* FOOTER */
+footer{background:var(--text);color:#94a3b8;text-align:center;padding:24px 20px;font-size:0.85rem}
+footer a{color:#94a3b8;text-decoration:none}
+
+@media(max-width:600px){
+  .hero{padding:48px 16px 56px}
+  .hero-stats{gap:20px}
+  .header-contacts .phone-link{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">L-TEX <span>секонд-хенд гуртом</span></a>
+    <div class="header-contacts">
+      <a href="tel:+380676710516" class="phone-link">+380 67 671 05 16</a>
+      <a href="https://t.me/L_TEX" target="_blank" class="btn-tg">✉️ Написати</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🇬🇧 Англія · Німеччина · Канада · Польща</div>
+    <h1>Секонд-хенд<br><span>гуртом від 10 кг</span></h1>
+    <p>Великий вибір одягу, взуття та аксесуарів. Доставка по Україні. Щоденне оновлення.</p>
+    <div class="hero-btns">
+      <a href="browse.html" class="btn-hero-main">🛍️ Переглянути каталог</a>
+      <a href="lots.html" class="btn-hero-sec">📦 Наявні лоти</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">1700+</div>
+        <div class="hero-stat-label">позицій у каталозі</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">480+</div>
+        <div class="hero-stat-label">мішків на складі</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">від 10 кг</div>
+        <div class="hero-stat-label">мінімальне замовлення</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-title">Категорії товарів</div>
+    <div class="section-sub">Натисніть на категорію щоб переглянути товари</div>
+    <div class="cat-grid">
+      <a href="browse.html?cat=Одяг" class="cat-card"><span class="cat-emoji">👕</span><span class="cat-name">Одяг</span></a>
+      <a href="browse.html?cat=Взуття" class="cat-card"><span class="cat-emoji">👟</span><span class="cat-name">Взуття</span></a>
+      <a href="browse.html?cat=Аксесуари" class="cat-card"><span class="cat-emoji">👜</span><span class="cat-name">Аксесуари</span></a>
+      <a href="browse.html?cat=Дім та побут" class="cat-card"><span class="cat-emoji">🏠</span><span class="cat-name">Дім та побут</span></a>
+      <a href="browse.html?cat=Іграшки" class="cat-card"><span class="cat-emoji">🧸</span><span class="cat-name">Іграшки</span></a>
+      <a href="browse.html?cat=Косметика" class="cat-card"><span class="cat-emoji">💄</span><span class="cat-name">Косметика</span></a>
+      <a href="browse.html?cat=Bric-a-Brac" class="cat-card"><span class="cat-emoji">🎁</span><span class="cat-name">Bric-a-Brac</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="advantages">
+  <div class="section-inner">
+    <div class="section-title" style="text-align:center;margin-bottom:36px">Чому обирають L-TEX</div>
+    <div class="adv-grid">
+      <div class="adv-card">
+        <div class="adv-icon">🇬🇧</div>
+        <div><div class="adv-title">Перевірені постачальники</div><div class="adv-text">Англія, Німеччина, Польща, Канада, Італія, Шотландія</div></div>
+      </div>
+      <div class="adv-card">
+        <div class="adv-icon">📹</div>
+        <div><div class="adv-title">Відео кожного лота</div><div class="adv-text">Перед купівлею можна переглянути вміст мішка на YouTube</div></div>
+      </div>
+      <div class="adv-card">
+        <div class="adv-icon">📦</div>
+        <div><div class="adv-title">Від 10 кг</div><div class="adv-text">Мінімальне замовлення від 10 кг. Опт та дрібний опт</div></div>
+      </div>
+      <div class="adv-card">
+        <div class="adv-icon">🔄</div>
+        <div><div class="adv-title">Щоденне оновлення</div><div class="adv-text">Каталог та наявність лотів оновлюються кожного дня</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lots-section">
+  <div class="lots-inner">
+    <div class="section-title">📦 Наявні лоти на складі</div>
+    <p style="color:#2e7d32;margin-top:8px">Конкретні мішки з відео, вагою та ціною в грн</p>
+    <a href="lots.html" class="btn-lots">Переглянути наявні лоти</a>
+  </div>
+</section>
+
+<section class="contacts">
+  <div class="contacts-inner">
+    <div class="section-title">Контакти</div>
+    <p style="color:var(--text-muted);margin-top:8px">с. Піддубці, Луцький р-н, Волинська обл.</p>
+    <div class="contact-list">
+      <a href="https://t.me/L_TEX" target="_blank" class="contact-item"><span class="ci-icon">✈️</span> Telegram @L_TEX</a>
+      <a href="tel:+380676710516" class="contact-item"><span class="ci-icon">📞</span> +380 67 671 05 16</a>
+      <a href="tel:+380993584992" class="contact-item"><span class="ci-icon">📞</span> +380 99 358 49 92</a>
+      <a href="mailto:ltex.lutsk.ai@gmail.com" class="contact-item"><span class="ci-icon">📧</span> ltex.lutsk.ai@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 L-TEX — Секонд-хенд гуртом · <a href="browse.html">Каталог</a> · <a href="lots.html">Лоти</a></p>
+</footer>
+
+</body>
+</html>
