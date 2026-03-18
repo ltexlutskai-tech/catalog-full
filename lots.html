@@ -161,10 +161,10 @@ body{font-family:'Inter',sans-serif;color:var(--text);background:#f0f4f8;min-hei
 /* TUTORIAL */
 .ltour-overlay{position:fixed;inset:0;z-index:900;pointer-events:none;transition:opacity .35s}
 .ltour-overlay.hidden{opacity:0;pointer-events:none}
-.ltour-spot{position:fixed;z-index:901;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.62);pointer-events:none;transition:all .35s;display:none}
-.ltour-tip{position:fixed;z-index:902;width:300px;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.22);padding:18px 18px 14px;display:none}
-.ltour-tip.arrow-top::before{content:'';position:absolute;top:-8px;left:22px;border:8px solid transparent;border-bottom:8px solid #fff;border-top:none}
-.ltour-tip.arrow-bottom::before{content:'';position:absolute;bottom:-8px;left:22px;border:8px solid transparent;border-top:8px solid #fff;border-bottom:none}
+.ltour-spot{position:fixed;z-index:901;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.62);pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1);display:none}
+.ltour-tip{position:fixed;z-index:902;width:300px;max-width:calc(100vw - 24px);background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.22);padding:18px 18px 14px;display:none}
+.ltour-tip.arrow-top::before{content:'';position:absolute;top:-8px;left:var(--arrow-x,22px);border:8px solid transparent;border-bottom:8px solid #fff;border-top:none}
+.ltour-tip.arrow-bottom::before{content:'';position:absolute;bottom:-8px;left:var(--arrow-x,22px);border:8px solid transparent;border-top:8px solid #fff;border-bottom:none}
 .ltour-num{font-size:.72rem;color:#94a3b8;font-weight:600;margin-bottom:5px}
 .ltour-title{font-family:Montserrat,sans-serif;font-weight:800;font-size:.98rem;color:#1e293b;margin-bottom:6px}
 .ltour-text{font-size:.82rem;color:#475569;line-height:1.55;margin-bottom:12px}
@@ -174,14 +174,23 @@ body{font-family:'Inter',sans-serif;color:var(--text);background:#f0f4f8;min-hei
 .ltour-dot.act{background:#1a7a3c}
 .ltour-skip-btn{background:none;border:none;font-size:.78rem;color:#94a3b8;cursor:pointer;padding:4px 8px;font-family:inherit}
 .ltour-next-btn{background:linear-gradient(135deg,#1a7a3c,#22a050);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;transition:.15s}
+.ltour-next-btn:active{transform:scale(.96)}
 .ltour-welcome{position:fixed;inset:0;z-index:910;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .3s;pointer-events:none}
-.ltour-welcome.show{opacity:1;pointer-events:all}
-.ltour-welcome-box{background:#fff;border-radius:20px;padding:32px 28px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.ltour-welcome.show{opacity:1;pointer-events:auto}
+.ltour-welcome-box{background:#fff;border-radius:20px;padding:32px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .ltour-welcome-icon{font-size:3rem;margin-bottom:14px}
-.ltour-welcome-box h2{font-family:Montserrat,sans-serif;font-weight:800;font-size:1.2rem;color:#1e293b;margin-bottom:10px}
-.ltour-welcome-box p{font-size:.88rem;color:#64748b;line-height:1.6;margin-bottom:22px}
-.ltour-start{display:block;width:100%;padding:13px;background:linear-gradient(135deg,#1a7a3c,#22a050);color:#fff;border:none;border-radius:12px;font-family:Montserrat,sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;margin-bottom:10px}
+.ltour-welcome-box h2{font-family:Montserrat,sans-serif;font-weight:800;font-size:1.15rem;color:#1e293b;margin-bottom:10px}
+.ltour-welcome-box p{font-size:.86rem;color:#64748b;line-height:1.6;margin-bottom:20px}
+.ltour-welcome-features{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;text-align:left}
+.ltour-feature{display:flex;align-items:flex-start;gap:10px;background:#f8fafc;border-radius:10px;padding:9px 11px;font-size:.82rem;color:#334155}
+.ltour-feature-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.ltour-start{display:block;width:100%;padding:13px;background:linear-gradient(135deg,#1a7a3c,#22a050);color:#fff;border:none;border-radius:12px;font-family:Montserrat,sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;margin-bottom:10px;transition:.15s}
+.ltour-start:active{transform:scale(.98)}
 .ltour-skip-all{background:none;border:none;font-size:.82rem;color:#94a3b8;cursor:pointer;font-family:inherit}
+@media(max-width:400px){
+  .ltour-welcome-box{padding:24px 16px}
+  .ltour-tip{padding:14px 14px 12px}
+}
 
 @media(max-width:680px){.hd-contacts{display:none}.grid{grid-template-columns:1fr}}
 @media(max-width:400px){.hd-inner{padding:10px 14px}.main{padding:16px 12px}}
@@ -342,10 +351,15 @@ body{font-family:'Inter',sans-serif;color:var(--text);background:#f0f4f8;min-hei
 <!-- TUTORIAL -->
 <div class="ltour-welcome" id="ltourWelcome">
   <div class="ltour-welcome-box">
-    <div class="ltour-welcome-icon">&#128666;</div>
-    <h2>Каталог наявних лотів</h2>
-    <p>Тут ви бачите конкретні мішки на складі.<br>Покажемо, як читати картку лоту і зробити замовлення.</p>
-    <button class="ltour-start" onclick="ltourNext()">Показати &#9654;</button>
+    <div class="ltour-welcome-icon">&#128230;</div>
+    <h2>Склад лотів L-TEX</h2>
+    <p>Конкретні м&#1110;шки, як&#1110; зараз є на склад&#1110;. Покажемо, як читати картки &#1110; оформити замовлення.</p>
+    <div class="ltour-welcome-features">
+      <div class="ltour-feature"><span class="ltour-feature-icon">&#9654;&#65039;</span><span>Кожен лот має <strong>своє відео</strong> — побачите вміст мішка до покупки</span></div>
+      <div class="ltour-feature"><span class="ltour-feature-icon">&#128293;</span><span>Акційні лоти позначені окремо — ціна нижча за стандартну</span></div>
+      <div class="ltour-feature"><span class="ltour-feature-icon">&#128666;</span><span>Кошик — зберіть кілька лотів і надішліть одне замовлення</span></div>
+    </div>
+    <button class="ltour-start" onclick="ltourNext()">Показати як користуватись &#9654;</button>
     <button class="ltour-skip-all" onclick="ltourEnd()">Пропустити, я розберусь сам</button>
   </div>
 </div>
@@ -357,9 +371,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);background:#f0f4f8;min-hei
   <div class="ltour-text" id="ltourText"></div>
   <div class="ltour-foot">
     <div class="ltour-dots" id="ltourDots"></div>
-    <div style="display:flex;gap:8px">
+    <div style="display:flex;gap:8px;align-items:center">
       <button class="ltour-skip-btn" onclick="ltourEnd()">Пропустити</button>
-      <button class="ltour-next-btn" id="ltourNextBtn" onclick="ltourNext()">&#8594;</button>
+      <button class="ltour-next-btn" id="ltourNextBtn" onclick="ltourNext()">Далі &#8594;</button>
     </div>
   </div>
 </div>
@@ -2154,85 +2168,182 @@ init();
 
 // TUTORIAL
 (function(){
-  const LTOUR_KEY='ltex_lots_tour_v2';
-  if(localStorage.getItem(LTOUR_KEY))return;
-  let ltstep=-1;
-  const LSTEPS=[
-    {title:'&#128221; Назва та сорт',text:'Зелена шапка: назва та сорт — Екстра, Крем, 1й/2й сорт, Сток. Акційні лоти позначені &#128293;.',target:'firstHead',arrow:'top'},
-    {title:'&#9654; Відеоогляд лоту',text:'Кожний лот має своє відео. Натисніть ▶ — побачите вміст конкретного мішка до покупки.',target:'firstYt',arrow:'top'},
-    {title:'&#9878;&#65039; Вага та ціна',text:'Вага в кг, ціна в гривнях. ЗАРЕЗЕРВОВАНО = мішок зайнятий.',target:'firstRows',arrow:'top'},
-    {title:'&#128666; Дві кнопки дії',text:'&#128233; Купити — запит через Telegram або Email. &#128666; В кошик — зберіть кілька лотів і надішліть одне замовлення. Сума відразу видна в шапці.',target:'firstBuy',arrow:'top'},
-    {title:'&#128274; Фільтр лотів',text:'Кнопки «Всі / Вільні / Зарезервовані» — показує тільки доступні для замовлення лоти.',target:'filter-bar',arrow:'bottom',last:true}
-  ]
-  function getEl(t){
-    if(!t)return null;
-    if(t==='firstHead')return document.querySelector('.card-head');
-    if(t==='firstYt')return document.querySelector('.card-yt');
-    if(t==='firstRows')return document.querySelector('.card-rows');
-    if(t==='firstDesc')return document.querySelector('.card-desc');
-    if(t==='firstBuy')return document.querySelector('.btn-buy-lot');
-    return document.getElementById(t);
+  var LTOUR_KEY = 'ltex_lots_tour_v2';
+  if(localStorage.getItem(LTOUR_KEY)) return;
+
+  // Determine page mode: product page (?id=) or all-lots page
+  var isProductPage = !!(new URLSearchParams(window.location.search).get('id'));
+
+  // Steps for product page (?id=...) — shows individual lot cards
+  var STEPS_PRODUCT = [
+    {
+      title: '&#128221; Назва та сорт лоту',
+      text:  'Зелена шапка картки: назва товару та значок сорту — Екстра, Крем, 1й/2й сорт, Сток. Акційні лоти позначені &#128293; АКЦІЯ.',
+      target: 'firstHead', arrow: 'top'
+    },
+    {
+      title: '&#9654;&#65039; Відеоогляд мішка',
+      text:  'Кожен лот має <strong>своє відео</strong>. Натисніть &#9654; — побачите вміст конкретного мішка до покупки.',
+      target: 'firstYt', arrow: 'top'
+    },
+    {
+      title: '&#9878;&#65039; Вага, кількість та ціна',
+      text:  'Вага лота в кг, кількість одиниць, ціна за кг у EUR та загальна вартість в гривнях.',
+      target: 'firstPrice', arrow: 'top'
+    },
+    {
+      title: '&#128233; Купити / &#128666; В кошик',
+      text:  '<strong>Купити</strong> — відкриє форму запиту через Telegram або Email. <strong>В кошик</strong> — збережіть кілька лотів і надішліть одне замовлення. Загальна сума видна у шапці.',
+      target: 'firstActions', arrow: 'top'
+    },
+    {
+      title: '&#128274; Фільтр лотів',
+      text:  'Кнопки <em>Всі / Вільні / Заброньовані</em> — показують тільки доступні або тільки зайняті лоти.',
+      target: 'filter-bar', arrow: 'bottom', last: true
+    }
+  ];
+
+  // Steps for all-lots page (no ?id) — shows product summary cards
+  var STEPS_ALL = [
+    {
+      title: '&#128230; Картка товарної позиції',
+      text:  'Назва, сорт та кількість <strong>вільних лотів</strong> на складі. Лоти з жовтим значком — акційна ціна.',
+      target: 'firstHead', arrow: 'top'
+    },
+    {
+      title: '&#128269; Переглянути всі мішки',
+      text:  'Натисніть <em>Переглянути лоти &rarr;</em> щоб побачити конкретні мішки, відео та ціну кожного лоту.',
+      target: 'firstBtn', arrow: 'top'
+    },
+    {
+      title: '&#128666; Кошик у шапці',
+      text:  'Додавайте лоти в кошик з будь-якої сторінки. Тут видно загальну суму обраних позицій.',
+      target: 'btnCartHdLots', arrow: 'bottom', last: true
+    }
+  ];
+
+  var LSTEPS = isProductPage ? STEPS_PRODUCT : STEPS_ALL;
+  var ltstep = -1;
+
+  function getTargetEl(t) {
+    if (!t) return null;
+    switch(t) {
+      case 'firstHead':    return document.querySelector('.card-head');
+      case 'firstYt':      return document.querySelector('.card-yt');
+      case 'firstPrice':   return document.querySelector('.price-block') || document.querySelector('.card-rows');
+      case 'firstActions': return document.querySelector('.lot-action-row') || document.querySelector('.btn-buy-lot');
+      case 'firstBtn':     return document.querySelector('.btn-buy');
+      default:             return document.getElementById(t);
+    }
   }
-  function renderDots(){
-    const d=document.getElementById('ltourDots');
-    d.innerHTML='';
-    LSTEPS.forEach((_,i)=>{
-      const dot=document.createElement('span');
-      dot.className='ltour-dot'+(i===ltstep?' act':'');
+
+  function renderDots() {
+    var d = document.getElementById('ltourDots');
+    if (!d) return;
+    d.innerHTML = '';
+    LSTEPS.forEach(function(_, i) {
+      var dot = document.createElement('span');
+      dot.className = 'ltour-dot' + (i === ltstep ? ' act' : '');
       d.appendChild(dot);
     });
   }
-  function positionTip(el){
-    const tip=document.getElementById('ltourTip');
-    const spot=document.getElementById('ltourSpot');
-    tip.style.display='block';
-    if(!el){
-      spot.style.display='none';
-      const vw=window.innerWidth,vh=window.innerHeight;
-      tip.style.left=Math.max(20,(vw-300)/2)+'px';
-      tip.style.top=(vh/2-120)+'px';
-      tip.className='ltour-tip';
+
+  function positionTip(el) {
+    var tip  = document.getElementById('ltourTip');
+    var spot = document.getElementById('ltourSpot');
+    if (!tip || !spot) return;
+
+    tip.style.display = 'block';
+
+    if (!el || el.offsetParent === null) {
+      // Element not visible — center the tip
+      spot.style.display = 'none';
+      var vw = window.innerWidth, vh = window.innerHeight;
+      var tw = Math.min(300, vw - 24);
+      tip.style.cssText = 'display:block;left:' + Math.max(12, (vw - tw) / 2) + 'px;top:' + (vh / 2 - 100) + 'px;width:' + tw + 'px';
+      tip.className = 'ltour-tip';
       return;
     }
-    el.scrollIntoView({behavior:'smooth',block:'center'});
-    setTimeout(()=>{
-      const r=el.getBoundingClientRect(),pad=8;
-      spot.style.cssText=`display:block;left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px`;
-      const vw=window.innerWidth,vh=window.innerHeight;
-      const tx=Math.max(10,Math.min(r.left,vw-310-10));
-      let ty,cls;
-      if(r.bottom+14+180<vh){ty=r.bottom+14;cls='ltour-tip arrow-top';}
-      else{ty=Math.max(10,r.top-14-180);cls='ltour-tip arrow-bottom';}
-      tip.style.left=tx+'px';tip.style.top=ty+'px';tip.className=cls;
-    },350);
+
+    el.scrollIntoView({behavior: 'smooth', block: 'center'});
+
+    setTimeout(function() {
+      var r   = el.getBoundingClientRect();
+      var pad = 8;
+      spot.style.cssText = 'display:block;left:' + (r.left - pad) + 'px;top:' + (r.top - pad) + 'px;width:' + (r.width + pad * 2) + 'px;height:' + (r.height + pad * 2) + 'px';
+
+      var vw  = window.innerWidth;
+      var vh  = window.innerHeight;
+      var tw  = Math.min(300, vw - 24);
+      var tx  = Math.max(12, Math.min(r.left, vw - tw - 12));
+      // Arrow x relative to tip left
+      var arrowX = Math.max(12, Math.min(r.left + r.width / 2 - tx - 8, tw - 28));
+      var ty, cls;
+
+      if (r.bottom + 14 + 190 < vh) {
+        ty  = r.bottom + 14;
+        cls = 'ltour-tip arrow-top';
+      } else {
+        ty  = Math.max(10, r.top - 14 - 190);
+        cls = 'ltour-tip arrow-bottom';
+      }
+      // Ensure tip doesn't go below viewport
+      if (ty + 190 > vh) ty = Math.max(10, vh - 200);
+
+      tip.style.cssText = 'display:block;left:' + tx + 'px;top:' + ty + 'px;width:' + tw + 'px;--arrow-x:' + arrowX + 'px';
+      tip.className = cls;
+    }, 380);
   }
-  function showStep(s){
-    ltstep=s;
-    if(s>=LSTEPS.length){ltourEnd();return;}
-    const cfg=LSTEPS[s];
-    document.getElementById('ltourNum').textContent='Крок '+(s+1)+' з '+LSTEPS.length;
-    document.getElementById('ltourTitle').innerHTML=cfg.title;
-    document.getElementById('ltourText').textContent=cfg.text;
-    document.getElementById('ltourNextBtn').textContent=cfg.last?'Зрозуміло \u2713':'Далі \u2192';
+
+  function showStep(s) {
+    ltstep = s;
+    if (s >= LSTEPS.length) { ltourEnd(); return; }
+    var cfg = LSTEPS[s];
+    var numEl   = document.getElementById('ltourNum');
+    var titleEl = document.getElementById('ltourTitle');
+    var textEl  = document.getElementById('ltourText');
+    var nextBtn = document.getElementById('ltourNextBtn');
+    if (numEl)   numEl.textContent  = 'Крок ' + (s + 1) + ' з ' + LSTEPS.length;
+    if (titleEl) titleEl.innerHTML  = cfg.title;
+    if (textEl)  textEl.innerHTML   = cfg.text;
+    if (nextBtn) nextBtn.innerHTML  = cfg.last ? '\u0417\u0440\u043e\u0437\u0443\u043c\u0456\u043b\u043e \u2713' : '\u0414\u0430\u043b\u0456 \u2192';
     renderDots();
-    positionTip(getEl(cfg.target));
+    positionTip(getTargetEl(cfg.target));
   }
-  window.ltourNext=function(){
-    if(ltstep===-1){document.getElementById('ltourWelcome').classList.remove('show');setTimeout(()=>showStep(0),300);}
-    else showStep(ltstep+1);
+
+  window.ltourNext = function() {
+    if (ltstep === -1) {
+      var w = document.getElementById('ltourWelcome');
+      if (w) w.classList.remove('show');
+      setTimeout(function() { showStep(0); }, 300);
+    } else {
+      showStep(ltstep + 1);
+    }
   };
-  window.ltourEnd=function(){
-    localStorage.setItem(LTOUR_KEY,'1');
-    document.getElementById('ltourWelcome').classList.remove('show');
-    document.getElementById('ltourSpot').style.display='none';
-    document.getElementById('ltourTip').style.display='none';
-    document.getElementById('ltourOverlay').classList.add('hidden');
+
+  window.ltourEnd = function() {
+    localStorage.setItem(LTOUR_KEY, '1');
+    var w   = document.getElementById('ltourWelcome');
+    var sp  = document.getElementById('ltourSpot');
+    var tip = document.getElementById('ltourTip');
+    var ov  = document.getElementById('ltourOverlay');
+    if (w)   w.classList.remove('show');
+    if (sp)  sp.style.display = 'none';
+    if (tip) tip.style.display = 'none';
+    if (ov)  ov.classList.add('hidden');
   };
-  window.addEventListener('load',()=>setTimeout(()=>{
-    document.getElementById('ltourWelcome').classList.add('show');
-  },1400));
-  window.addEventListener('resize',()=>{
-    if(ltstep>=0&&ltstep<LSTEPS.length)positionTip(getEl(LSTEPS[ltstep].target));
+
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var w = document.getElementById('ltourWelcome');
+      if (w) w.classList.add('show');
+    }, 1200);
+  });
+
+  window.addEventListener('resize', function() {
+    if (ltstep >= 0 && ltstep < LSTEPS.length) {
+      positionTip(getTargetEl(LSTEPS[ltstep].target));
+    }
   });
 })();
 
