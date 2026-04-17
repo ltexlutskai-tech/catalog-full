@@ -439,6 +439,57 @@ body{font-family:'Open Sans',sans-serif;background:#f0f0f8;color:var(--text);min
 }
 /* ── Filter toast ── */
 .filter-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:#1e293b;color:#fff;padding:9px 18px;border-radius:20px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}
+
+/* ═══ CATALOG TREE DRAWER ═══ */
+.tree-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:550;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(3px)}
+.tree-ov.open{opacity:1;pointer-events:auto}
+.tree-drw{position:fixed;top:0;left:0;bottom:0;width:min(400px,94vw);background:#fff;z-index:560;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:4px 0 24px rgba(0,0,0,.2)}
+.tree-drw.open{transform:translateX(0)}
+.tree-hd{background:var(--grad);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;color:#fff;flex-shrink:0;gap:10px;padding-top:calc(14px + var(--safe-top))}
+.tree-hd-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.02rem;letter-spacing:.3px}
+.tree-hd-x{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.3);color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-appearance:none;flex-shrink:0}
+.tree-hd-x:hover{background:rgba(255,255,255,.3)}
+.tree-body{flex:1;overflow-y:auto;padding:14px 14px calc(16px + var(--safe-bottom));-webkit-overflow-scrolling:touch}
+.tree-sect{margin-bottom:18px}
+.tree-sect-t{font-family:'Montserrat',sans-serif;font-weight:800;font-size:.72rem;color:#94a3b8;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:8px;padding:0 2px}
+.tree-cat{margin-bottom:5px;background:#fafaff;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;transition:.2s}
+.tree-cat.open{border-color:rgba(118,75,162,.35);background:#fff;box-shadow:0 2px 10px rgba(118,75,162,.08)}
+.tree-cat-hd{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;user-select:none;-webkit-appearance:none;background:none;border:none;width:100%;font-family:inherit;color:inherit;text-align:left}
+.tree-cat-hd:hover{background:rgba(118,75,162,.04)}
+.tree-cat-ic{font-size:1.05rem;flex-shrink:0;width:22px;text-align:center}
+.tree-cat-nm{font-weight:700;font-size:.88rem;color:var(--text);flex:1;min-width:0}
+.tree-cat.open .tree-cat-nm{color:var(--purple)}
+.tree-cat-cnt{background:#f0f0f8;color:#666;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.tree-cat.open .tree-cat-cnt{background:rgba(118,75,162,.15);color:var(--purple)}
+.tree-cat-arr{font-size:.65rem;color:#aaa;transition:transform .2s;flex-shrink:0;margin-left:2px}
+.tree-cat.open .tree-cat-arr{transform:rotate(90deg);color:var(--purple)}
+.tree-subs{display:none;padding:2px 8px 8px 30px;flex-direction:column;gap:2px;border-top:1px solid #f0f0f8}
+.tree-cat.open .tree-subs{display:flex}
+.tree-sub{background:none;border:none;padding:8px 10px;font-size:.8rem;color:#555;cursor:pointer;text-align:left;border-radius:7px;font-family:inherit;display:flex;justify-content:space-between;align-items:center;gap:8px;transition:.15s;-webkit-appearance:none;min-height:34px}
+.tree-sub:hover{background:rgba(102,126,234,.08);color:var(--purple)}
+.tree-sub.act{background:var(--grad);color:#fff;font-weight:600}
+.tree-sub.all{font-weight:600;color:var(--blue)}
+.tree-sub.all.act{color:#fff}
+.tree-sub-cnt{font-size:.68rem;opacity:.75;font-weight:500}
+.tree-facet{margin-bottom:14px}
+.tree-facet-hd{display:flex;align-items:center;gap:6px;margin-bottom:7px;padding:0 2px}
+.tree-facet-ic{font-size:.95rem}
+.tree-facet-nm{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.86rem;color:var(--text)}
+.tree-chips{display:flex;flex-wrap:wrap;gap:5px}
+.tree-chip{background:#f8f9ff;border:1.5px solid var(--border);color:#555;border-radius:14px;padding:5px 11px;font-size:.76rem;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s;-webkit-appearance:none;display:inline-flex;align-items:center;gap:5px;line-height:1.3}
+.tree-chip:hover{border-color:var(--purple);color:var(--purple)}
+.tree-chip.act{background:var(--grad);color:#fff;border-color:transparent}
+.tree-chip-cnt{font-size:.66rem;opacity:.8;font-weight:500;background:rgba(255,255,255,.3);padding:1px 5px;border-radius:8px}
+.tree-chip:not(.act) .tree-chip-cnt{background:rgba(118,75,162,.08);color:#888}
+.tree-subgrp{margin-bottom:8px;background:#fafaff;border:1px dashed #d4d6e8;border-radius:10px;padding:8px 10px}
+.tree-subgrp:last-child{margin-bottom:0}
+.tree-subgrp-t{font-size:.68rem;color:#7c4dff;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
+.tree-reset-all{display:block;width:100%;background:none;border:2px solid #ddd;color:#888;border-radius:10px;padding:10px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;transition:.2s;-webkit-appearance:none}
+.tree-reset-all:hover{border-color:var(--purple);color:var(--purple)}
+.btn-tree{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3);padding:7px 12px;border-radius:18px;font-size:.82rem;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap;-webkit-appearance:none;display:inline-flex;align-items:center;gap:4px;font-family:inherit}
+.btn-tree:hover,.btn-tree:active{background:rgba(255,255,255,.28)}
+.btn-tree-fil{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:18px;padding:7px 13px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s;white-space:nowrap;box-shadow:0 2px 8px rgba(118,75,162,.25);display:inline-flex;align-items:center;gap:4px}
+.btn-tree-fil:hover{box-shadow:0 3px 12px rgba(118,75,162,.4);transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -476,6 +527,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0f0f8;color:var(--text);min
         <input type="search" id="search" placeholder="&#128269; Пошук за назвою, кодом або брендом..." autocomplete="off" autocorrect="off" spellcheck="false">
         <button class="s-clr" onclick="clearSearch()">&#10005;</button>
       </div>
+      <button class="btn-tree-fil" onclick="treeOpen()" title="Дерево каталогу">&#127795; Каталог</button>
       <button class="fil-tog" id="filTogBtn" onclick="toggleFilters()">&#9881;&#65039; Фільтри</button>
       <button class="btn-mgr-filter" id="btnMgrFilter" onclick="mgrPwdOpen()" title="Менеджер-режим">&#128203; Менеджер</button>
     </div>
@@ -675,6 +727,16 @@ body{font-family:'Open Sans',sans-serif;background:#f0f0f8;color:var(--text);min
     </div>
   </div>
 </div>
+
+<!-- ═══ CATALOG TREE DRAWER ═══ -->
+<div class="tree-ov" id="treeOv" onclick="treeClose()"></div>
+<aside class="tree-drw" id="treeDrw" aria-label="Дерево каталогу">
+  <div class="tree-hd">
+    <div class="tree-hd-title">&#127795; Дерево каталогу</div>
+    <button class="tree-hd-x" onclick="treeClose()" aria-label="Закрити">&#10005;</button>
+  </div>
+  <div class="tree-body" id="treeBody"></div>
+</aside>
 
 <script>
 const PRODUCTS=[
@@ -7309,6 +7371,196 @@ function resetFilters(){
   try{history.replaceState(null,'',location.pathname);}catch(e){}
   applyFilters();
 }
+
+// ═══════════════════════════════════════════════════════════
+//  CATALOG TREE DRAWER — hierarchy (cat→sub) + facets
+// ═══════════════════════════════════════════════════════════
+var TREE_CAT_ORDER=['Одяг','Взуття','Аксесуари','Дім та побут','Іграшки','Косметика','Bric-a-Brac'];
+var TREE_CAT_ICON={'Одяг':'👕','Взуття':'👟','Аксесуари':'👜','Дім та побут':'🏠','Іграшки':'🧸','Косметика':'💄','Bric-a-Brac':'📦'};
+var TREE_SEASONS=[['Літо','☀️'],['Демісезон','🍂'],['Зима','❄️'],['Всесезонне','🔁']];
+var TREE_AUDS=[['Жіноче','👩'],['Чоловіче','👨'],['Дитяче','🧒'],['Дорослі','👤'],['Мікс','👥']];
+// Сорт: СТОК (новий склад) — окремо; СЕКОНД-ХЕНД сортований: Крем/Екстра/1й/2й; МІКС — несортоване
+var TREE_SORT_STOCK=['Сток'];
+var TREE_SORT_SECOND=[['Крем','Преміум стан'],['Екстра','Відмінний стан'],['1й сорт','Дуже добрий'],['2й сорт','Добрий, легкі сліди']];
+var TREE_SORT_MIX=['Мікс'];
+var TREE_COUNTRIES=[['Німеччина','🇩🇪'],['Італія','🇮🇹'],['Англія','🇬🇧'],['Шотландія','🏴'],['Канада','🇨🇦']];
+
+function treeCountBy(field,val){
+  var n=0;
+  for(var i=0;i<PRODUCTS.length;i++){
+    if(PRODUCTS[i][field]===val){
+      if(mgrActiveIds&&!mgrActiveIds.has(PRODUCTS[i].id))continue;
+      n++;
+    }
+  }
+  return n;
+}
+function treeCountSub(cat,sub){
+  var n=0;
+  for(var i=0;i<PRODUCTS.length;i++){
+    if(PRODUCTS[i].category===cat&&PRODUCTS[i].subcategory===sub){
+      if(mgrActiveIds&&!mgrActiveIds.has(PRODUCTS[i].id))continue;
+      n++;
+    }
+  }
+  return n;
+}
+function treeEsc(s){return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+
+function treeOpen(){
+  treeRender();
+  document.getElementById('treeOv').classList.add('open');
+  document.getElementById('treeDrw').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function treeClose(){
+  document.getElementById('treeOv').classList.remove('open');
+  document.getElementById('treeDrw').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// Toggle category expand/collapse AND apply as filter when opening
+function treeToggleCat(cat){
+  var elC=document.getElementById('fCat');
+  if(elC.value===cat){
+    elC.value='';
+    document.getElementById('fSub').value='';
+    elC.classList.remove('on');
+    document.getElementById('fSub').classList.remove('on');
+  }else{
+    elC.value=cat;
+    elC.classList.add('on');
+    updateSubs();
+  }
+  applyFilters();
+  treeRender();
+}
+// Pick "All <cat>" row — apply cat, clear sub, close drawer
+function treePickCatAll(cat){
+  var elC=document.getElementById('fCat');
+  elC.value=cat; elC.classList.add('on');
+  updateSubs();
+  var elS=document.getElementById('fSub'); elS.value=''; elS.classList.remove('on');
+  applyFilters();
+  treeClose();
+}
+function treePickSub(cat,sub){
+  var elC=document.getElementById('fCat');
+  if(elC.value!==cat){elC.value=cat;elC.classList.add('on');updateSubs();}
+  var elS=document.getElementById('fSub');
+  elS.value=(elS.value===sub)?'':sub;
+  elS.classList.toggle('on',!!elS.value);
+  applyFilters();
+  treeClose();
+}
+// Single-value facet toggle
+function treePickFacet(id,val){
+  var el=document.getElementById(id); if(!el)return;
+  el.value=(el.value===val)?'':val;
+  el.classList.toggle('on',!!el.value);
+  applyFilters();
+  treeRender();
+}
+function treeResetAll(){ resetFilters(); treeRender(); }
+
+function treeRender(){
+  var curCat=document.getElementById('fCat').value;
+  var curSub=document.getElementById('fSub').value;
+  var curSort=document.getElementById('fSort').value;
+  var curSsn=document.getElementById('fSeason').value;
+  var curAud=document.getElementById('fAud').value;
+  var curCtr=document.getElementById('fCountry').value;
+  var html='';
+
+  // ── Hierarchy ──
+  html+='<div class="tree-sect"><div class="tree-sect-t">&#128193; Ієрархія</div>';
+  TREE_CAT_ORDER.forEach(function(cat){
+    if(!SUBCATS[cat])return;
+    var cnt=treeCountBy('category',cat);
+    if(cnt===0)return;
+    var isOpen=(curCat===cat);
+    html+='<div class="tree-cat'+(isOpen?' open':'')+'">';
+    html+='<button class="tree-cat-hd" onclick="treeToggleCat(\''+treeEsc(cat)+'\')">';
+    html+='<span class="tree-cat-ic">'+(TREE_CAT_ICON[cat]||'📁')+'</span>';
+    html+='<span class="tree-cat-nm">'+cat+'</span>';
+    html+='<span class="tree-cat-cnt">'+cnt+'</span>';
+    html+='<span class="tree-cat-arr">&#9654;</span>';
+    html+='</button>';
+    html+='<div class="tree-subs">';
+    html+='<button class="tree-sub all'+(curCat===cat&&!curSub?' act':'')+'" onclick="treePickCatAll(\''+treeEsc(cat)+'\')"><span>&mdash; Усі «'+cat+'»</span><span class="tree-sub-cnt">'+cnt+'</span></button>';
+    SUBCATS[cat].forEach(function(sub){
+      var sc=treeCountSub(cat,sub);
+      if(sc===0)return;
+      var subAct=(curCat===cat&&curSub===sub);
+      html+='<button class="tree-sub'+(subAct?' act':'')+'" onclick="treePickSub(\''+treeEsc(cat)+'\',\''+treeEsc(sub)+'\')"><span>'+sub+'</span><span class="tree-sub-cnt">'+sc+'</span></button>';
+    });
+    html+='</div></div>';
+  });
+  html+='</div>';
+
+  // ── Season ──
+  html+='<div class="tree-facet"><div class="tree-facet-hd"><span class="tree-facet-ic">&#128197;</span><span class="tree-facet-nm">Сезон</span></div><div class="tree-chips">';
+  TREE_SEASONS.forEach(function(s){
+    var cnt=treeCountBy('season',s[0]); if(cnt===0)return;
+    var act=(curSsn===s[0]);
+    html+='<button class="tree-chip'+(act?' act':'')+'" onclick="treePickFacet(\'fSeason\',\''+treeEsc(s[0])+'\')">'+s[1]+' '+s[0]+'<span class="tree-chip-cnt">'+cnt+'</span></button>';
+  });
+  html+='</div></div>';
+
+  // ── Audience ──
+  html+='<div class="tree-facet"><div class="tree-facet-hd"><span class="tree-facet-ic">&#128100;</span><span class="tree-facet-nm">Аудиторія</span></div><div class="tree-chips">';
+  TREE_AUDS.forEach(function(a){
+    var cnt=treeCountBy('audience',a[0]); if(cnt===0)return;
+    var act=(curAud===a[0]);
+    html+='<button class="tree-chip'+(act?' act':'')+'" onclick="treePickFacet(\'fAud\',\''+treeEsc(a[0])+'\')">'+a[1]+' '+a[0]+'<span class="tree-chip-cnt">'+cnt+'</span></button>';
+  });
+  html+='</div></div>';
+
+  // ── Sort: grouped (Сток — окремо; Секонд-хенд сортований; Мікс) ──
+  html+='<div class="tree-facet"><div class="tree-facet-hd"><span class="tree-facet-ic">&#11088;</span><span class="tree-facet-nm">Сорт</span></div>';
+  // Stock
+  html+='<div class="tree-subgrp"><div class="tree-subgrp-t">&#128230; Сток — нові складські залишки</div><div class="tree-chips">';
+  TREE_SORT_STOCK.forEach(function(v){
+    var cnt=treeCountBy('sort',v); if(cnt===0)return;
+    var act=(curSort===v);
+    html+='<button class="tree-chip'+(act?' act':'')+'" onclick="treePickFacet(\'fSort\',\''+treeEsc(v)+'\')">'+v+'<span class="tree-chip-cnt">'+cnt+'</span></button>';
+  });
+  html+='</div></div>';
+  // Second-hand
+  html+='<div class="tree-subgrp"><div class="tree-subgrp-t">&#9851;&#65039; Секонд-хенд — сортований</div><div class="tree-chips">';
+  TREE_SORT_SECOND.forEach(function(s){
+    var cnt=treeCountBy('sort',s[0]); if(cnt===0)return;
+    var act=(curSort===s[0]);
+    html+='<button class="tree-chip'+(act?' act':'')+'" title="'+s[1]+'" onclick="treePickFacet(\'fSort\',\''+treeEsc(s[0])+'\')">'+s[0]+'<span class="tree-chip-cnt">'+cnt+'</span></button>';
+  });
+  html+='</div></div>';
+  // Mix
+  html+='<div class="tree-subgrp"><div class="tree-subgrp-t">&#127922; Мікс — несортоване</div><div class="tree-chips">';
+  TREE_SORT_MIX.forEach(function(v){
+    var cnt=treeCountBy('sort',v); if(cnt===0)return;
+    var act=(curSort===v);
+    html+='<button class="tree-chip'+(act?' act':'')+'" onclick="treePickFacet(\'fSort\',\''+treeEsc(v)+'\')">'+v+'<span class="tree-chip-cnt">'+cnt+'</span></button>';
+  });
+  html+='</div></div>';
+  html+='</div>';
+
+  // ── Country ──
+  html+='<div class="tree-facet"><div class="tree-facet-hd"><span class="tree-facet-ic">&#127758;</span><span class="tree-facet-nm">Країна</span></div><div class="tree-chips">';
+  TREE_COUNTRIES.forEach(function(c){
+    var cnt=treeCountBy('country',c[0]); if(cnt===0)return;
+    var act=(curCtr===c[0]);
+    html+='<button class="tree-chip'+(act?' act':'')+'" onclick="treePickFacet(\'fCountry\',\''+treeEsc(c[0])+'\')">'+c[1]+' '+c[0]+'<span class="tree-chip-cnt">'+cnt+'</span></button>';
+  });
+  html+='</div></div>';
+
+  html+='<button class="tree-reset-all" onclick="treeResetAll()">&#10005; Скинути всі фільтри</button>';
+  document.getElementById('treeBody').innerHTML=html;
+}
+
+// ESC closes drawer
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&document.getElementById('treeDrw').classList.contains('open'))treeClose();
+});
 
 function renderGrid(){
   var grid=document.getElementById('grid'),total=filtered.length;
