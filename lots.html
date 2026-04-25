@@ -54,6 +54,31 @@ body{font-family:'Inter',sans-serif;color:var(--text);background:#f0f4f8;min-hei
 .lots-count{margin-left:auto;font-size:.8rem;color:var(--text2);font-weight:500;white-space:nowrap}
 .lots-count span{font-weight:700;color:var(--green)}
 
+/* ALL-LOTS FILTER BAR (smart search + category) */
+.all-lots-filters{background:#fff;border-bottom:2px solid var(--border);padding:14px 20px;position:sticky;top:62px;z-index:90;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.alf-inner{max-width:1200px;margin:0 auto}
+.alf-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.alf-row:last-child{margin-bottom:0}
+.alf-search{flex:1;min-width:240px;position:relative}
+.alf-search input{width:100%;padding:11px 38px 11px 16px;border:2px solid var(--border);border-radius:24px;font-size:15px;font-family:'Inter',sans-serif;outline:none;transition:.18s;background:#fff;color:var(--text);-webkit-appearance:none}
+.alf-search input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(26,122,60,.1)}
+.alf-clr{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;font-size:1rem;display:none;padding:6px;line-height:1}
+.alf-search input:not(:placeholder-shown)~.alf-clr{display:block}
+.alf-tog{display:none;background:linear-gradient(135deg,#1a7a3c,#22a050);color:#fff;border:none;border-radius:22px;padding:9px 18px;font-size:.86rem;font-weight:700;cursor:pointer;-webkit-appearance:none;font-family:inherit}
+.alf-selrow{flex-wrap:wrap}
+.alf-sel{padding:8px 28px 8px 14px;border:2px solid var(--border);border-radius:18px;font-size:.85rem;font-family:'Inter',sans-serif;background-color:#fff;cursor:pointer;outline:none;color:var(--text);transition:.15s;max-width:200px;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.alf-sel:focus,.alf-sel.on{border-color:var(--green);background-color:rgba(26,122,60,.05);color:var(--green);font-weight:600}
+.alf-rst{background:none;border:2px solid #ddd;color:#888;border-radius:18px;padding:7px 16px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:.15s}
+.alf-rst:hover{border-color:var(--green);color:var(--green)}
+.alf-meta{font-size:.8rem;color:var(--text2);font-weight:500;padding-top:6px;border-top:1px dashed #f0f4f8}
+.alf-meta span{font-weight:800;color:var(--green)}
+@media(max-width:680px){
+  .alf-tog{display:inline-block}
+  .alf-selrow{display:none}
+  .alf-selrow.open{display:flex}
+  .alf-sel{max-width:100%;flex:1 1 calc(50% - 4px)}
+}
+
 /* GRID */
 .main{max-width:1200px;margin:0 auto;padding:24px 20px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
@@ -277,6 +302,29 @@ body{font-family:'Inter',sans-serif;color:var(--text);background:#f0f4f8;min-hei
     <button class="filter-btn" onclick="setFilter('free')" id="f-free">&#9989; Вільні</button>
     <button class="filter-btn" onclick="setFilter('reserved')" id="f-reserved">&#128274; Заброньовані</button>
     <div class="lots-count">Показано: <span id="shown-count">0</span></div>
+  </div>
+</div>
+
+<!-- ALL-LOTS VIEW SEARCH BAR (hidden on single-product page) -->
+<div id="all-lots-filters" class="all-lots-filters" style="display:none">
+  <div class="alf-inner">
+    <div class="alf-row">
+      <div class="alf-search">
+        <input type="search" id="alfSearch" placeholder="&#128269; Пошук: назва, ID, бренд, сезон..." autocomplete="off">
+        <button class="alf-clr" id="alfClr" type="button">&#10005;</button>
+      </div>
+      <button class="alf-tog" id="alfTog" type="button">&#9881;&#65039; Фільтри</button>
+    </div>
+    <div class="alf-row alf-selrow" id="alfSelRow">
+      <select id="alfCat" class="alf-sel"><option value="">Всі категорії</option></select>
+      <select id="alfSub" class="alf-sel"><option value="">Всі підкатегорії</option></select>
+      <select id="alfSort" class="alf-sel"><option value="">Всі сорти</option></select>
+      <select id="alfSeason" class="alf-sel"><option value="">Всі сезони</option></select>
+      <button class="alf-rst" id="alfRst" type="button">&#10005; Скинути</button>
+    </div>
+    <div class="alf-meta">
+      <span id="alfCount">0</span> позицій з наявністю лотів
+    </div>
   </div>
 </div>
 
@@ -2060,29 +2108,132 @@ function init(){
   renderLots(prod);
 }
 
-function showAllLots(){
-  const grid=document.getElementById('grid');
-  const entries=Object.values(LOTS_DATA).filter(p=>p.lots.some(l=>!l.reserved));
-  grid.innerHTML=entries.map(prod=>{
-    const free=prod.lots.filter(l=>!l.reserved).length;
-    const reserved=prod.lots.filter(l=>!!l.reserved).length;
-    return `<a href="lots.html?id=${prod.id}" style="text-decoration:none"><div class="card">
-      <div class="card-head">
-        <div class="card-head-top">
-          <div class="card-barcode-top">ID: ${prod.id}</div>
-          <div class="card-sort ${sortClass(prod.sort)}">${prod.sort||''}</div>
-        </div>
-        <div class="card-head-name">${prod.name}</div>
-      </div>
-      <div class="card-body">
-        <div class="card-rows">
-          <div class="card-row"><span class="card-row-lbl">Вільних лотів</span><span class="card-row-val accent">${free} шт</span></div>
-          ${reserved?`<div class="card-row"><span class="card-row-lbl">Заброньовано</span><span class="card-row-val" style="color:var(--text2)">${reserved} шт</span></div>`:''}
-        </div>
-        <div class="btn-buy" style="text-align:center;margin-top:4px">Переглянути лоти &rarr;</div>
-      </div>
-    </div></a>`;
+// ── ALL-LOTS smart search + filter ──
+var _allLotsBase=[]; // products with at least one free lot
+function _alfNorm(s){return String(s||'').toLowerCase().replace(/['\u2019\u2018]/g,"'").trim();}
+function _alfSmartMatch(query, prod){
+  if(!query) return true;
+  var q = _alfNorm(query);
+  if(!q) return true;
+  // Build searchable haystack
+  var hay = _alfNorm([
+    prod.id, prod.name, prod.brand, prod.category, prod.subcategory,
+    prod.season, prod.audience, prod.country, prod.sort
+  ].filter(Boolean).join(' | '));
+  // Also include description from first lot (catches characteristics)
+  if(prod.lots && prod.lots[0] && prod.lots[0].desc) hay += ' ' + _alfNorm(prod.lots[0].desc);
+  // Multi-word AND match
+  var words = q.split(/\s+/).filter(Boolean);
+  return words.every(function(w){return hay.indexOf(w)>=0;});
+}
+function _alfApply(){
+  var q   = document.getElementById('alfSearch').value;
+  var cat = document.getElementById('alfCat').value;
+  var sub = document.getElementById('alfSub').value;
+  var srt = document.getElementById('alfSort').value;
+  var sea = document.getElementById('alfSeason').value;
+  // Mark "on" sels
+  ['alfCat','alfSub','alfSort','alfSeason'].forEach(function(id){
+    var el=document.getElementById(id); el.classList.toggle('on', !!el.value);
+  });
+  var filtered = _allLotsBase.filter(function(p){
+    if(cat && p.category!==cat) return false;
+    if(sub && p.subcategory!==sub) return false;
+    if(srt && p.sort!==srt) return false;
+    if(sea && p.season!==sea) return false;
+    return _alfSmartMatch(q, p);
+  });
+  document.getElementById('alfCount').textContent = filtered.length;
+  _renderAllLotsList(filtered);
+}
+function _alfPopulateSubs(){
+  var cat = document.getElementById('alfCat').value;
+  var subs = new Set();
+  _allLotsBase.forEach(function(p){
+    if(!cat || p.category===cat){ if(p.subcategory) subs.add(p.subcategory); }
+  });
+  var sel = document.getElementById('alfSub');
+  var prev = sel.value;
+  sel.innerHTML = '<option value="">Всі підкатегорії</option>' +
+    Array.from(subs).sort().map(function(s){return '<option value="'+s+'">'+s+'</option>';}).join('');
+  if(Array.from(subs).indexOf(prev)>=0) sel.value=prev;
+}
+function _alfPopulateOptions(){
+  var cats=new Set(), sorts=new Set(), seasons=new Set();
+  _allLotsBase.forEach(function(p){
+    if(p.category) cats.add(p.category);
+    if(p.sort) sorts.add(p.sort);
+    if(p.season) seasons.add(p.season);
+  });
+  function fill(id, set){
+    var sel=document.getElementById(id);
+    var label=sel.options[0].textContent;
+    sel.innerHTML='<option value="">'+label+'</option>'+
+      Array.from(set).sort().map(function(s){return '<option value="'+s+'">'+s+'</option>';}).join('');
+  }
+  fill('alfCat', cats);
+  fill('alfSort', sorts);
+  fill('alfSeason', seasons);
+  _alfPopulateSubs();
+}
+function _renderAllLotsList(entries){
+  var grid=document.getElementById('grid');
+  if(!entries.length){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text2)"><div style="font-size:2.4rem;margin-bottom:10px">&#128269;</div><div style="font-family:Montserrat,sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:6px">Нічого не знайдено</div><div style="font-size:.88rem">Спробуйте інший запит або скиньте фільтри</div></div>';
+    return;
+  }
+  grid.innerHTML=entries.map(function(prod){
+    var free=prod.lots.filter(function(l){return !l.reserved;}).length;
+    var reserved=prod.lots.filter(function(l){return !!l.reserved;}).length;
+    var akciya=prod.lots.filter(function(l){return l.is_akciya;}).length;
+    var subTag = prod.subcategory ? '<span style="background:#ede7f6;color:#5e35b1;font-size:.72rem;padding:2px 8px;border-radius:8px;font-weight:600">'+prod.subcategory+'</span>' : '';
+    var akBadge = akciya ? '<span style="background:#fef3c7;color:#b45309;font-size:.72rem;padding:2px 8px;border-radius:8px;font-weight:700;margin-left:6px">&#128293; '+akciya+' акц.</span>' : '';
+    return '<a href="lots.html?id='+prod.id+'" style="text-decoration:none"><div class="card">'+
+      '<div class="card-head">'+
+        '<div class="card-head-top">'+
+          '<div class="card-barcode-top">ID: '+prod.id+'</div>'+
+          '<div class="card-sort '+sortClass(prod.sort)+'">'+(prod.sort||'')+'</div>'+
+        '</div>'+
+        '<div class="card-head-name">'+prod.name+'</div>'+
+      '</div>'+
+      '<div class="card-body">'+
+        '<div style="margin-bottom:8px">'+subTag+akBadge+'</div>'+
+        '<div class="card-rows">'+
+          '<div class="card-row"><span class="card-row-lbl">Вільних лотів</span><span class="card-row-val accent">'+free+' шт</span></div>'+
+          (reserved?'<div class="card-row"><span class="card-row-lbl">Заброньовано</span><span class="card-row-val" style="color:var(--text2)">'+reserved+' шт</span></div>':'')+
+          (prod.price?'<div class="card-row"><span class="card-row-lbl">Ціна</span><span class="card-row-val gold">'+prod.price+' EUR/'+(prod.unit||'кг')+'</span></div>':'')+
+        '</div>'+
+        '<div class="btn-buy" style="text-align:center;margin-top:4px">Переглянути лоти &rarr;</div>'+
+      '</div>'+
+    '</div></a>';
   }).join('');
+}
+function showAllLots(){
+  _allLotsBase = Object.values(LOTS_DATA).filter(function(p){return p.lots.some(function(l){return !l.reserved;});});
+  document.getElementById('all-lots-filters').style.display='block';
+  _alfPopulateOptions();
+  document.getElementById('alfCount').textContent = _allLotsBase.length;
+  _renderAllLotsList(_allLotsBase);
+  // wire filter events (idempotent guard)
+  if(!showAllLots._wired){
+    showAllLots._wired = true;
+    document.getElementById('alfSearch').addEventListener('input', _alfApply);
+    document.getElementById('alfClr').addEventListener('click', function(){
+      document.getElementById('alfSearch').value=''; _alfApply();
+    });
+    document.getElementById('alfCat').addEventListener('change', function(){_alfPopulateSubs();_alfApply();});
+    document.getElementById('alfSub').addEventListener('change', _alfApply);
+    document.getElementById('alfSort').addEventListener('change', _alfApply);
+    document.getElementById('alfSeason').addEventListener('change', _alfApply);
+    document.getElementById('alfRst').addEventListener('click', function(){
+      document.getElementById('alfSearch').value='';
+      ['alfCat','alfSub','alfSort','alfSeason'].forEach(function(id){document.getElementById(id).value='';});
+      _alfApply();
+    });
+    document.getElementById('alfTog').addEventListener('click', function(){
+      document.getElementById('alfSelRow').classList.toggle('open');
+    });
+  }
 }
 
 // MODAL
@@ -2531,10 +2682,7 @@ async function lotsCartSendEmail() {
 lotsCartUpdateBadge();
 
 
-// ── Попередження при закритті вкладки ──
-window.addEventListener('beforeunload',function(e){
-  if(lotsCart&&lotsCart.length>0){e.preventDefault();e.returnValue='';}
-});
+// (beforeunload-попередження прибрано — вільний вихід зі сторінки)
 </script>
 
 <!-- ═══ CART DRAWER ═══ -->
