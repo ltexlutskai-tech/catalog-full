@@ -258,6 +258,14 @@ const WL_KEY = 'ltex_wishlist_v1';
 function getProductImages(id){
   var map = window.IMAGES_BY_ID || {};
   var list = map[id] || map[String(id).padStart(4,'0')] || map[String(id).replace(/^0+/,'')] || [];
+  return list.map(function(f){
+    var thumb = f.replace(/\.(jpg|jpeg|png)$/i,'.jpg');
+    return IMG_DIR+'/thumbs/'+encodeURIComponent(thumb);
+  });
+}
+function getProductImagesFull(id){
+  var map = window.IMAGES_BY_ID || {};
+  var list = map[id] || map[String(id).padStart(4,'0')] || map[String(id).replace(/^0+/,'')] || [];
   return list.map(function(f){return IMG_DIR+'/'+encodeURIComponent(f);});
 }
 function getDetail(id){
@@ -281,7 +289,7 @@ function toggleWish(p){
   var wl = getWishlist();
   var idx = wl.findIndex(function(w){return w.id===p.id;});
   if(idx>=0) wl.splice(idx,1);
-  else wl.push({id:p.id,name:p.name,price:p.price,akciya:p.akciya,unit:p.unit});
+  else wl.push(p);
   setWishlist(wl);
   return idx<0;
 }
@@ -326,7 +334,7 @@ function buildCarousel(imgs, name){
     : '';
   var counter = imgs.length>1 ? '<div class="car-counter"><span class="cc-cur">1</span>/'+imgs.length+'</div>' : '';
   return '<div class="car" data-len="'+imgs.length+'" data-pos="0">'+counter+
-    '<div class="car-track" style="width:'+(imgs.length*100)+'%">'+slides+'</div>'+
+    '<div class="car-track">'+slides+'</div>'+
     arrows+'<div class="car-dots">'+dots+'</div></div>';
 }
 
@@ -341,11 +349,10 @@ function wireCarousel(carEl, thumbsEl, openLightbox){
   var dots  = carEl.querySelectorAll('.car-dot');
   var counter = carEl.querySelector('.cc-cur');
   var thumbs = thumbsEl ? thumbsEl.querySelectorAll('.thumb') : [];
-  var slideW = 100/len;
   var pos = 0;
   function set(p){
     pos = (p+len)%len;
-    track.style.transform = 'translateX(-'+(pos*slideW)+'%)';
+    track.style.transform = 'translateX(-'+(pos*100)+'%)';
     dots.forEach(function(d,i){d.classList.toggle('act',i===pos);});
     if(counter) counter.textContent = (pos+1);
     thumbs.forEach(function(t,i){t.classList.toggle('act',i===pos);});
@@ -401,8 +408,8 @@ function renderProduct(p){
             '<button class="act-btn act-wl'+(inWish?' added':'')+'" id="btnWl">'+(inWish?'❤ В обраному':'♡ Обране')+'</button>'+
             '<button class="act-btn act-order" id="btnOrder">📩 Замовити</button>'+
             (hasLots
-              ? '<a class="act-btn act-lots" href="lots.html?id='+encodeURIComponent(p.id)+'">📦 Наявні лоти</a>'
-              : '<button class="act-btn act-lots disabled" type="button" disabled title="Лоти тимчасово відсутні">📦 Лотів немає</button>')+
+              ? '<a class="act-btn act-lots" href="lots.html?id='+encodeURIComponent(p.id)+'">📹 Відеоогляди лотів</a>'
+              : '<button class="act-btn act-lots" type="button" id="btnReqVideo">🎬 Замовити відеоогляд</button>')+
           '</div>'+
           (hasLots?'<div class="lot-hint"><div class="lot-hint-ic">📦</div><div class="lot-hint-txt"><div class="lot-hint-title">Є наявні лоти на складі</div><div class="lot-hint-sub">Перейдіть до конкретних мішків з відео, вагою і ціною в грн</div></div></div>':'')+
         '</div>'+
@@ -422,7 +429,7 @@ function renderProduct(p){
   var carEl = document.querySelector('.car');
   var thumbsEl = document.querySelector('.thumbs');
   if(carEl){
-    wireCarousel(carEl, thumbsEl, function(idx){openLightbox(imgs, idx);});
+    wireCarousel(carEl, thumbsEl, function(idx){openLightbox(getProductImagesFull(p.id), idx);});
   }
   // wire wishlist
   var btnWl = document.getElementById('btnWl');
@@ -433,6 +440,9 @@ function renderProduct(p){
   });
   // wire order
   document.getElementById('btnOrder').addEventListener('click',function(){openOrder(p);});
+  // wire video review request (only when no lots)
+  var btnReq = document.getElementById('btnReqVideo');
+  if(btnReq) btnReq.addEventListener('click',function(){openOrder(p,'video');});
 }
 
 function renderNotFound(id){
@@ -474,20 +484,34 @@ document.addEventListener('keydown', function(e){
 });
 
 /* ───── ORDER MODAL ───── */
-var moProd = null;
-function openOrder(p){
+var moProd = null, moMode = 'order';
+function openOrder(p, mode){
   moProd = p;
+  moMode = mode || 'order';
+  var isVideo = moMode==='video';
+  var title = isVideo ? '🎬 Замовити відеоогляд' : '📩 Замовити';
+  var headEl = document.querySelector('#mo .mo-head h3');
+  if(headEl) headEl.textContent = title;
   document.getElementById('moProd').innerHTML =
     '<b>'+escapeHTML(p.name)+'</b>'+
     'ID: '+escapeHTML(p.id)+' &middot; '+escapeHTML(p.subcategory)+
     (p.price?' &middot; '+(p.akciya?p.akciya:p.price)+' EUR/'+escapeHTML(p.unit||'кг'):'');
   // Pre-fill telegram link
-  var tgMsg = '🛒 Запит на товар L-TEX:\n'
-    + 'ID: '+p.id+'\n'
-    + 'Назва: '+p.name+'\n'
-    + (p.price?'Ціна: '+(p.akciya?p.akciya:p.price)+' EUR/'+(p.unit||'кг'):'')+'\n\n'
-    + 'Доброго дня! Хочу замовити цей лот.';
+  var tgMsg = isVideo
+    ? '🎬 Запит на відеоогляд L-TEX:\n'
+      + 'ID: '+p.id+'\n'
+      + 'Назва: '+p.name+'\n\n'
+      + 'Доброго дня! Хочу замовити відеоогляд цього лота.'
+    : '🛒 Запит на товар L-TEX:\n'
+      + 'ID: '+p.id+'\n'
+      + 'Назва: '+p.name+'\n'
+      + (p.price?'Ціна: '+(p.akciya?p.akciya:p.price)+' EUR/'+(p.unit||'кг'):'')+'\n\n'
+      + 'Доброго дня! Хочу замовити цей лот.';
   document.getElementById('tgLink').href = 'https://t.me/L_TEX?text='+encodeURIComponent(tgMsg);
+  var fComment = document.getElementById('fComment');
+  if(fComment) fComment.placeholder = isVideo
+    ? 'Напишіть, що саме показати у відео (опціонально)'
+    : 'Коментар до замовлення (опціонально)';
   setChannel('tg');
   document.getElementById('moFormBlock').style.display='';
   document.getElementById('moSuccess').style.display='none';
@@ -513,7 +537,7 @@ document.getElementById('emForm').addEventListener('submit', function(e){
   e.preventDefault();
   if(!moProd) return;
   var payload = {
-    _subject: 'L-TEX запит: '+moProd.name+' (ID '+moProd.id+')',
+    _subject: (moMode==='video'?'L-TEX відеоогляд: ':'L-TEX запит: ')+moProd.name+' (ID '+moProd.id+')',
     name: document.getElementById('fName').value.trim(),
     phone: document.getElementById('fPhone').value.trim(),
     city: document.getElementById('fCity').value.trim(),

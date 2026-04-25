@@ -24,11 +24,14 @@ header{background:var(--white);border-bottom:1px solid var(--border);position:st
 .header-inner{max-width:1100px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:var(--purple);text-decoration:none;letter-spacing:-1px}
 .logo span{color:var(--text);font-weight:400;font-size:0.9rem;margin-left:8px}
-.header-right{display:flex;gap:12px;align-items:center}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn-nav{display:inline-flex;align-items:center;gap:6px;background:#ede7fa;color:#5e35b1;padding:8px 14px;border-radius:8px;text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;transition:.2s;border:1.5px solid transparent}
+.btn-nav:hover{background:#dcd1f5;border-color:var(--purple)}
 .btn-tg{display:inline-flex;align-items:center;gap:6px;background:var(--purple);color:#fff;padding:8px 18px;border-radius:8px;text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;transition:background .2s}
 .btn-tg:hover{background:var(--purple-dark)}
 .phone-link{color:var(--text-muted);text-decoration:none;font-size:0.85rem;font-weight:600}
 .phone-link:hover{color:var(--purple)}
+@media(max-width:560px){.btn-nav{display:none}}
 
 /* BREADCRUMB */
 .breadcrumb{max-width:1100px;margin:0 auto;padding:16px 20px 0;display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--text-muted)}
@@ -80,6 +83,8 @@ header{background:var(--white);border-bottom:1px solid var(--border);position:st
   <div class="header-inner">
     <a href="index.html" class="logo">L-TEX <span>секонд-хенд гуртом</span></a>
     <div class="header-right">
+      <a href="catalog.html" class="btn-nav">🛍️ Каталог</a>
+      <a href="lots.html" class="btn-nav">📦 Лоти</a>
       <a href="tel:+380676710516" class="phone-link">+380 67 671 05 16</a>
       <a href="https://t.me/L_TEX" target="_blank" class="btn-tg">✉️ Написати</a>
     </div>
