@@ -169,7 +169,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'20-25',
     price:7.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGyw63nBVneKze8nG0Vp9Ae',qty_stock:18
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGyw63nBVneKze8nG0Vp9Ae',qty_stock:20
   },
   {
     id:'1392',name:'Кофти з капюшоном, світшоти мікс демісезон Екстра',
@@ -259,7 +259,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'20',
     price:7.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHH7uVlXsAdaIeqR7jSVjen',qty_stock:2
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHH7uVlXsAdaIeqR7jSVjen',qty_stock:1
   },
   {
     id:'0894',name:'Флісові кофти мікс демісезон 1й сорт',
@@ -529,7 +529,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'25',
     price:6.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFGQTEOfDbuk3hcd3_cACuK',qty_stock:25
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFGQTEOfDbuk3hcd3_cACuK',qty_stock:24
   },
   {
     id:'0036',name:'Взуття (угги, сибірійки) мікс зима 1й сорт',
@@ -610,7 +610,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'25',
     price:4.15,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEEs65CEAW-IBBfUxXtw-g4',qty_stock:16
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEEs65CEAW-IBBfUxXtw-g4',qty_stock:null
   },
   {
     id:'1762',name:'Футболки чоловічі 1й сорт',
@@ -790,7 +790,7 @@ window.PRODUCTS=[
     audience:'Жіноче',country:'',
     unit:'кг',weight:'15-20',
     price:6.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFHw6xNIvdKlqUr1XSptF4n',qty_stock:5
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFHw6xNIvdKlqUr1XSptF4n',qty_stock:1
   },
   {
     id:'1303',name:'Куртки мікс 2й сорт чоловічі + жіночі Німеччина D',
@@ -817,7 +817,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'25',
     price:3.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE12ZEasS26XdME24ed0cJI',qty_stock:6
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE12ZEasS26XdME24ed0cJI',qty_stock:5
   },
   {
     id:'0565',name:'Футболки чоловічі літо 2й сорт',
@@ -997,7 +997,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'25',
     price:4.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pG6O6ceyEqwgv0txGhfEgMi',qty_stock:4
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pG6O6ceyEqwgv0txGhfEgMi',qty_stock:2
   },
   {
     id:'1000',name:'Футболки мікс літо 2й сорт XXL',
@@ -1114,7 +1114,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'20-25',
     price:5.1,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGWYDxsFg1kHBCu_g6pzQhg',qty_stock:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGWYDxsFg1kHBCu_g6pzQhg',qty_stock:null
   },
   {
     id:'0101',name:'Чоловіче взуття зима 1й сорт',
@@ -1141,7 +1141,7 @@ window.PRODUCTS=[
     audience:'Жіноче',country:'',
     unit:'кг',weight:'15-20',
     price:5.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHwhm8jNPRemJCn0RoOmZpU',qty_stock:5
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHwhm8jNPRemJCn0RoOmZpU',qty_stock:1
   },
   {
     id:'0009',name:'Куртки мікс зима 2й сорт',
@@ -1213,7 +1213,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'20-25',
     price:4.8,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHIccSv2ffPtA_dplQCgBGK',qty_stock:18
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHIccSv2ffPtA_dplQCgBGK',qty_stock:15
   },
   {
     id:'1024',name:'Кофти з капюшоном, світшоти мікс демісезон 2й сорт',
@@ -1393,7 +1393,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'20-25',
     price:5.8,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pF_N_Sxpyu57G5TxLc4Pnyn',qty_stock:10
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pF_N_Sxpyu57G5TxLc4Pnyn',qty_stock:9
   },
   {
     id:'1812',name:'Сумки дорожні мікс 1й сорт',
@@ -1405,7 +1405,7 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGdTZ4JCwqNyWNL9Ze_7pMH',qty_stock:null
   },
   {
-    id:'1864',name:'Мікс одягу XXL великы розміри',
+    id:'1864',name:'Мікс одягу XXL великі розміри',
     category:'Одяг',subcategory:'Одяг мікс',
     brand:'',sort:'Мікс',season:'Всесезонне',
     audience:'Мікс',country:'',
@@ -1573,7 +1573,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'25-30',
     price:2.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFrpCC6YQ_sH_ebo_ILlFaN',qty_stock:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFrpCC6YQ_sH_ebo_ILlFaN',qty_stock:5
   },
   {
     id:'0920',name:'Піжамні штани мікс демісезон 2й сорт',
@@ -1627,7 +1627,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'30-35',
     price:5.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHaTs933zfueGOj4qr2VH0X',qty_stock:1
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHaTs933zfueGOj4qr2VH0X',qty_stock:null
   },
   {
     id:'1621',name:'Робочий одяг мікс, штани, комбінезони, куртки 1й сорт',
@@ -1645,7 +1645,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'20-25',
     price:7.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGeBE6gX0dQGCLy7QKaTe4M',qty_stock:8
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGeBE6gX0dQGCLy7QKaTe4M',qty_stock:2
   },
   {
     id:'0261',name:'Штани спортивні жіночі демісезон 1й сорт',
@@ -1699,7 +1699,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'25-30',
     price:4.25,akciya:3.95,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFvOdQAifBmHUOc0YoTV_oa',qty_stock:1
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFvOdQAifBmHUOc0YoTV_oa',qty_stock:3
   },
   {
     id:'0266',name:'Шорти мікс літо 2й сорт',
@@ -1816,7 +1816,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'15-20',
     price:2.6,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGIvkl4WUEpy2TQvBCzxjxg',qty_stock:17
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGIvkl4WUEpy2TQvBCzxjxg',qty_stock:16
   },
   {
     id:'0707',name:'Футболки на довгий рукав чоловічі демісезон 2й сорт',
@@ -1960,7 +1960,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'',
     price:6.6,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEiRbn4z8-ofgDBGtNRq9VJ',qty_stock:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEiRbn4z8-ofgDBGtNRq9VJ',qty_stock:1
   },
   {
     id:'0135',name:'Сумки жіночі, гаманці, рюкзаки мікс Екстра',
@@ -1969,7 +1969,7 @@ window.PRODUCTS=[
     audience:'Жіноче',country:'',
     unit:'кг',weight:'20-25',
     price:9.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pF9zPWbvrDgDvM3vqlPtllU',qty_stock:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pF9zPWbvrDgDvM3vqlPtllU',qty_stock:2
   },
   {
     id:'0744',name:'Сумки жіночі, рюкзаки, гаманці мікс Екстра',
@@ -2005,7 +2005,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'25',
     price:8.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE50jHs7cOWmhcTupJMe4-V',qty_stock:19
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE50jHs7cOWmhcTupJMe4-V',qty_stock:10
   },
   {
     id:'0138',name:'Шорти мікс літо Екстра',
@@ -2041,7 +2041,7 @@ window.PRODUCTS=[
     audience:'Жіноче',country:'',
     unit:'кг',weight:'20-25',
     price:10.7,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pErjKSEbjkZTs21XSWatlYT',qty_stock:2
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pErjKSEbjkZTs21XSWatlYT',qty_stock:1
   },
   {
     id:'1811',name:'Постіль мікс Екстра+1й сорт',
@@ -2167,7 +2167,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'Німеччина',
     unit:'кг',weight:'',
     price:8.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFTu56je1SB3Ps4cISSP1rg',qty_stock:6
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFTu56je1SB3Ps4cISSP1rg',qty_stock:5
   },
   {
     id:'0178',name:'Куртки мікс зима Екстра',
@@ -2500,7 +2500,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'Німеччина',
     unit:'кг',weight:'20-25',
     price:5.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFIRrk36bkM0Og3fB_bWVx4',qty_stock:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFIRrk36bkM0Og3fB_bWVx4',qty_stock:1
   },
   {
     id:'1775',name:'Кофти з капюшоном мікс демісезон 1й сорт',
@@ -2545,7 +2545,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'20-25',
     price:5.45,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEDS0OVKNn1ut46CBMIRgwC',qty_stock:6
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEDS0OVKNn1ut46CBMIRgwC',qty_stock:5
   },
   {
     id:'0627',name:'Лосіни, легінси жіночі  демісезон 1 сорт',
@@ -2707,7 +2707,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'Німеччина',
     unit:'кг',weight:'25',
     price:6.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEtKJrW3-wSSPg5wb14BTIO',qty_stock:5
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEtKJrW3-wSSPg5wb14BTIO',qty_stock:4
   },
   {
     id:'0657',name:'Штани коттон, джинси чоловічі демісезон 1й сорт',
@@ -2995,7 +2995,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'100-110',
     price:4.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFOY-rgWWR44XQ1HKonOAU-',qty_stock:null
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFOY-rgWWR44XQ1HKonOAU-',qty_stock:13
   },
   {
     id:'1733',name:'Одяг мікс демісезон Crane, Alive, Watsons  Сток',
@@ -3058,7 +3058,7 @@ window.PRODUCTS=[
     audience:'Дитяче',country:'',
     unit:'кг',weight:'20-25',
     price:13.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFe-P9uZFE6-pff1TVPud5B',qty_stock:19
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFe-P9uZFE6-pff1TVPud5B',qty_stock:20
   },
   {
     id:'1687',name:'Кросівки дорослі (ремонт) TERREX',
@@ -3166,7 +3166,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'10-15',
     price:3.4,akciya:2.2,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEF3_SEP4EVV-2V0k-k8iwX',qty_stock:82
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEF3_SEP4EVV-2V0k-k8iwX',qty_stock:47
   },
   {
     id:'1794',name:'Bric a Brac C2R Товари для дому,офісу,іграшки,порцеляна, посуд',
@@ -3193,7 +3193,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'10-20',
     price:3.8,akciya:3.5,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE6VbeGHBjKPBQHxs8u08oY',qty_stock:98
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE6VbeGHBjKPBQHxs8u08oY',qty_stock:96
   },
   {
     id:'1890',name:'Bric a Brac C2R+ Товари для дому,офісу,іграшки,порцеляна,посуд підвищена якість',
@@ -3293,6 +3293,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'50',
     price:2.7,akciya:null,
     youtube:'',qty_stock:null
+  },
+  {
+    id:'1916',name:'Взуття робоче BRICKERS літо, Сток',
+    category:'Bric-a-Brac',subcategory:'Bric-a-Brac',
+    brand:'',sort:'Сток',season:'Літо',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'',
+    price:12.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFYpkBEqlzH-MSJmtT5Sj4D',qty_stock:24
   },
   {
     id:'0473',name:'Аксесуари мікс зима (шапки,шарфи,рукавиці)  C&A Сток',
@@ -3526,7 +3535,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'шт',weight:'20',
     price:12.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH0X2rO4D-XWuIPyT_pXEAj',qty_stock:6
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH0X2rO4D-XWuIPyT_pXEAj',qty_stock:5
   },
   {
     id:'1317',name:'Крокси оригінал Зима/Демісезон  сток Crocs',
@@ -3607,7 +3616,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'20-25',
     price:7.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFUkUgv6d-hLgb5WbGEuxD5',qty_stock:2
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFUkUgv6d-hLgb5WbGEuxD5',qty_stock:4
   },
   {
     id:'1658',name:'Взуття футбольне Adidas (ремонт)',
@@ -3670,7 +3679,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'15-20',
     price:3.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGOLPIKmLMHX0aqY-EE4-ya',qty_stock:4
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGOLPIKmLMHX0aqY-EE4-ya',qty_stock:3
   },
   {
     id:'0960',name:'Флісові кофти мікс зима 2й сорт',
@@ -3778,7 +3787,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'шт',weight:'15',
     price:20.0,akciya:13.0,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE9JHKubTcVHtD54fDxRiUx',qty_stock:15
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE9JHKubTcVHtD54fDxRiUx',qty_stock:14
   },
   {
     id:'1346',name:'Кросівки, сліпони базові чоловічі/жіночі демісезон сток GUESS',
@@ -3841,7 +3850,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'Англія',
     unit:'кг',weight:'15-20',
     price:3.5,akciya:3.45,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHoxDA-8fBRbQpCR4xz0X4a',qty_stock:19
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHoxDA-8fBRbQpCR4xz0X4a',qty_stock:21
   },
   {
     id:'1688',name:'Іграшки тверді мікс Шотландія  1й сорт',
@@ -3903,8 +3912,8 @@ window.PRODUCTS=[
     brand:'',sort:'1й сорт',season:'Всесезонне',
     audience:'Мікс',country:'Німеччина',
     unit:'кг',weight:'15',
-    price:3.6,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGOtDx6zDE2MW-2tKInNHmH',qty_stock:null
+    price:4.1,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGOtDx6zDE2MW-2tKInNHmH',qty_stock:1
   },
   {
     id:'1624',name:'Спорт мікс штани , кофти 1й сорт',
@@ -3957,7 +3966,7 @@ window.PRODUCTS=[
     brand:'',sort:'Мікс',season:'Демісезон',
     audience:'Мікс',country:'',
     unit:'шт',weight:'15',
-    price:24.0,akciya:null,
+    price:23.0,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFkEgXU_ffwtJHUFSII_g0x',qty_stock:3
   },
   {
@@ -4093,7 +4102,7 @@ window.PRODUCTS=[
     audience:'Дитяче',country:'',
     unit:'шт',weight:'20-25',
     price:9.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFzpQpONikvDZZkvGaX5PuV',qty_stock:7
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFzpQpONikvDZZkvGaX5PuV',qty_stock:5
   },
   {
     id:'1445',name:'Взуття дитяче ( кросівки, сандалі) мікс демісезон Hummel Сток  категорія B',
@@ -4165,7 +4174,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'Канада',
     unit:'кг',weight:'20-25',
     price:6.6,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGFjpg1Cd7RYL2BOd_jdd7k',qty_stock:8
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGFjpg1Cd7RYL2BOd_jdd7k',qty_stock:6
   },
   {
     id:'1718',name:'Штани спортивні мікс демісезон 1й сорт LEGEND Канада',
@@ -4372,7 +4381,7 @@ window.PRODUCTS=[
     audience:'Дитяче',country:'',
     unit:'кг',weight:'5-10',
     price:14.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHEcfR3oYvcBTcj6S6dC3jU',qty_stock:19
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHEcfR3oYvcBTcj6S6dC3jU',qty_stock:18
   },
   {
     id:'1690',name:'Шкарпетки дитячі зима LidL сток',
@@ -4570,7 +4579,7 @@ window.PRODUCTS=[
     audience:'Дитяче',country:'',
     unit:'кг',weight:'15-20',
     price:9.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFW1oCKIx8hDtMWc2Aq7l2q',qty_stock:40
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFW1oCKIx8hDtMWc2Aq7l2q',qty_stock:36
   },
   {
     id:'1763',name:'Взуття мікс зима  Esmara, Livergy Сток',
@@ -4588,7 +4597,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'15-20',
     price:15.3,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFFYOp5xVsSOnjuqEkqoM1b',qty_stock:21
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFFYOp5xVsSOnjuqEkqoM1b',qty_stock:22
   },
   {
     id:'0614',name:'Лижний одяг мікс зима Crivit  Сток',
@@ -4633,7 +4642,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'',
     price:11.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGruv04UrBUGQkrVmvPI3QY',qty_stock:23
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGruv04UrBUGQkrVmvPI3QY',qty_stock:22
   },
   {
     id:'0322',name:'Шкарпетки мікс демісезон Livergy, Esmara, Crivit Сток',
@@ -4696,7 +4705,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'15-20',
     price:15.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFzDHAiozQ0w77TjD_yNciD',qty_stock:24
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFzDHAiozQ0w77TjD_yNciD',qty_stock:23
   },
   {
     id:'1355',name:'Взуття спортивне, кросівки мікс демісезон Crivit Сток',
@@ -4741,7 +4750,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'10-15',
     price:15.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHhUq1SGZgX1aiWfI48mDYM',qty_stock:12
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHhUq1SGZgX1aiWfI48mDYM',qty_stock:10
   },
   {
     id:'0847',name:'Футболки мікс літо Esmara,Livergy Сток',
@@ -4804,7 +4813,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'15-20',
     price:12.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFD4kKwR2yRB8oZ6brIzE2W',qty_stock:1
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFD4kKwR2yRB8oZ6brIzE2W',qty_stock:4
   },
   {
     id:'1740',name:'Одяг робочий мікс зима Parkside Сток',
@@ -4867,7 +4876,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'5-10',
     price:23.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFpT-ovxm8-LDUGNfcvxcW3',qty_stock:7
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFpT-ovxm8-LDUGNfcvxcW3',qty_stock:6
   },
   {
     id:'1505',name:'Білизна мікс чоловіча, жіноча сток NL',
@@ -5002,7 +5011,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'Канада',
     unit:'кг',weight:'25',
     price:6.4,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGuRvwFom6mh9qL4yxmO0vE',qty_stock:1
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGuRvwFom6mh9qL4yxmO0vE',qty_stock:null
   },
   {
     id:'1219',name:'Штани спортивні нейлон чоловічі демісезон Екстра Канада',
@@ -5020,7 +5029,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'Канада',
     unit:'кг',weight:'30',
     price:6.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHMwUATswt19-QOdTI3tjP4',qty_stock:11
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHMwUATswt19-QOdTI3tjP4',qty_stock:10
   },
   {
     id:'1063',name:'Футболки з принтом чоловічі літо Екстра Канада',
@@ -5038,7 +5047,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'Канада',
     unit:'кг',weight:'',
     price:7.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFjsHdUl8kgdUryuBVZvsIH',qty_stock:5
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFjsHdUl8kgdUryuBVZvsIH',qty_stock:7
   },
   {
     id:'1384',name:'Футболки чоловічі літо 1й + Екстра Канада',
@@ -5047,7 +5056,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'Канада',
     unit:'кг',weight:'25',
     price:7.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHu7hzH6vIDNrVs4AlRIe-9',qty_stock:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHu7hzH6vIDNrVs4AlRIe-9',qty_stock:2
   },
   {
     id:'1343',name:'Білизна доросла мікс демісезон  Сток',
@@ -5137,7 +5146,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'5-10',
     price:25.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGIux1_JxLYxZ1wspWwvLM3',qty_stock:41
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGIux1_JxLYxZ1wspWwvLM3',qty_stock:39
   },
   {
     id:'1668',name:'Джинси,брюки чоловічі демісезон Екстра',
@@ -5371,7 +5380,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'20',
     price:9.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH8ARDDwZrMuf0FUpFErzZP',qty_stock:17
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH8ARDDwZrMuf0FUpFErzZP',qty_stock:18
   },
   {
     id:'1746',name:'Оригінал несортований - Cash 4 Clothes Premium (ЗБІР З ПІДВИЩЕНОЮ ЯКІСТЮ ТОВАРУ)',
@@ -5389,7 +5398,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'шт',weight:'12',
     price:25.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEIrewNLi1s-Tt4h2_IfxLY',qty_stock:51
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEIrewNLi1s-Tt4h2_IfxLY',qty_stock:49
   },
   {
     id:'1841',name:'Кросівки чоловічі + жіночі PUMA С-  (б/у, ремонт)',
@@ -5416,7 +5425,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'5-8',
     price:13.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGjuuZjSmfyuslHjJD2Q-Jr',qty_stock:99
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGjuuZjSmfyuslHjJD2Q-Jr',qty_stock:98
   },
   {
     id:'1159',name:'Кросівки мікс демісезон Reebok Сток',
@@ -5434,7 +5443,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'20',
     price:22.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGn9c5aZLFboEjM0pk8l3yi',qty_stock:39
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGn9c5aZLFboEjM0pk8l3yi',qty_stock:37
   },
   {
     id:'1580',name:'Светри новорічні унісекс REVOLT Happy Christmas  сток Зима',
@@ -5641,7 +5650,7 @@ window.PRODUCTS=[
     audience:'Жіноче',country:'',
     unit:'кг',weight:'10',
     price:9.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHZRVkipyXVndJanr08gUw1',qty_stock:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHZRVkipyXVndJanr08gUw1',qty_stock:2
   },
   {
     id:'1843',name:'Ремні мікс Sinsay Сток',
@@ -5866,7 +5875,7 @@ window.PRODUCTS=[
     audience:'Дитяче',country:'',
     unit:'кг',weight:'15',
     price:34.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHVsNUNrwaPPfgFh01exzq6',qty_stock:23
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHVsNUNrwaPPfgFh01exzq6',qty_stock:21
   },
   {
     id:'1902',name:'Одяг спорт футбольний дорослий та дитячий мікс демісезон Adidas Сток',
@@ -5884,7 +5893,7 @@ window.PRODUCTS=[
     audience:'Дитяче',country:'',
     unit:'кг',weight:'20',
     price:26.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEXW4JG_e9HpG6zt2H7aWFK',qty_stock:11
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEXW4JG_e9HpG6zt2H7aWFK',qty_stock:10
   },
   {
     id:'1470',name:'Рюкзаки, сумки, бананки Adidas мікс Сток',
@@ -5974,7 +5983,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'Канада',
     unit:'кг',weight:'',
     price:6.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHTwARyH15tBXUJFuu70Fl8',qty_stock:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHTwARyH15tBXUJFuu70Fl8',qty_stock:2
   },
   {
     id:'1570',name:'Світшоти, худі, кофти з капюшоном сток INDEPENDENT',
@@ -6019,7 +6028,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'10-15',
     price:19.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEv0Cav5rC3wy-fq19TthJ4',qty_stock:2
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEv0Cav5rC3wy-fq19TthJ4',qty_stock:null
   },
   {
     id:'1691',name:'Футболки чоловічі літо Sorbino, Richmond, Altitudine Сток',
@@ -6064,7 +6073,7 @@ window.PRODUCTS=[
     audience:'Чоловіче',country:'',
     unit:'кг',weight:'15',
     price:14.9,akciya:13.0,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFpOCRDhz1gjacHGU89ST1f',qty_stock:1
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFpOCRDhz1gjacHGU89ST1f',qty_stock:null
   },
   {
     id:'1728',name:'Футболки мікс сірі базові root apparel',
@@ -6073,7 +6082,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'20',
     price:8.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHwjwpDdD76t7P4kUCebh4V',qty_stock:5
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHwjwpDdD76t7P4kUCebh4V',qty_stock:6
   },
   {
     id:'1809',name:'Взуття жіноче зима Tamaris  Сток',
@@ -6109,7 +6118,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'Канада',
     unit:'кг',weight:'20-25',
     price:7.5,akciya:6.9,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGHDWyWs00pG8NGIcmXKS1-',qty_stock:1
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGHDWyWs00pG8NGIcmXKS1-',qty_stock:null
   },
   {
     id:'1548',name:'Кросівки, взуття мікс чоловічі, жіночі демісезон сток TEVA (примірка, нові, мін. дефект))',
@@ -6145,7 +6154,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'15',
     price:8.7,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFd9knodIAWcHpm9BPbbbk-',qty_stock:2
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFd9knodIAWcHpm9BPbbbk-',qty_stock:null
   },
   {
     id:'1229',name:'Рушники мікс 1й сорт Англія',
@@ -6199,7 +6208,7 @@ window.PRODUCTS=[
     audience:'Мікс',country:'',
     unit:'кг',weight:'25',
     price:7.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFeNRd2V3cvt1PAa94538_M',qty_stock:7
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFeNRd2V3cvt1PAa94538_M',qty_stock:10
   },
   {
     id:'1549',name:'Угги, сабо мікс оригінал UGG Зима Сток (нові)',
@@ -6364,5 +6373,5 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE83VQ2XRso-Z5iJjcX-h8n',qty_stock:1
   }
 ];
-window.LOTS_IDS=new Set(['1913','1914','1915','1373','1132','1627','0155','0173','1651','1653','0193','1073','0038','1377','1567','0166','1645','0135','1113','1884','1638','1911','1672','1907','0127','1910','1611','1912','0565','1159','1900','1865','1628','1012','0186','1659','1473','1434','1384','0847','0761','0322','0500','1110','0752','0032','1030','1514','1902','1383','1137','1643','0763','0217','0403','0153','1609','0277','1396','1727','0012','0214','0247','1163','1906','1234','1586','1859','1882','1898','1056','1065','1866','0420','0160','0809','1348','1808','1594','1908','0454','1671','1686','1733','1464','1022','1899','1649','0466','0368','1201','1662','1323','1646','1795','0281','0136','0645','0216','1311','1162','0013','1892','1625','1888','1426','1811','1617','0419','1077','1001','1816','1103','1753','0325','1876','0637','1725','0644','0758','1570','0223','0651','1676','1794','0280','1738','1642','1443','0526','0508','0207','0241','1344','0633','1726','0658','1634','0275','0014','0170','0676','1814','0677','1094','0683','1308','1792','1858','1566','1701','1131','1049','0980','1518','0226','0575','1260','0260','1657','0122','0233','0028','0123','0240','1312','0015','0154','1236','1874','0418','1053','1527','1707','0533','1298','1724','0664','0714','0660','0261','0164','1300','0162','0117','0269','0215','1302','1805','1552','1871','0036','1870','1578','1807','1873','1842','1403','1461','1669','1862','1863','0985','1595','1853','0655','1742','1722','1509','1824','1800','1420','1849','1410','1847','1852','1125','0960','0707','1845','0311','0542','0703','1803','1843','1191','1846','1604','1206','1291','1612','1783','0448','0587','1598','1696','1167','1844','0836','1458','1322','1801','1822','1819','1172','0667','0009','1813','0981','1427','1815','0098','1199','0669','1580','1606','1820','0235','0881','1369','1326','1640','1319','1788','1146','1743','1290','0930','1605','1313','0270','0409','0276','0652','1081','1281','1780','1175','1063','1346','0147','1535','1168','1798','1441','1773','1799','1734','0093','0263','0748','1670','0573','1423','1769','0350','1744','1778','1762','1303','1362','1548','1767','1195','0213','1241','0451','0267','1430','1700','1719','0458','1717','1499','1208','0524','1093','1415','1708','0245','0315','1663','1085','0476','1655','0168','0049','0754','1637','0174','1710','1250','1694','1429','1613','0209','1644','1684','1232','0896','1204','0138','0094','1352','0348','1699','1501','1685','0149','1397','0057','1156','1661','1668','1194','1467','1422','0678','0462','1624','1506','1336','0314','1083','0894','0105','1228','0025','0360','1559','0851','0297','1602','1554','1024','0525','1588','1202','0697','1078','0888','1008','0346','0037','1528','0051','1060','0184','1541','0776','1401','1489','1455','0219','1412','1358','0165','1200','1235','1264','0694']);
+window.LOTS_IDS=new Set(['1728','1916','1636','0318','1373','0261','0557','1392','1880','0540','1201','1913','1914','1915','1627','0155','0173','1651','1653','0193','1073','0038','1377','1567','0166','1645','1113','1884','1638','1911','1672','1907','0127','1611','1912','0135','0565','1159','1900','1865','1628','0186','1659','1473','1434','0847','0761','0322','0500','1110','0032','1030','1514','1902','1383','1137','1643','0763','0217','0403','0153','1609','0277','1396','1727','0012','0214','0247','1163','1906','1234','1586','1859','1882','1898','1056','1065','1866','0420','0160','0809','1808','1594','1908','0454','1671','1686','1733','1464','1022','1899','1649','0466','0368','1384','1662','1323','1646','1795','0281','0136','0645','0216','1311','1162','0013','1892','1625','1888','1426','1811','1617','0419','1077','1001','1816','1103','1753','0325','1876','0637','1725','0644','0758','1570','0223','0651','1676','1794','0280','1738','1642','1443','0526','0508','0207','0241','1344','0633','1726','0658','1634','0275','0014','0170','0676','1814','0677','1094','0683','1308','1792','1858','1566','1701','1131','1049','0980','1518','0226','0575','1260','0260','1657','0122','0233','0028','0123','0240','1312','0015','0154','1874','0418','1053','1527','1707','0533','1298','1724','0664','0714','0660','0164','1300','0162','0117','0269','0215','1302','1805','1552','1871','0036','1870','1578','1807','1873','1842','1403','1461','1669','1862','1863','0985','1595','1853','0655','1742','1722','1509','1824','1800','1420','1849','1410','1847','1852','1125','0960','0707','1845','0311','0542','0703','1803','1843','1191','1846','1604','1206','1291','1612','1783','0448','0587','1598','1696','1167','1844','0836','1458','1322','1801','1822','1819','1172','0667','0009','1813','0981','1427','1815','0098','1199','0669','1580','1606','1820','0235','0881','1369','1326','1640','1319','1788','1146','1743','1290','0930','1605','0270','0409','0276','0652','1081','1281','1780','1175','1063','1346','0147','1535','1168','1798','1441','1773','1799','1734','0093','0263','0748','1670','0573','1423','1769','0350','1744','1778','1762','1303','1362','1548','1767','1195','0213','1241','0451','0267','1430','1700','1719','0458','1717','1499','1208','0524','1093','1415','1708','0245','0315','1663','1085','0476','1655','0168','0049','0754','1348','1637','0174','1710','1250','1694','1429','1613','0209','1644','1684','1232','0896','1204','0138','0094','1352','0348','1699','1501','0149','1397','0057','1156','1661','1668','1194','1467','1422','0678','0462','1624','1506','1336','0314','1083','0894','0105','1228','0025','0360','1559','0851','0297','1602','1554','1024','0525','1588','1202','0697','1078','0888','1008','0346','0037','1528','0051','1060','0184','1541','0776','1401','1489','1455','0219','1412','1358','0165','1200','1235','1264','0694']);
 window.SUBCATS={"Одяг": ["Вітровки та штормовки", "Джинси", "Колготки та легінси", "Комбінезони", "Костюми", "Кофти флісові", "Купальники", "Куртки та пальта", "Майки та топи", "Нижня білизна", "Одяг мікс", "Піджаки та жилети", "Робочий одяг", "Светри та кардигани", "Сорочки та блузи", "Спортивний одяг", "Спідниці та плаття", "Футболки", "Халати та піжами", "Худі та світшоти", "Шкарпетки", "Шорти", "Штани та брюки"], "Аксесуари": ["Біжутерія", "Сумки та рюкзаки", "Шапки та головні убори"], "Взуття": ["Взуття гумове", "Взуття мікс", "Взуття робоче", "Кросівки та кеди", "Тапочки та шльопанці", "Туфлі та босоніжки", "Черевики та чоботи"], "Дім та побут": ["Килими та килимки", "Побутові товари", "Постільна білизна", "Рушники", "Товари для тварин"], "Іграшки": ["М'які іграшки", "Тверді іграшки"], "Bric-a-Brac": ["Bric-a-Brac"], "Косметика": ["Косметика декоративна"]};
