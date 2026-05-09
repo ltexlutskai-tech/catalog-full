@@ -1,0 +1,273 @@
+/* L-TEX Utilities — data mapping, price formatting, slug helpers
+   Maps existing window.PRODUCTS schema to the new design.
+*/
+window.LTEX = window.LTEX || {};
+
+(() => {
+  const L = window.LTEX;
+
+  /* === Configuration === */
+  L.CONFIG = {
+    EUR_UAH_RATE: 43,                // EUR → UAH
+    PER_PAGE: 30,
+    IMAGES_DIR: window.IMAGES_DIR || '2025-2026-named-top5',
+    PHONES: [
+      { display: '+380 67 671 05 16', tel: '+380676710516' },
+      { display: '+380 99 358 49 92', tel: '+380993584992' },
+    ],
+    EMAIL: 'ltex.lutsk.ai@gmail.com',
+    TELEGRAM: 'https://t.me/L_TEX',
+    ADDRESS: 'с. Піддубці, Луцький р-н, Волинська обл.',
+    MIN_ORDER_KG: 10,
+    BRAND: 'L-TEX',
+  };
+
+  /* === Enums / labels === */
+  L.QUALITY_LABELS = {
+    'Екстра':'Екстра','Крем':'Крем','1й сорт':'1й сорт','2й сорт':'2й сорт',
+    'Сток':'Сток','Мікс':'Мікс'
+  };
+  L.SEASON_LABELS = {
+    'Зима':'Зима','Літо':'Літо','Демісезон':'Демісезон','Всесезонне':'Всесезонне'
+  };
+  L.AUDIENCE_LABELS = {
+    'Жіноче':'Жіноча','Чоловіче':'Чоловіча','Дитяче':'Дитяча',
+    'Дорослі':'Дорослий','Мікс':'Унісекс'
+  };
+  L.COUNTRY_FLAG = {
+    'Англія':'🇬🇧','Німеччина':'🇩🇪','Канада':'🇨🇦',
+    'Польща':'🇵🇱','Шотландія':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Італія':'🇮🇹','США':'🇺🇸'
+  };
+
+  /* === Slug === */
+  L.slug = (str) => {
+    if(!str) return '';
+    const map = {'а':'a','б':'b','в':'v','г':'h','ґ':'g','д':'d','е':'e','є':'ie','ж':'zh','з':'z','и':'y','і':'i','ї':'i','й':'i','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ь':'','ю':'iu','я':'ia','ы':'y','э':'e','ё':'e','ъ':''};
+    return String(str).toLowerCase().split('').map(c => map[c] !== undefined ? map[c] : c)
+      .join('').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);
+  };
+
+  /* === Image helpers === */
+  L.imagesFor = (id) => {
+    const list = (window.IMAGES_BY_ID && window.IMAGES_BY_ID[String(id)]) || [];
+    return list.map(name => `${L.CONFIG.IMAGES_DIR}/${encodeURIComponent(name).replace(/'/g,'%27')}`);
+  };
+  L.firstImageFor = (id) => L.imagesFor(id)[0] || null;
+
+  L.detailFor = (id) => (window.DETAILS_BY_ID && window.DETAILS_BY_ID[String(id)]) || '';
+
+  L.parseDetails = (text) => {
+    if(!text) return {};
+    const out = {};
+    text = text.replace(/✔️|✔/g,'').replace(/\r/g,'');
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    for(const line of lines){
+      const m = line.match(/^(Сезон|Сорт|Стать|Розміри|Країна|Бренд|Кількість одиниць|Вага одиниці|Вага лота|Наповнення|Категорія)\s*[:\t]\s*(.*)$/i);
+      if(m){
+        out[m[1].toLowerCase().replace(/\s/g,'_')] = m[2].trim();
+      }
+    }
+    return out;
+  };
+
+  /* === Price === */
+  L.eurToUah = (eur) => Math.round(eur * L.CONFIG.EUR_UAH_RATE);
+  L.formatUah = (uah) => {
+    if(uah == null || isNaN(uah)) return '';
+    return Math.round(uah).toLocaleString('uk-UA').replace(/,/g,' ') + ' ₴';
+  };
+  L.formatEur = (eur) => {
+    if(eur == null || isNaN(eur)) return '';
+    return '€' + Number(eur).toFixed(2);
+  };
+  L.priceEurFor = (p) => {
+    if(!p) return null;
+    return p.akciya != null ? p.akciya : p.price;
+  };
+  L.hasDiscount = (p) => p && p.akciya != null && p.price != null && p.akciya < p.price;
+  L.discountPct = (p) => {
+    if(!L.hasDiscount(p)) return 0;
+    return Math.round((1 - p.akciya / p.price) * 100);
+  };
+
+  /* === Quality / season label colours === */
+  L.qualityClass = (q) => {
+    const map = {'Екстра':'q-extra','Крем':'q-cream','1й сорт':'q-first','2й сорт':'q-second','Сток':'q-stock','Мікс':'q-mix'};
+    return map[q] || '';
+  };
+
+  /* === In stock === */
+  L.inStock = (p) => Number(p?.qty_stock || 0) > 0 || p?.qty_stock === null /* unknown == in catalog */;
+
+  /* === Top categories === */
+  L.TOP_CATS = [
+    'Одяг','Взуття','Аксесуари','Дім та побут','Іграшки','Косметика','Bric-a-Brac'
+  ];
+  L.normalizeTopCat = (cat) => {
+    if(!cat) return null;
+    const c = String(cat).trim();
+    if(L.TOP_CATS.includes(c)) return c;
+    /* sub-categories that are stored as top-level "category" — group them under Одяг */
+    const odyag = ['Светри та кардигани','Худі та світшоти','Куртки та пальта','Одяг мікс','Футболки','Кофти флісові','Штани та брюки','Нижня білизна','Робочий одяг','Джинси','Спортивний одяг','Піджаки та жилети','Колготки та легінси','Сорочки та блузи','Спідниці та плаття','Шкарпетки','Шорти','Халати та піжами','Купальники','Комбінезони','Вітровки та штормовки','Шапки та головні убори'];
+    const vzuttya = ['Взуття мікс','Кросівки та кеди','Туфлі та босоніжки','Черевики та чоботи','Тапочки та шльопанці','Взуття гумове','Взуття робоче'];
+    const aks = ['Сумки та рюкзаки','Біжутерія'];
+    const dim = ['Постільна білизна','Рушники','Килими та килимки','Побутові товари','Товари для тварин'];
+    const igr = ['М’які іграшки','Тверді іграшки'];
+    const kos = ['Косметика декоративна'];
+    if(odyag.includes(c)) return 'Одяг';
+    if(vzuttya.includes(c)) return 'Взуття';
+    if(aks.includes(c)) return 'Аксесуари';
+    if(dim.includes(c)) return 'Дім та побут';
+    if(igr.includes(c)) return 'Іграшки';
+    if(kos.includes(c)) return 'Косметика';
+    return c;
+  };
+
+  /* For each product compute a `topCat` */
+  L.enrich = (p) => {
+    if(p._enriched) return p;
+    p.topCat = L.normalizeTopCat(p.category);
+    p.subcat = p.subcategory || (p.topCat !== p.category ? p.category : '');
+    p.images = L.imagesFor(p.id);
+    p.image = p.images[0] || null;
+    p.priceEur = L.priceEurFor(p);
+    p.priceUah = p.priceEur != null ? L.eurToUah(p.priceEur) : null;
+    p.oldPriceEur = L.hasDiscount(p) ? p.price : null;
+    p.oldPriceUah = p.oldPriceEur != null ? L.eurToUah(p.oldPriceEur) : null;
+    p.discount = L.discountPct(p);
+    p.inStock = L.inStock(p);
+    p.slug = L.slug(p.name) + '-' + p.id;
+    p.detailRaw = L.detailFor(p.id);
+    p._enriched = true;
+    return p;
+  };
+
+  L.getProducts = () => {
+    const list = window.PRODUCTS || [];
+    if(!list._enriched){
+      list.forEach(L.enrich);
+      list._enriched = true;
+    }
+    return list;
+  };
+
+  L.findProduct = (idOrSlug) => {
+    const list = L.getProducts();
+    return list.find(p => p.id === idOrSlug || String(p.id) === String(idOrSlug) || p.slug === idOrSlug);
+  };
+
+  /* === Subcategory aggregation === */
+  L.subcatsForTop = (top) => {
+    const set = new Map();
+    for(const p of L.getProducts()){
+      if(p.topCat !== top) continue;
+      const sc = p.subcat || (p.topCat !== p.category ? p.category : null);
+      if(!sc) continue;
+      set.set(sc, (set.get(sc) || 0) + 1);
+    }
+    return [...set.entries()].sort((a,b) => b[1] - a[1]).map(([n,c]) => ({name:n,count:c}));
+  };
+  L.topCatCounts = () => {
+    const map = new Map();
+    for(const p of L.getProducts()) map.set(p.topCat, (map.get(p.topCat)||0)+1);
+    return map;
+  };
+
+  /* === YouTube helpers === */
+  L.youtubeId = (url) => {
+    if(!url) return null;
+    const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    if(m) return m[1];
+    const list = url.match(/[?&]list=([A-Za-z0-9_-]+)/);
+    return list ? { playlist: list[1] } : null;
+  };
+  L.youtubeThumb = (url) => {
+    const id = L.youtubeId(url);
+    if(!id) return null;
+    if(typeof id === 'string') return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    return null; // playlists don't have a single thumb
+  };
+  L.youtubeWatchUrl = (url) => {
+    const id = L.youtubeId(url);
+    if(!id) return url;
+    if(typeof id === 'string') return `https://www.youtube.com/watch?v=${id}`;
+    return url;
+  };
+
+  /* === Debounce === */
+  L.debounce = (fn, ms = 200) => {
+    let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+  };
+
+  /* === DOM helpers === */
+  L.escapeHtml = (str) => String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  L.qs = (sel, root = document) => root.querySelector(sel);
+  L.qsa = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+  /* === URL state === */
+  L.getParam = (key) => new URLSearchParams(location.search).get(key);
+  L.getParams = () => Object.fromEntries(new URLSearchParams(location.search));
+  L.setParams = (patch, replace = false) => {
+    const url = new URL(location.href);
+    for(const [k,v] of Object.entries(patch)){
+      if(v === null || v === undefined || v === '' || (Array.isArray(v) && v.length === 0)) {
+        url.searchParams.delete(k);
+      } else if(Array.isArray(v)){
+        url.searchParams.set(k, v.join(','));
+      } else {
+        url.searchParams.set(k, String(v));
+      }
+    }
+    history[replace ? 'replaceState' : 'pushState']({}, '', url);
+    window.dispatchEvent(new CustomEvent('ltex:urlchange'));
+  };
+  L.getMulti = (key) => {
+    const v = L.getParam(key);
+    return v ? v.split(',').filter(Boolean) : [];
+  };
+
+  /* === Toast === */
+  let toastTimer;
+  L.toast = (msg, type = 'info') => {
+    let el = document.getElementById('ltex-toast');
+    if(!el){
+      el = document.createElement('div');
+      el.id = 'ltex-toast';
+      el.className = 'toast';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add('show');
+    if(type === 'error') el.style.background = 'var(--red-600)';
+    else if(type === 'success') el.style.background = 'var(--primary)';
+    else el.style.background = 'var(--gray-900)';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  };
+
+  /* === Build catalog href === */
+  L.catalogHref = (params = {}) => {
+    const url = new URL('catalog.html', location.href);
+    for(const [k,v] of Object.entries(params)){
+      if(v != null && v !== '') {
+        url.searchParams.set(k, Array.isArray(v) ? v.join(',') : String(v));
+      }
+    }
+    return url.pathname.split('/').pop() + (url.search || '');
+  };
+  L.productHref = (id) => `product.html?id=${encodeURIComponent(id)}`;
+
+  /* === sortMatch (relevance heuristic) === */
+  L.byRelevance = (a, b, query) => {
+    if(!query) return 0;
+    const q = query.toLowerCase();
+    const ai = a.name.toLowerCase().indexOf(q);
+    const bi = b.name.toLowerCase().indexOf(q);
+    if(ai !== bi){
+      if(ai === -1) return 1;
+      if(bi === -1) return -1;
+      return ai - bi;
+    }
+    return 0;
+  };
+})();

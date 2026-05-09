@@ -1,0 +1,13 @@
+# Claude Code project settings
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Working xlsx files (managed locally; do not commit)
+*.xlsx
+
+# Local helpers / scratch
+preview_render.html

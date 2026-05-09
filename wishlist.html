@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16a34a">
+<title>Список бажань — L-TEX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+<link rel="stylesheet" href="assets/components.css">
+</head>
+<body>
+
+<header data-ltex-header></header>
+
+<main class="container" style="padding-top:1.5rem;padding-bottom:3rem">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="index.html">Головна</a></li>
+      <li>Список бажань</li>
+    </ol>
+  </nav>
+
+  <div class="catalog-toolbar" style="margin-top:1rem">
+    <div>
+      <h1 class="h1">Список бажань</h1>
+      <p class="text-muted text-sm" id="totalCount" style="margin-top:.25rem">—</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="btn btn-outline" id="clearAll" type="button" style="display:none">
+        <span class="icon icon-sm" data-icon="trash"></span>
+        Очистити
+      </button>
+    </div>
+  </div>
+
+  <div id="grid" class="products-grid" style="margin-top:1.5rem"></div>
+  <div id="empty" style="display:none">
+    <div class="empty-state">
+      <h3>Список бажань порожній</h3>
+      <p>Додавайте товари у бажання, натискаючи на ❤ у каталозі.</p>
+      <a class="btn btn-primary" href="catalog.html" style="margin-top:1rem">Перейти у каталог</a>
+    </div>
+  </div>
+</main>
+
+<footer data-ltex-footer></footer>
+
+<script src="data/meta.js"></script>
+<script src="data/images.js"></script>
+<script src="data/details.js"></script>
+<script src="data/products.js"></script>
+<script src="assets/icons.js"></script>
+<script src="assets/utils.js"></script>
+<script src="assets/wishlist.js"></script>
+<script src="assets/search.js"></script>
+<script src="assets/header.js"></script>
+<script>
+(() => {
+  const L = window.LTEX;
+  const ICONS = window.ICONS;
+  document.querySelectorAll('[data-icon]').forEach(el => {
+    const n = el.dataset.icon;
+    if(ICONS[n]) el.innerHTML = ICONS[n]();
+  });
+
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const totalEl = document.getElementById('totalCount');
+  const clearBtn = document.getElementById('clearAll');
+
+  function plural(n){
+    const ten = n % 100;
+    if(ten >= 11 && ten <= 14) return 'товарів';
+    const o = n % 10;
+    if(o === 1) return 'товар';
+    if(o >= 2 && o <= 4) return 'товари';
+    return 'товарів';
+  }
+
+  function render(){
+    const ids = L.wishlist.get();
+    const products = ids.map(id => L.findProduct(id)).filter(Boolean);
+    totalEl.textContent = `${products.length} ${plural(products.length)}`;
+
+    if(!products.length){
+      grid.style.display = 'none';
+      empty.style.display = 'block';
+      clearBtn.style.display = 'none';
+      return;
+    }
+    grid.style.display = '';
+    empty.style.display = 'none';
+    clearBtn.style.display = 'inline-flex';
+
+    grid.innerHTML = products.map(p => {
+      const isAk = L.hasDiscount(p);
+      const inCart = L.cart.has(p.id);
+      return `<article class="product-card ${isAk?'akciya':''}" data-id="${p.id}">
+        <a href="${L.productHref(p.id)}">
+          <div class="product-card__media">
+            ${p.image
+              ? `<img class="product-card__img" src="${p.image}" alt="${L.escapeHtml(p.name)}" loading="lazy">`
+              : `<div class="product-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
+            <div class="product-card__badges">
+              ${isAk ? `<span class="tag tag-sale">SALE${p.discount?' −'+p.discount+'%':''}</span>` : ''}
+            </div>
+          </div>
+        </a>
+        <button class="product-card__wish active" data-wish="${p.id}" type="button" aria-label="Прибрати з обраного">
+          <span class="icon icon-sm">${ICONS.heartFilled()}</span>
+        </button>
+        <div class="product-card__body">
+          <a href="${L.productHref(p.id)}" class="product-card__title">${L.escapeHtml(p.name)}</a>
+          <div class="product-card__tags">
+            ${p.sort ? `<span class="badge-pill">${L.escapeHtml(p.sort)}</span>` : ''}
+            ${p.season ? `<span class="badge-pill">${L.escapeHtml(p.season)}</span>` : ''}
+          </div>
+          <div class="product-card__price-block">
+            <div class="product-card__price">${L.formatUah(p.priceUah || 0)}<span class="unit">/${p.unit||'кг'}</span></div>
+            <div class="product-card__price-eur">${L.formatEur(p.priceEur || 0)}</div>
+          </div>
+          <div class="flex gap-2" style="margin-top:.75rem">
+            <a class="btn btn-outline-primary" href="${L.productHref(p.id)}" style="flex:1">Детальніше</a>
+            <button class="btn btn-primary" data-add-cart="${p.id}" type="button" style="flex:1">
+              <span class="icon icon-sm">${inCart ? ICONS.check() : ICONS.plus()}</span>
+              ${inCart ? 'У кошику' : 'В кошик'}
+            </button>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+
+    grid.querySelectorAll('[data-wish]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        const id = btn.dataset.wish;
+        const p = L.findProduct(id);
+        L.wishlist.toggle(id, p?.name);
+        render();
+      });
+    });
+    grid.querySelectorAll('[data-add-cart]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const id = btn.dataset.addCart;
+        const p = L.findProduct(id);
+        if(L.cart.has(id)){ location.href = 'cart.html'; return; }
+        L.cart.add(id, 1, p?.name);
+        btn.innerHTML = `<span class="icon icon-sm">${ICONS.check({size:16})}</span> У кошику`;
+      });
+    });
+  }
+
+  clearBtn.addEventListener('click', () => {
+    if(confirm('Очистити список бажань?')){
+      L.wishlist.clear();
+      render();
+    }
+  });
+
+  window.addEventListener('ltex:wishlist-changed', render);
+  render();
+})();
+</script>
+</body>
+</html>
