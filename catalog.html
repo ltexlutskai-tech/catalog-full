@@ -124,6 +124,7 @@
     unit: '',
     inStock: false,
     sale: false,
+    onlyNew: false,
     priceMin: null, priceMax: null,
     weightMin: null, weightMax: null,
     q: '',
@@ -144,6 +145,7 @@
     state.unit = p.unit || '';
     state.inStock = p.inStock === '1' || p.inStock === 'true';
     state.sale = p.sale === '1' || p.sale === 'true';
+    state.onlyNew = p.new === '1' || p.new === 'true';
     state.priceMin = p.priceMin ? parseFloat(p.priceMin) : null;
     state.priceMax = p.priceMax ? parseFloat(p.priceMax) : null;
     state.weightMin = p.weightMin ? parseFloat(p.weightMin) : null;
@@ -163,6 +165,7 @@
       unit: state.unit || '',
       inStock: state.inStock ? '1' : '',
       sale: state.sale ? '1' : '',
+      new: state.onlyNew ? '1' : '',
       priceMin: state.priceMin || '',
       priceMax: state.priceMax || '',
       weightMin: state.weightMin || '',
@@ -187,6 +190,7 @@
     if(state.unit) list = list.filter(p => p.unit === state.unit);
     if(state.inStock) list = list.filter(p => p.inStock);
     if(state.sale) list = list.filter(p => L.hasDiscount(p));
+    if(state.onlyNew) list = list.filter(p => p.isNew);
     if(state.priceMin != null) list = list.filter(p => (p.priceEur || 0) >= state.priceMin);
     if(state.priceMax != null) list = list.filter(p => (p.priceEur || 0) <= state.priceMax);
     if(state.weightMin != null) list = list.filter(p => parseFloat(String(p.weight).replace(',', '.')) >= state.weightMin);
@@ -211,7 +215,7 @@
     const img = p.thumb || p.image;
     const isAkciya = L.hasDiscount(p);
     const lotsCount = L.lotsForProduct(p.id).length;
-    const isNew = false; // not enough data to mark NEW reliably
+    const isNew = !!p.isNew;
     const tags = [];
     if(p.sort) tags.push(`<span class="badge-pill">${L.escapeHtml(p.sort)}</span>`);
     if(p.season) tags.push(`<span class="badge-pill">${L.escapeHtml(p.season)}</span>`);
@@ -546,15 +550,21 @@
   /* === Title / breadcrumbs === */
   function renderTitleAndCrumbs(){
     const titleEl = document.getElementById('pageTitle');
-    if(state.sub) titleEl.textContent = state.sub;
-    else if(state.cat) titleEl.textContent = state.cat;
-    else titleEl.textContent = 'Каталог';
+    let title;
+    if(state.onlyNew && !state.cat && !state.sub) title = '🆕 Новинки';
+    else if(state.sale && !state.cat && !state.sub) title = '🔥 Акції';
+    else if(state.sub) title = state.sub;
+    else if(state.cat) title = state.cat;
+    else title = 'Каталог';
+    titleEl.textContent = title;
 
-    document.title = (state.sub || state.cat || 'Каталог товарів') + ' — L-TEX';
+    document.title = title + ' — L-TEX';
 
     const ol = document.getElementById('bcList');
     let html = `<li><a href="index.html">Головна</a></li>`;
-    if(!state.cat) html += `<li>Каталог</li>`;
+    if(state.onlyNew) html += `<li><a href="catalog.html">Каталог</a></li><li>Новинки</li>`;
+    else if(state.sale) html += `<li><a href="catalog.html">Каталог</a></li><li>Акції</li>`;
+    else if(!state.cat) html += `<li>Каталог</li>`;
     else {
       html += `<li><a href="catalog.html">Каталог</a></li>`;
       if(!state.sub) html += `<li>${L.escapeHtml(state.cat)}</li>`;
@@ -564,6 +574,14 @@
       }
     }
     ol.innerHTML = html;
+
+    /* Highlight matching nav link in header */
+    document.querySelectorAll('.site-header__nav a, .mobile-menu__nav a').forEach(a => {
+      const href = a.getAttribute('href') || '';
+      if(state.onlyNew && href.includes('new=1')) a.classList.add('active');
+      else if(state.sale && href.includes('sale=1')) a.classList.add('active');
+      else if(href.includes('new=1') || href.includes('sale=1')) a.classList.remove('active');
+    });
   }
 
   /* === Main render === */

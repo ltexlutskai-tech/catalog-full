@@ -105,6 +105,7 @@
               ? `<img class="product-card__img" src="${p.thumb || p.image}" alt="${L.escapeHtml(p.name)}" loading="lazy">`
               : `<div class="product-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
             <div class="product-card__badges">
+              ${p.isNew ? `<span class="tag tag-new">NEW</span>` : ''}
               ${isAk ? `<span class="tag tag-sale">SALE${p.discount?' −'+p.discount+'%':''}</span>` : ''}
             </div>
           </div>

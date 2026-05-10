@@ -160,6 +160,11 @@ window.LTEX = window.LTEX || {};
     const list = window.PRODUCTS || [];
     if(!list._enriched){
       list.forEach(L.enrich);
+      /* Mark top 5% of products by ID as "NEW" (proxy for newest additions). */
+      const sorted = [...list].sort((a, b) => parseInt(b.id) - parseInt(a.id));
+      const top = Math.max(15, Math.floor(sorted.length * 0.05));
+      const newIds = new Set(sorted.slice(0, top).map(p => p.id));
+      for(const p of list) p.isNew = newIds.has(p.id);
       list._enriched = true;
     }
     return list;

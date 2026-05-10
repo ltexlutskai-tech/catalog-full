@@ -10,7 +10,7 @@ window.LTEX = window.LTEX || {};
   const NAV = [
     { key: 'catalog',  label: 'Каталог',   href: 'catalog.html' },
     { key: 'lots',     label: 'Лоти',      href: 'lots.html' },
-    { key: 'new',      label: 'Новинки',   href: 'catalog.html?sort=newest' },
+    { key: 'new',      label: 'Новинки',   href: 'catalog.html?new=1' },
     { key: 'sale',     label: 'Акції',     href: 'catalog.html?sale=1' },
     { key: 'about',    label: 'Про нас',   href: 'index.html#about' },
     { key: 'contacts', label: 'Контакти',  href: 'index.html#contacts' },

@@ -297,8 +297,8 @@
             ? `<img class="product-card__img" src="${p.thumb || p.image}" alt="${L.escapeHtml(p.name)}" loading="lazy">`
             : `<div class="product-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
           <div class="product-card__badges">
+            ${p.isNew ? `<span class="tag tag-new">NEW</span>` : ''}
             ${isAk ? `<span class="tag tag-sale">SALE</span>` : ''}
-            ${p.youtube ? `` : ''}
           </div>
           ${p.youtube ? `<span class="product-card__video"><span class="icon icon-sm">${ICONS.play({size:12})}</span>Відео</span>` : ''}
         </div>

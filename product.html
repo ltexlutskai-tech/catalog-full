@@ -556,6 +556,7 @@
         <div class="product-card__media">
           ${r.image ? `<img class="product-card__img" src="${r.thumb || r.image}" alt="${L.escapeHtml(r.name)}" loading="lazy">` : `<div class="product-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
           <div class="product-card__badges">
+            ${r.isNew ? `<span class="tag tag-new">NEW</span>` : ''}
             ${isAk ? `<span class="tag tag-sale">SALE</span>` : ''}
           </div>
         </div>
