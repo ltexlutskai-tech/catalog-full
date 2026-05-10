@@ -164,13 +164,6 @@
             </div>
           `}
 
-          ${p.youtube ? `
-            <a href="${L.youtubeWatchUrl(p.youtube)}" target="_blank" rel="noopener" class="btn btn-outline w-full" style="margin-top:.75rem">
-              <span class="icon icon-sm" data-icon="play"></span>
-              Переглянути відеоогляд
-            </a>
-          ` : ''}
-
           <div class="key-facts" style="margin-top:1rem;background:var(--green-50);border-color:var(--green-200)">
             <div class="flex items-center gap-2" style="margin-bottom:.5rem">
               <span class="icon" style="color:var(--primary)" data-icon="shieldCheck"></span>
@@ -179,7 +172,7 @@
             <ul style="font-size:.8125rem">
               <li><span class="key-facts__check">✔</span><span>Усі фото та відео — оригінальні, з нашого складу</span></li>
               <li><span class="key-facts__check">✔</span><span>Передоплата не потрібна — менеджер передзвонить для підтвердження</span></li>
-              <li><span class="key-facts__check">✔</span><span>Доставка по всій Україні: Нова Пошта · Justin · самовивіз</span></li>
+              <li><span class="key-facts__check">✔</span><span>Доставка по всій Україні: Нова Пошта · власна доставка · самовивіз</span></li>
             </ul>
           </div>
         </div>
@@ -209,7 +202,11 @@
             <span class="price-head__secondary">/ ${p.unit || 'кг'}</span>
           </div>
           <p class="text-sm text-gray-500" style="margin-top:.25rem">
-            ${L.formatEur(p.priceEur || 0)}/${p.unit || 'кг'} · курс €1 = ${L.CONFIG.EUR_UAH_RATE} ₴
+            ${L.formatEur(p.priceEur || 0)}/${p.unit || 'кг'} ·
+            <button type="button" class="rate-edit" id="rateEditBtn" title="Змінити курс">
+              курс €1 = <span id="rateValBox">${L.getRate()}</span> ₴
+              <span class="icon icon-sm" style="vertical-align:-2px;margin-left:.125rem" data-icon="sliders"></span>
+            </button>
           </p>
         </div>
 
@@ -308,7 +305,7 @@
         <div class="grid md:grid-cols-2 gap-3" style="margin-top:.5rem">
           <div class="flex items-start gap-3" style="padding:.75rem;border:1px solid var(--border);border-radius:var(--radius-lg)">
             <span class="icon" style="color:var(--primary);flex-shrink:0" data-icon="truck"></span>
-            <div><div class="font-semibold text-sm">Доставка</div><div class="text-xs text-muted">Нова Пошта · Justin · самовивіз</div></div>
+            <div><div class="font-semibold text-sm">Доставка</div><div class="text-xs text-muted">Нова Пошта · власна доставка · самовивіз</div></div>
           </div>
           <div class="flex items-start gap-3" style="padding:.75rem;border:1px solid var(--border);border-radius:var(--radius-lg)">
             <span class="icon" style="color:var(--primary);flex-shrink:0" data-icon="package"></span>
@@ -320,7 +317,7 @@
           </div>
           <div class="flex items-start gap-3" style="padding:.75rem;border:1px solid var(--border);border-radius:var(--radius-lg)">
             <span class="icon" style="color:var(--primary);flex-shrink:0" data-icon="scale"></span>
-            <div><div class="font-semibold text-sm">Без передоплати</div><div class="text-xs text-muted">Оплата при отриманні</div></div>
+            <div><div class="font-semibold text-sm">Без передоплати</div><div class="text-xs text-muted">при доставці нашим транспортом</div></div>
           </div>
         </div>
       </div>
@@ -507,6 +504,48 @@
       });
     });
   }
+
+  /* === Rate edit + reactive price update === */
+  const rateBtn = document.getElementById('rateEditBtn');
+  if(rateBtn){
+    rateBtn.addEventListener('click', () => L.openRateEditor());
+    rateBtn.querySelectorAll('[data-icon]').forEach(el => {
+      const n = el.dataset.icon;
+      if(ICONS[n]) el.innerHTML = ICONS[n]({size:14});
+    });
+  }
+  function refreshPriceBlocks(){
+    /* update visible price elements after rate change */
+    const rate = L.getRate();
+    const rateBox = document.getElementById('rateValBox');
+    if(rateBox) rateBox.textContent = rate;
+
+    /* main price */
+    const priceMainEl = document.querySelector('.price-head__primary');
+    if(priceMainEl) priceMainEl.textContent = L.formatUah(p.priceUah || 0);
+    const priceOldEl = document.querySelector('.price-head__old');
+    if(priceOldEl && p.oldPriceUah != null) priceOldEl.textContent = L.formatUah(p.oldPriceUah);
+
+    /* qty total */
+    const qIn = document.getElementById('qInput');
+    if(qIn){
+      const v = Math.max(1, parseInt(qIn.value) || 1);
+      const totEl = document.getElementById('qTotal');
+      if(totEl) totEl.textContent = L.formatUah((p.priceUah || 0) * v);
+    }
+
+    /* related products grid */
+    document.querySelectorAll('#related .product-card').forEach(card => {
+      const id = card.dataset.id;
+      const r = L.findProduct(id);
+      if(!r) return;
+      const priceEl = card.querySelector('.product-card__price');
+      if(priceEl){
+        priceEl.innerHTML = `${L.formatUah(r.priceUah || 0)}<span class="unit">/${r.unit||'кг'}</span>`;
+      }
+    });
+  }
+  window.addEventListener('ltex:rate-changed', refreshPriceBlocks);
 
   /* === Render product lots (mini cards) === */
   if(hasLots){

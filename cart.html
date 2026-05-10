@@ -167,8 +167,12 @@
           <span class="val" id="sumUah">0 ₴</span>
         </div>
         <div class="text-xs text-muted" style="margin:.5rem 0 1rem">
-          Курс: €1 = <span id="rateBox" data-loading>43</span> ₴.
-          Точна сума підтверджується при замовленні (актуальний курс НБУ).
+          <button type="button" class="rate-edit" id="rateEditBtn" title="Змінити курс">
+            Курс: €1 = <span id="rateBox">43</span> ₴
+            <span class="icon icon-sm" style="vertical-align:-2px" data-icon="sliders"></span>
+          </button>
+          <br>
+          <span style="margin-top:.25rem;display:inline-block">Точна сума підтверджується при замовленні (актуальний курс НБУ).</span>
         </div>
 
         <button class="btn btn-primary btn-lg w-full" id="btnCheckout" type="button">
@@ -184,7 +188,7 @@
         <ul style="font-size:.75rem;color:var(--gray-500);line-height:1.6">
           <li>✓ Передоплата не потрібна</li>
           <li>✓ Менеджер зв'яжеться для підтвердження</li>
-          <li>✓ Доставка: Нова Пошта · Justin · самовивіз</li>
+          <li>✓ Доставка: Нова Пошта · власна доставка · самовивіз</li>
         </ul>
       </div>
     </aside>
@@ -386,7 +390,7 @@
     document.getElementById('sumKg').textContent = totalKg.toFixed(1).replace(/\.0$/,'') + ' кг';
     document.getElementById('sumEur').textContent = L.formatEur(totalEur);
     document.getElementById('sumUah').textContent = L.formatUah(totalUah);
-    document.getElementById('rateBox').textContent = L.CONFIG.EUR_UAH_RATE;
+    document.getElementById('rateBox').textContent = L.getRate();
 
     /* Min order warning */
     const warn = document.getElementById('summaryWarning');
@@ -428,7 +432,18 @@
     });
   });
 
+  /* Rate editor */
+  const rateBtn = document.getElementById('rateEditBtn');
+  if(rateBtn){
+    rateBtn.addEventListener('click', () => L.openRateEditor());
+    rateBtn.querySelectorAll('[data-icon]').forEach(el => {
+      const n = el.dataset.icon;
+      if(ICONS[n]) el.innerHTML = ICONS[n]({size:14});
+    });
+  }
+
   window.addEventListener('ltex:cart-changed', render);
+  window.addEventListener('ltex:rate-changed', render);
   render();
 })();
 </script>

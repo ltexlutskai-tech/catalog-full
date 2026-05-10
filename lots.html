@@ -760,6 +760,7 @@
     });
 
     window.addEventListener('popstate', () => { readUrl(); render(); });
+    window.addEventListener('ltex:rate-changed', render);
     render();
   }
 

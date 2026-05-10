@@ -756,6 +756,7 @@
 
     /* URL changes (back/forward) */
     window.addEventListener('popstate', () => { readUrl(); render(); });
+    window.addEventListener('ltex:rate-changed', render);
     window.addEventListener('ltex:wishlist-changed', () => {
       /* keep wish-state badges in sync without re-rendering all */
       document.querySelectorAll('[data-wish]').forEach(btn => {

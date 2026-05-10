@@ -94,7 +94,34 @@ window.LTEX = window.LTEX || {};
   };
 
   /* === Price === */
-  L.eurToUah = (eur) => Math.round(eur * L.CONFIG.EUR_UAH_RATE);
+  /* User-editable rate (kept in localStorage; falls back to CONFIG default). */
+  const RATE_KEY = 'ltex-rate';
+  L.getRate = () => {
+    try {
+      const v = localStorage.getItem(RATE_KEY);
+      const n = v == null ? null : parseFloat(v);
+      if(n && n > 0) return n;
+    } catch(e){}
+    return L.CONFIG.EUR_UAH_RATE;
+  };
+  L.setRate = (n) => {
+    n = Number(n);
+    if(!n || n <= 0) return false;
+    try { localStorage.setItem(RATE_KEY, String(n)); } catch(e){}
+    L.recomputePrices();
+    window.dispatchEvent(new CustomEvent('ltex:rate-changed', { detail: { rate: n } }));
+    return true;
+  };
+  L.openRateEditor = () => {
+    const cur = L.getRate();
+    const v = prompt('Курс EUR → UAH (1€ = ? ₴):\nВведіть нове значення', cur);
+    if(v == null) return;
+    const n = parseFloat(String(v).replace(',', '.'));
+    if(isNaN(n) || n <= 0){ L.toast('Невірне значення', 'error'); return; }
+    L.setRate(n);
+    L.toast(`Курс оновлено: 1€ = ${n} ₴`, 'success');
+  };
+  L.eurToUah = (eur) => Math.round(eur * L.getRate());
   L.formatUah = (uah) => {
     if(uah == null || isNaN(uah)) return '';
     return Math.round(uah).toLocaleString('uk-UA').replace(/,/g,' ') + ' ₴';
@@ -179,6 +206,15 @@ window.LTEX = window.LTEX || {};
       list._enriched = true;
     }
     return list;
+  };
+
+  /* Recompute UAH price columns for all products after rate changes. */
+  L.recomputePrices = () => {
+    const list = window.PRODUCTS || [];
+    for(const p of list){
+      if(p.priceEur != null) p.priceUah = L.eurToUah(p.priceEur);
+      if(p.oldPriceEur != null) p.oldPriceUah = L.eurToUah(p.oldPriceEur);
+    }
   };
 
   L.findProduct = (idOrSlug) => {
