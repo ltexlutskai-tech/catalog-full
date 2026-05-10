@@ -272,8 +272,10 @@
     const lineUah = (p.priceUah || 0) * multiplier * qty;
     const lineEur = (p.priceEur || 0) * multiplier * qty;
     const qtyLabel = isPerKg ? (qty === 1 ? 'лот' : (qty < 5 ? 'лоти' : 'лотів')) : 'шт';
+    /* Prefer the human range from details (e.g. '20-25 кг'); fallback to numeric average. */
+    const weightLabel = (p.avgWeightLabel || '').replace(/\s*кг\s*$/i,'').trim();
     const weightHint = w > 0
-      ? (isPerKg ? `~${w.toFixed(0)} кг кожен` : `${w.toFixed(2).replace(/\.00$/,'').replace(/0$/,'')} кг шт`)
+      ? (isPerKg ? `${weightLabel || w.toFixed(0)} кг лот` : `~${w.toFixed(2).replace(/\.00$/,'').replace(/0$/,'')} кг шт`)
       : '';
     return `<div class="cart-row" data-key="prod:${L.escapeHtml(p.id)}">
       <a class="cart-row__media" href="${L.productHref(p.id)}">
@@ -329,12 +331,13 @@
         if(!p) return;
         const isPerKg = p.unit === 'кг';
         const w = (p.avgWeight != null) ? p.avgWeight : 0;
+        const wLabel = (p.avgWeightLabel || '').replace(/\s*кг\s*$/i,'').trim() || (w > 0 ? w.toFixed(0) : '');
         const multiplier = isPerKg ? (w || 1) : 1;
         const lineUah = (p.priceUah || 0) * multiplier * it.qty;
         lines.push(`${i+1}. ${p.name}`);
         lines.push(`   Артикул: ${String(p.id).padStart(4,'0')}`);
         if(isPerKg && w > 0){
-          lines.push(`   ${it.qty} лот${it.qty===1?'':'и'} × ~${w.toFixed(0)} кг × ${L.formatUah(p.priceUah||0)}/кг = ${L.formatUah(lineUah)}`);
+          lines.push(`   ${it.qty} лот${it.qty===1?'':'и'} × ${wLabel} кг × ${L.formatUah(p.priceUah||0)}/кг = ${L.formatUah(lineUah)}`);
         } else {
           lines.push(`   ${it.qty} ${p.unit||'кг'} × ${L.formatUah(p.priceUah||0)} = ${L.formatUah(lineUah)}`);
         }

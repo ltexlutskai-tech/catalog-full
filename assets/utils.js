@@ -255,7 +255,18 @@ window.LTEX = window.LTEX || {};
     p.thumbs = L.thumbsFor(p.id);
     p.image = p.images[0] || null;       // original (high-res) — for lightbox / hero
     p.thumb = p.thumbs[0] || p.image;    // small (~800px) — for cards
-    p.avgWeight = L.parseAvgWeight(p.weight);  // numeric avg kg of one lot/mix
+    /* Average lot weight in kg.
+       Source priority: parsed details ("✔ Вага лота: 20-25 кг") → price-list
+       weight column → 0. Details usually has the explicit range, while the
+       price-list column is sometimes blank or just the upper bound. */
+    p.detailsParsed = L.parseDetails(p.detailRaw);
+    const detailWeight = p.detailsParsed && (p.detailsParsed['вага_лота'] || p.detailsParsed['вага_лоту']);
+    const detailAvg = L.parseAvgWeight(detailWeight);
+    const fallbackAvg = L.parseAvgWeight(p.weight);
+    p.avgWeight = detailAvg > 0 ? detailAvg : fallbackAvg;
+    /* Also expose the human range string for UI labels */
+    p.avgWeightLabel = (detailWeight && String(detailWeight).trim()) ||
+                       (p.weight && String(p.weight).trim()) || '';
     p.priceEur = L.priceEurFor(p);
     p.priceUah = p.priceEur != null ? L.eurToUah(p.priceEur) : null;
     p.oldPriceEur = L.hasDiscount(p) ? p.price : null;

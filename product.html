@@ -236,7 +236,7 @@
               <button class="btn btn-outline btn-sm" id="qMinus" type="button" aria-label="Зменшити">−</button>
               <input type="number" id="qInput" value="1" min="1" max="99" step="1" style="width:4rem;text-align:center;padding:.5rem;border:1px solid var(--border);border-radius:var(--radius-md);font-weight:600">
               <button class="btn btn-outline btn-sm" id="qPlus" type="button" aria-label="Збільшити">+</button>
-              <span class="text-sm text-muted" id="qLabel">${p.unit === 'кг' ? 'лот' : 'шт'}${p.avgWeight > 0 && p.unit === 'кг' ? ` (~${p.avgWeight.toFixed(0)} кг)` : ''}</span>
+              <span class="text-sm text-muted" id="qLabel">${p.unit === 'кг' ? 'лот' : 'шт'}${p.avgWeight > 0 && p.unit === 'кг' ? ` (${(p.avgWeightLabel||'').replace(/\s*кг\s*$/i,'').trim() || p.avgWeight.toFixed(0)} кг)` : ''}</span>
             </div>
             <div class="flex-1" style="min-width:140px">
               <p class="text-sm text-muted">Сума: <span id="qHint" class="text-xs"></span></p>
@@ -409,13 +409,15 @@
   const qHint = document.getElementById('qHint');
   const isPerKg = p.unit === 'кг';
   const avgW = (p.avgWeight != null && p.avgWeight > 0) ? p.avgWeight : 0;
+  const avgWLabel = (p.avgWeightLabel || '').replace(/\s*кг\s*$/i,'').trim();
   function updateTotal(){
     const v = Math.max(1, parseInt(qIn.value) || 1);
     const multiplier = isPerKg ? (avgW || 1) : 1;
     qTot.textContent = L.formatUah((p.priceUah || 0) * multiplier * v);
     if(qHint){
       if(isPerKg && avgW > 0){
-        qHint.textContent = `(${v} × ~${avgW.toFixed(0)} кг × ${L.formatUah(p.priceUah || 0)}/кг)`;
+        const wText = avgWLabel || avgW.toFixed(0);
+        qHint.textContent = `(${v} × ${wText} кг × ${L.formatUah(p.priceUah || 0)}/кг)`;
       } else {
         qHint.textContent = '';
       }
