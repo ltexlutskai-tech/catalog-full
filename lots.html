@@ -441,17 +441,35 @@
     if(!p && !grp){ banner.style.display = 'none'; return; }
     const name = (p && p.name) || (grp && grp.name) || 'Товар';
     const img = p && (p.thumb || p.image);
-    const lotsCnt = grp ? (grp.lots || []).length : 0;
+    const allLots = grp ? (grp.lots || []) : [];
+    const free = allLots.filter(l => !l.reserved && !l.is_akciya).length;
+    const sale = allLots.filter(l => l.is_akciya).length;
+    const reserved = allLots.filter(l => l.reserved).length;
+    const totalKg = allLots.reduce((s,l) => s + (Number(l.weight)||0), 0);
+
+    const ppkUah = p && p.priceUah ? `${L.formatUah(p.priceUah)}/${p.unit||'кг'}` : '';
+    const ppkEur = p && p.priceEur ? `€${p.priceEur.toFixed(2)}/${p.unit||'кг'}` : '';
+
     banner.innerHTML = `
-      <div style="display:flex;gap:1rem;align-items:center;background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:.75rem 1rem">
-        ${img ? `<img src="${img}" alt="" style="width:4rem;height:4rem;object-fit:cover;border-radius:var(--radius-md);flex-shrink:0">` : ''}
-        <div style="flex:1;min-width:0">
-          <div class="text-xs text-muted">Лоти за товаром:</div>
-          <div class="font-semibold" style="line-height:1.3">${L.escapeHtml(name)}</div>
-          <div class="text-xs text-muted" style="margin-top:.125rem">№ ${L.escapeHtml(String(state.productId).padStart(4,'0'))} · ${lotsCnt} ${lotsCnt === 1 ? 'лот' : 'лотів'}</div>
+      <div class="lots-banner">
+        ${img ? `
+          <a href="${L.productHref(state.productId)}" class="lots-banner__img">
+            <img src="${img}" alt="${L.escapeHtml(name)}" loading="lazy">
+          </a>` : `<div class="lots-banner__img"></div>`}
+        <div class="lots-banner__info">
+          <div class="text-xs text-muted">Лоти за товаром № ${L.escapeHtml(String(state.productId).padStart(4,'0'))}</div>
+          <a href="${L.productHref(state.productId)}" class="lots-banner__title">${L.escapeHtml(name)}</a>
+          <div class="lots-banner__meta">
+            ${ppkUah ? `<span class="badge-pill" style="background:var(--red-50);color:var(--red-700);border-color:var(--red-200);font-weight:700">${ppkUah}</span>` : ''}
+            ${ppkEur ? `<span class="badge-pill">${ppkEur}</span>` : ''}
+            ${free ? `<span class="badge-pill" style="background:var(--green-50);color:var(--green-700);border-color:var(--green-200)">✓ ${free} ${free === 1 ? 'вільний' : (free<5?'вільні':'вільних')}</span>` : ''}
+            ${sale ? `<span class="badge-pill" style="background:var(--red-50);color:var(--red-700);border-color:var(--red-200)">🔥 ${sale} акційних</span>` : ''}
+            ${reserved ? `<span class="badge-pill" style="background:var(--gray-100);color:var(--gray-600)">${reserved} заброньовано</span>` : ''}
+            ${totalKg > 0 ? `<span class="badge-pill">∑ ${totalKg.toFixed(0)} кг</span>` : ''}
+          </div>
         </div>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <a class="btn btn-outline btn-sm" href="${L.productHref(state.productId)}">Картка товару</a>
+        <div class="lots-banner__actions">
+          <a class="btn btn-outline-primary btn-sm" href="${L.productHref(state.productId)}">↩ До товару</a>
           <a class="btn btn-ghost btn-sm" href="lots.html">Усі лоти</a>
         </div>
       </div>`;
