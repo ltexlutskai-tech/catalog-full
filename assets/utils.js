@@ -94,7 +94,49 @@ window.LTEX = window.LTEX || {};
   };
 
   /* === Price === */
-  /* User-editable rate (kept in localStorage; falls back to CONFIG default). */
+  /* Parse a weight string like "25", "20-25", "20-25 кг", "0,4-0,5 кг" → average kg.
+     Returns 0 if the string can't be interpreted. */
+  L.parseAvgWeight = (raw) => {
+    if(raw == null) return 0;
+    const s = String(raw).replace(',', '.');
+    const matches = s.match(/\d+(?:\.\d+)?/g);
+    if(!matches || !matches.length) return 0;
+    const nums = matches.map(parseFloat).filter(n => !isNaN(n));
+    if(!nums.length) return 0;
+    if(nums.length === 1) return nums[0];
+    /* Use first two numbers as a [min, max] range */
+    return (nums[0] + nums[1]) / 2;
+  };
+
+  /* Detect the prevailing EUR→UAH rate from lot data (mode = most frequent
+     rounded value). Falls back to median, then null. */
+  L.detectRateFromLots = () => {
+    const map = window.LOTS_DATA;
+    if(!map) return null;
+    const counts = new Map();
+    for(const pid of Object.keys(map)){
+      const lots = (map[pid] && map[pid].lots) || [];
+      for(const l of lots){
+        const r = Number(l.eur_rate);
+        if(!r || r <= 0 || r > 200) continue;
+        const k = Math.round(r * 100) / 100;
+        counts.set(k, (counts.get(k) || 0) + 1);
+      }
+    }
+    if(!counts.size) return null;
+    /* Pick the rate with the highest count; tiebreak by the larger value
+       (more recent imports tend to use a higher rate). */
+    let best = null, bestCount = 0;
+    for(const [r, c] of counts){
+      if(c > bestCount || (c === bestCount && r > (best || 0))){
+        best = r; bestCount = c;
+      }
+    }
+    return best;
+  };
+
+  /* User-editable rate.
+     Priority: localStorage user override → auto-detected from lots → CONFIG default. */
   const RATE_KEY = 'ltex-rate';
   L.getRate = () => {
     try {
@@ -102,7 +144,16 @@ window.LTEX = window.LTEX || {};
       const n = v == null ? null : parseFloat(v);
       if(n && n > 0) return n;
     } catch(e){}
+    const auto = L.detectRateFromLots();
+    if(auto && auto > 0) return auto;
     return L.CONFIG.EUR_UAH_RATE;
+  };
+  L.getUserRate = () => {
+    try {
+      const v = localStorage.getItem(RATE_KEY);
+      const n = v == null ? null : parseFloat(v);
+      return n && n > 0 ? n : null;
+    } catch(e){ return null; }
   };
   L.setRate = (n) => {
     n = Number(n);
@@ -112,10 +163,32 @@ window.LTEX = window.LTEX || {};
     window.dispatchEvent(new CustomEvent('ltex:rate-changed', { detail: { rate: n } }));
     return true;
   };
+  L.resetRate = () => {
+    try { localStorage.removeItem(RATE_KEY); } catch(e){}
+    L.recomputePrices();
+    window.dispatchEvent(new CustomEvent('ltex:rate-changed', { detail: { rate: L.getRate() } }));
+  };
   L.openRateEditor = () => {
+    const auto = L.detectRateFromLots();
+    const userRate = L.getUserRate();
     const cur = L.getRate();
-    const v = prompt('Курс EUR → UAH (1€ = ? ₴):\nВведіть нове значення', cur);
+    const lines = [
+      'Курс EUR → UAH (1€ = ? ₴)',
+      '',
+      auto ? `Автоматично з лотів: ${auto}` : '',
+      userRate ? `Поточне (ваше): ${userRate}` : `Поточне: ${cur} (авто)`,
+      '',
+      'Введіть нове значення (порожньо = повернутися на авто)',
+    ].filter(Boolean).join('\n');
+    const v = prompt(lines, userRate || cur);
     if(v == null) return;
+    if(String(v).trim() === ''){
+      if(L.getUserRate()){
+        L.resetRate();
+        L.toast(`Курс відновлено: 1€ = ${L.getRate()} ₴ (авто)`, 'success');
+      }
+      return;
+    }
     const n = parseFloat(String(v).replace(',', '.'));
     if(isNaN(n) || n <= 0){ L.toast('Невірне значення', 'error'); return; }
     L.setRate(n);
@@ -182,6 +255,7 @@ window.LTEX = window.LTEX || {};
     p.thumbs = L.thumbsFor(p.id);
     p.image = p.images[0] || null;       // original (high-res) — for lightbox / hero
     p.thumb = p.thumbs[0] || p.image;    // small (~800px) — for cards
+    p.avgWeight = L.parseAvgWeight(p.weight);  // numeric avg kg of one lot/mix
     p.priceEur = L.priceEurFor(p);
     p.priceUah = p.priceEur != null ? L.eurToUah(p.priceEur) : null;
     p.oldPriceEur = L.hasDiscount(p) ? p.price : null;

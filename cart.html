@@ -265,8 +265,16 @@
     const p = L.findProduct(it.id);
     if(!p) return '';
     const qty = Number(it.qty || 1);
-    const lineUah = (p.priceUah || 0) * qty;
-    const lineEur = (p.priceEur || 0) * qty;
+    const isPerKg = p.unit === 'кг';
+    const w = (p.avgWeight != null) ? p.avgWeight : (parseFloat(String(p.weight).replace(',', '.')) || 0);
+    const multiplier = isPerKg ? (w || 1) : 1;
+    const lineKg = isPerKg ? qty * w : qty * w; // visual line weight
+    const lineUah = (p.priceUah || 0) * multiplier * qty;
+    const lineEur = (p.priceEur || 0) * multiplier * qty;
+    const qtyLabel = isPerKg ? (qty === 1 ? 'лот' : (qty < 5 ? 'лоти' : 'лотів')) : 'шт';
+    const weightHint = w > 0
+      ? (isPerKg ? `~${w.toFixed(0)} кг кожен` : `${w.toFixed(2).replace(/\.00$/,'').replace(/0$/,'')} кг шт`)
+      : '';
     return `<div class="cart-row" data-key="prod:${L.escapeHtml(p.id)}">
       <a class="cart-row__media" href="${L.productHref(p.id)}">
         ${p.image ? `<img src="${p.thumb || p.image}" alt="${L.escapeHtml(p.name)}" loading="lazy">` : ''}
@@ -279,6 +287,7 @@
           № ${L.escapeHtml(String(p.id).padStart(4,'0'))}
           ${p.sort ? ` · ${L.escapeHtml(p.sort)}` : ''}
           ${p.season ? ` · ${L.escapeHtml(p.season)}` : ''}
+          ${weightHint ? ` · ${weightHint}` : ''}
           <br>
           ${L.formatUah(p.priceUah || 0)}/${p.unit||'кг'}
           ${p.priceEur ? ` <span class="text-muted">(${L.formatEur(p.priceEur)})</span>` : ''}
@@ -289,7 +298,7 @@
             <input type="number" value="${qty}" min="1" max="9999" step="1" aria-label="Кількість">
             <button data-step="+1" type="button" aria-label="Збільшити">+</button>
           </div>
-          <span class="text-muted text-xs" style="margin-left:.5rem">${p.unit||'кг'}</span>
+          <span class="text-muted text-xs" style="margin-left:.5rem">${qtyLabel}${lineKg > 0 ? ` = ${(lineKg).toFixed(1).replace(/\.0$/,'')} кг` : ''}</span>
         </div>
       </div>
       <div class="cart-row__actions">
@@ -318,8 +327,17 @@
       } else {
         const p = L.findProduct(it.id);
         if(!p) return;
+        const isPerKg = p.unit === 'кг';
+        const w = (p.avgWeight != null) ? p.avgWeight : 0;
+        const multiplier = isPerKg ? (w || 1) : 1;
+        const lineUah = (p.priceUah || 0) * multiplier * it.qty;
         lines.push(`${i+1}. ${p.name}`);
-        lines.push(`   ${it.qty} ${p.unit||'кг'} × ${L.formatUah(p.priceUah||0)} = ${L.formatUah((p.priceUah||0)*it.qty)}`);
+        lines.push(`   Артикул: ${String(p.id).padStart(4,'0')}`);
+        if(isPerKg && w > 0){
+          lines.push(`   ${it.qty} лот${it.qty===1?'':'и'} × ~${w.toFixed(0)} кг × ${L.formatUah(p.priceUah||0)}/кг = ${L.formatUah(lineUah)}`);
+        } else {
+          lines.push(`   ${it.qty} ${p.unit||'кг'} × ${L.formatUah(p.priceUah||0)} = ${L.formatUah(lineUah)}`);
+        }
       }
     });
     lines.push('');

@@ -97,6 +97,9 @@ window.LTEX = window.LTEX || {};
     remove: (id) => L.cart.set(id, 0),
     clear: () => { write(CK, []); L.cart._notify(); },
     count: () => read(CK).length,
+    /* For products sold per kg, 1 cart unit = 1 mix-lot of average weight.
+       So total kg / sum = qty × avgWeight × pricePerKg.
+       For per-piece products (unit='шт'), 1 unit = 1 piece. */
     totalKg: () => {
       const products = L.getProducts ? L.getProducts() : (window.PRODUCTS || []);
       let kg = 0;
@@ -108,11 +111,8 @@ window.LTEX = window.LTEX || {};
         }
         const p = products.find(pp => String(pp.id) === String(it.id));
         if(!p) continue;
-        if(p.unit === 'кг') kg += Number(it.qty);
-        else {
-          const w = parseFloat(String(p.weight).replace(',', '.')) || 0;
-          kg += w * Number(it.qty);
-        }
+        const w = (p.avgWeight != null) ? p.avgWeight : (parseFloat(String(p.weight).replace(',', '.')) || 0);
+        kg += (w || 1) * Number(it.qty);
       }
       return Math.round(kg * 10) / 10;
     },
@@ -128,7 +128,9 @@ window.LTEX = window.LTEX || {};
         const p = products.find(pp => String(pp.id) === String(it.id));
         if(!p) continue;
         const eur = p.priceEur ?? L.priceEurFor(p) ?? 0;
-        uah += L.eurToUah(eur) * Number(it.qty);
+        const w = (p.avgWeight != null) ? p.avgWeight : (parseFloat(String(p.weight).replace(',', '.')) || 0);
+        const multiplier = p.unit === 'кг' ? (w || 1) : 1;
+        uah += L.eurToUah(eur) * multiplier * Number(it.qty);
       }
       return Math.round(uah);
     },
@@ -144,7 +146,9 @@ window.LTEX = window.LTEX || {};
         const p = products.find(pp => String(pp.id) === String(it.id));
         if(!p) continue;
         const price = p.priceEur ?? L.priceEurFor(p) ?? 0;
-        eur += price * Number(it.qty);
+        const w = (p.avgWeight != null) ? p.avgWeight : (parseFloat(String(p.weight).replace(',', '.')) || 0);
+        const multiplier = p.unit === 'кг' ? (w || 1) : 1;
+        eur += price * multiplier * Number(it.qty);
       }
       return Math.round(eur * 100) / 100;
     },

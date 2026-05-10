@@ -236,11 +236,11 @@
               <button class="btn btn-outline btn-sm" id="qMinus" type="button" aria-label="Зменшити">−</button>
               <input type="number" id="qInput" value="1" min="1" max="99" step="1" style="width:4rem;text-align:center;padding:.5rem;border:1px solid var(--border);border-radius:var(--radius-md);font-weight:600">
               <button class="btn btn-outline btn-sm" id="qPlus" type="button" aria-label="Збільшити">+</button>
-              <span class="text-sm text-muted">${p.unit || 'кг'}</span>
+              <span class="text-sm text-muted" id="qLabel">${p.unit === 'кг' ? 'лот' : 'шт'}${p.avgWeight > 0 && p.unit === 'кг' ? ` (~${p.avgWeight.toFixed(0)} кг)` : ''}</span>
             </div>
             <div class="flex-1" style="min-width:140px">
-              <p class="text-sm text-muted">Сума:</p>
-              <p class="font-bold text-lg" style="color:var(--red-600)" id="qTotal">${L.formatUah(p.priceUah || 0)}</p>
+              <p class="text-sm text-muted">Сума: <span id="qHint" class="text-xs"></span></p>
+              <p class="font-bold text-lg" style="color:var(--red-600)" id="qTotal">${L.formatUah((p.priceUah || 0) * (p.unit === 'кг' && p.avgWeight ? p.avgWeight : 1))}</p>
             </div>
           </div>
           <div class="flex gap-2" style="margin-top:1rem">
@@ -403,16 +403,28 @@
     if(e.key === 'ArrowRight') document.getElementById('lbNext').click();
   });
 
-  /* Quantity + CTA */
+  /* Quantity + CTA — for unit='кг' qty means LOTS (× avgWeight), for 'шт' it's pieces. */
   const qIn = document.getElementById('qInput');
   const qTot = document.getElementById('qTotal');
+  const qHint = document.getElementById('qHint');
+  const isPerKg = p.unit === 'кг';
+  const avgW = (p.avgWeight != null && p.avgWeight > 0) ? p.avgWeight : 0;
   function updateTotal(){
     const v = Math.max(1, parseInt(qIn.value) || 1);
-    qTot.textContent = L.formatUah((p.priceUah || 0) * v);
+    const multiplier = isPerKg ? (avgW || 1) : 1;
+    qTot.textContent = L.formatUah((p.priceUah || 0) * multiplier * v);
+    if(qHint){
+      if(isPerKg && avgW > 0){
+        qHint.textContent = `(${v} × ~${avgW.toFixed(0)} кг × ${L.formatUah(p.priceUah || 0)}/кг)`;
+      } else {
+        qHint.textContent = '';
+      }
+    }
   }
   document.getElementById('qPlus').addEventListener('click', () => { qIn.value = Math.min(99, parseInt(qIn.value)+1); updateTotal(); });
   document.getElementById('qMinus').addEventListener('click', () => { qIn.value = Math.max(1, parseInt(qIn.value)-1); updateTotal(); });
   qIn.addEventListener('input', updateTotal);
+  updateTotal();
 
   document.getElementById('addCart').addEventListener('click', () => {
     if(L.cart.has(p.id)){ location.href = 'cart.html'; return; }
@@ -526,13 +538,8 @@
     const priceOldEl = document.querySelector('.price-head__old');
     if(priceOldEl && p.oldPriceUah != null) priceOldEl.textContent = L.formatUah(p.oldPriceUah);
 
-    /* qty total */
-    const qIn = document.getElementById('qInput');
-    if(qIn){
-      const v = Math.max(1, parseInt(qIn.value) || 1);
-      const totEl = document.getElementById('qTotal');
-      if(totEl) totEl.textContent = L.formatUah((p.priceUah || 0) * v);
-    }
+    /* qty total — re-uses updateTotal so the avgWeight multiplier stays consistent */
+    if(typeof updateTotal === 'function') updateTotal();
 
     /* related products grid */
     document.querySelectorAll('#related .product-card').forEach(card => {
