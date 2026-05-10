@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#16a34a">
 <title>Каталог товарів — L-TEX</title>
 <meta name="description" content="Каталог секонд-хенду та стоку гуртом — одяг, взуття, аксесуари. Англія, Німеччина, Канада, Польща. Від 10 кг.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -100,6 +102,7 @@
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
 <script src="assets/order-modal.js"></script>
+<script src="assets/seo.js"></script>
 <script src="assets/header.js"></script>
 <script>
 /* ============= Catalog page logic ============= */
@@ -594,6 +597,7 @@
     renderTitleAndCrumbs();
     renderPills();
     renderActive();
+    updateSeo(filtered);
 
     const filterBadge = document.getElementById('filterBadge');
     const cnt = activeCount();
@@ -668,6 +672,42 @@
     if(o === 1) return 'товар';
     if(o >= 2 && o <= 4) return 'товари';
     return 'товарів';
+  }
+
+  function updateSeo(filtered){
+    let title, description, image;
+    if(state.onlyNew){
+      title = 'Новинки каталогу — L-TEX';
+      description = `Свіжі надходження секонд-хенду і стоку. ${filtered.length} ${plural(filtered.length)} нових позицій. Гуртом від ${L.CONFIG.MIN_ORDER_KG} кг.`;
+    } else if(state.sale){
+      title = 'Акційні товари — L-TEX';
+      description = `Знижки на гуртові партії: ${filtered.length} ${plural(filtered.length)} зі знижкою. Англія · Німеччина · Канада · Польща.`;
+    } else if(state.sub){
+      title = `${state.sub} — каталог L-TEX`;
+      description = `${state.sub}: ${filtered.length} ${plural(filtered.length)} в наявності. Гуртом від ${L.CONFIG.MIN_ORDER_KG} кг, відеоогляди лотів. Доставка по Україні.`;
+    } else if(state.cat){
+      title = `${state.cat} — каталог L-TEX`;
+      description = `${state.cat}: ${filtered.length} ${plural(filtered.length)} в наявності. Англія · Німеччина · Канада · Польща. Гуртом від ${L.CONFIG.MIN_ORDER_KG} кг.`;
+    } else {
+      title = `Каталог товарів — ${L.getProducts().length}+ позицій — L-TEX`;
+      description = `Каталог секонд-хенду та стоку: одяг, взуття, аксесуари, дім та побут. Англія · Німеччина · Канада · Польща. Гуртом від ${L.CONFIG.MIN_ORDER_KG} кг.`;
+    }
+    image = filtered[0] && (filtered[0].thumb || filtered[0].image);
+    L.SEO.setMeta({ title, description, image, type: 'website' });
+
+    /* Breadcrumbs */
+    const crumbs = [{ name: 'Головна', url: '/' }];
+    if(state.onlyNew){ crumbs.push({ name: 'Каталог', url: '/catalog.html' }); crumbs.push({ name: 'Новинки', url: '/catalog.html?new=1' }); }
+    else if(state.sale){ crumbs.push({ name: 'Каталог', url: '/catalog.html' }); crumbs.push({ name: 'Акції', url: '/catalog.html?sale=1' }); }
+    else if(state.cat){
+      crumbs.push({ name: 'Каталог', url: '/catalog.html' });
+      crumbs.push({ name: state.cat, url: L.catalogHref({cat: state.cat}) });
+      if(state.sub) crumbs.push({ name: state.sub, url: L.catalogHref({cat: state.cat, sub: state.sub}) });
+    } else {
+      crumbs.push({ name: 'Каталог', url: '/catalog.html' });
+    }
+    L.SEO.setBreadcrumbs(crumbs);
+    L.SEO.setItemList(filtered, title);
   }
 
   /* === Boot === */

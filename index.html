@@ -6,6 +6,14 @@
 <meta name="theme-color" content="#16a34a">
 <title>L-TEX — Секонд-хенд та сток гуртом</title>
 <meta name="description" content="Секонд-хенд та сток гуртом від 10 кг. Англія, Німеччина, Канада, Польща. Каталог, наявні лоти, відеоогляди.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="L-TEX">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:title" content="L-TEX — Секонд-хенд та сток гуртом від 10 кг">
+<meta property="og:description" content="Гуртовий продаж секонд-хенду і стоку: одяг, взуття, аксесуари. Англія · Німеччина · Канада · Польща.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -253,6 +261,7 @@
 <script src="assets/utils.js"></script>
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
+<script src="assets/seo.js"></script>
 <script src="assets/header.js"></script>
 <script>
 (() => {
@@ -269,6 +278,17 @@
   const all = L.getProducts();
   document.getElementById('statCatalog').textContent = all.length + '+';
   document.getElementById('statLots').textContent = all.filter(p => p.youtube).length + '+';
+
+  /* SEO */
+  L.SEO.setMeta({
+    title: 'L-TEX — Секонд-хенд та сток гуртом від 10 кг',
+    description: `Гуртовий продаж секонд-хенду і стоку: одяг, взуття, аксесуари, дім та побут. Англія · Німеччина · Канада · Польща. ${all.length}+ позицій у каталозі, відеоогляди лотів. Доставка по Україні, від ${L.CONFIG.MIN_ORDER_KG} кг.`,
+    keywords: 'секонд-хенд гуртом, сток гуртом, мікс одягу, оптом, Англія, Німеччина, Канада, Польща, Луцьк',
+    type: 'website',
+    url: '/',
+  });
+  L.SEO.setBreadcrumbs([{ name: 'Головна', url: '/' }]);
+  L.SEO.setItemList(all.slice(0, 24), 'Каталог L-TEX');
 
   /* Categories grid */
   const counts = L.topCatCounts();

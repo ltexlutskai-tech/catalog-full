@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#16a34a">
 <title>Товар — L-TEX</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -57,6 +59,7 @@
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
 <script src="assets/order-modal.js"></script>
+<script src="assets/seo.js"></script>
 <script src="assets/header.js"></script>
 <script>
 (() => {
@@ -78,7 +81,21 @@
     return;
   }
 
-  document.title = p.name + ' — L-TEX';
+  /* SEO: title, OG, JSON-LD Product + Breadcrumbs */
+  const seoDesc = `${p.name}. ${p.priceUah ? L.formatUah(p.priceUah) + '/' + (p.unit||'кг') + '. ' : ''}${p.sort ? 'Сорт: '+p.sort+'. ' : ''}${p.season ? 'Сезон: '+p.season+'. ' : ''}${p.country ? 'Країна: '+p.country+'. ' : ''}Гуртом від ${L.CONFIG.MIN_ORDER_KG} кг — L-TEX.`.trim();
+  L.SEO.setMeta({
+    title: `${p.name} — L-TEX`,
+    description: seoDesc.slice(0, 200),
+    image: p.image,
+    type: 'product',
+    url: L.productHref(p.id),
+  });
+  L.SEO.setProduct(p);
+  const seoCrumbs = [{ name: 'Головна', url: '/' }, { name: 'Каталог', url: '/catalog.html' }];
+  if(p.topCat) seoCrumbs.push({ name: p.topCat, url: L.catalogHref({cat:p.topCat}) });
+  if(p.subcat && p.subcat !== p.topCat) seoCrumbs.push({ name: p.subcat, url: L.catalogHref({cat:p.topCat, sub:p.subcat}) });
+  seoCrumbs.push({ name: p.name, url: L.productHref(p.id) });
+  L.SEO.setBreadcrumbs(seoCrumbs);
 
   const bc = document.getElementById('bcList');
   let bcHtml = `<li><a href="index.html">Головна</a></li><li><a href="catalog.html">Каталог</a></li>`;
@@ -499,7 +516,7 @@
       const inCart = L.cart.hasLot(lot.barcode);
       const reserved = lot.reserved;
       const onSale = lot.is_akciya;
-      const thumb = L.youtubeThumb(lot.youtube || p.youtube);
+      const thumb = L.youtubeThumb(lot.youtube) || L.youtubeThumb(p.youtube) || p.thumb || p.image;
       const watchUrl = L.youtubeWatchUrl(lot.youtube || p.youtube);
       const status = onSale ? `<span class="tag tag-status-sale">АКЦІЯ</span>`
         : reserved ? `<span class="tag tag-status-reserved">Заброньований</span>`

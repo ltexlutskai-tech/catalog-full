@@ -20,6 +20,17 @@ window.LTEX = window.LTEX || {};
     ADDRESS: 'с. Піддубці, Луцький р-н, Волинська обл.',
     MIN_ORDER_KG: 10,
     BRAND: 'L-TEX',
+    /* Public site URL — used to build absolute URLs for SEO / Open Graph / JSON-LD. */
+    SITE_URL: 'https://ltexlutskai-tech.github.io/catalog-full',
+  };
+
+  /* Make a relative path absolute against SITE_URL (or location.origin if same host). */
+  L.absUrl = (path) => {
+    if(!path) return L.CONFIG.SITE_URL;
+    if(/^https?:\/\//.test(path)) return path;
+    const base = L.CONFIG.SITE_URL.replace(/\/$/, '');
+    const p = path.startsWith('/') ? path : '/' + path;
+    return base + p;
   };
 
   /* === Enums / labels === */

@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#16a34a">
 <title>Наявні лоти — L-TEX</title>
 <meta name="description" content="Конкретні лоти секонд-хенду з відеооглядом, штрихкодом, вагою та ціною в гривнях. Гуртом від 10 кг.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -96,6 +98,7 @@
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
 <script src="assets/order-modal.js"></script>
+<script src="assets/seo.js"></script>
 <script src="assets/header.js"></script>
 <script>
 /* ============= Lots page logic — uses real LOTS_DATA from data/lots.js ============= */
@@ -223,7 +226,9 @@
     const reserved = lot.reserved;
     const free = !reserved && !onSale;
 
-    const thumb = L.youtubeThumb(lot.youtube || grp.youtube);
+    /* Prefer concrete lot video thumb; fall back to product photo for playlist URLs. */
+    const thumb = L.youtubeThumb(lot.youtube) || L.youtubeThumb(grp.youtube)
+                  || (prod && (prod.thumb || prod.image));
     const watchUrl = L.youtubeWatchUrl(lot.youtube || grp.youtube);
 
     const isList = state.layout === 'list';
@@ -573,14 +578,27 @@
     const total = filtered.length;
 
     document.getElementById('totalCount').textContent = `${total} ${plural(total)}`;
+    let seoTitle, seoDesc, seoImage, seoCrumbs;
     if(state.productId){
       const p = L.findProduct(state.productId);
-      document.getElementById('pageTitle').textContent = p ? `Лоти: ${p.name}` : 'Лоти товару';
-      document.title = (p ? p.name + ' · Лоти' : 'Лоти товару') + ' — L-TEX';
+      const heading = p ? `Лоти: ${p.name}` : 'Лоти товару';
+      document.getElementById('pageTitle').textContent = heading;
+      seoTitle = (p ? p.name + ' · Лоти' : 'Лоти товару') + ' — L-TEX';
+      seoDesc = `${total} ${plural(total)} зі штрихкодом, реальною вагою та ціною в гривнях. ${p ? p.name : ''}`.slice(0, 200);
+      seoImage = p && (p.thumb || p.image);
+      seoCrumbs = [
+        { name: 'Головна', url: '/' },
+        { name: 'Лоти', url: '/lots.html' },
+        { name: p ? p.name : 'Товар', url: '/lots.html?id=' + encodeURIComponent(state.productId) },
+      ];
     } else {
       document.getElementById('pageTitle').textContent = 'Наявні лоти';
-      document.title = 'Наявні лоти — L-TEX';
+      seoTitle = `Наявні лоти — ${total} мішків зі складу — L-TEX`;
+      seoDesc = `Конкретні лоти секонд-хенду зі штрихкодом, реальною вагою та ціною в гривнях. Відеоогляд кожного мішка. Гуртом від ${L.CONFIG.MIN_ORDER_KG} кг.`;
+      seoCrumbs = [{ name: 'Головна', url: '/' }, { name: 'Наявні лоти', url: '/lots.html' }];
     }
+    L.SEO.setMeta({ title: seoTitle, description: seoDesc, image: seoImage, type: 'website' });
+    L.SEO.setBreadcrumbs(seoCrumbs);
 
     /* breadcrumbs */
     const ol = document.getElementById('bcList');

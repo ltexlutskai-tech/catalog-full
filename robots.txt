@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /cart.html
+Disallow: /wishlist.html
+Disallow: /preview_render.html
+Disallow: /*.xlsx$
+
+Sitemap: https://ltexlutskai-tech.github.io/catalog-full/sitemap.xml

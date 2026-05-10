@@ -20,7 +20,7 @@ REM optimize_images.py is non-fatal: skip if it errors
 
 echo.
 echo === [5/5] Committing and pushing ===
-git add data assets *.html 2025-2026-named-top5
+git add data assets *.html sitemap.xml robots.txt favicon.svg 2025-2026-named-top5
 git diff --cached --quiet
 if %ERRORLEVEL% equ 0 (
     echo No changes to commit. Done.
