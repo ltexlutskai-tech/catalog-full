@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#16a34a">
 <title>Наявні лоти — L-TEX</title>
-<meta name="description" content="Конкретні лоти секонд-хенду з відеооглядом, вагою та ціною. Гуртом від 10 кг.">
+<meta name="description" content="Конкретні лоти секонд-хенду з відеооглядом, штрихкодом, вагою та ціною в гривнях. Гуртом від 10 кг.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
 <main class="container" style="padding-top:1.5rem;padding-bottom:3rem">
 
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <ol>
+    <ol id="bcList">
       <li><a href="index.html">Головна</a></li>
       <li>Наявні лоти</li>
     </ol>
@@ -27,7 +27,7 @@
 
   <div class="catalog-toolbar" style="margin-top:1rem">
     <div>
-      <h1 class="h1">Наявні лоти</h1>
+      <h1 class="h1" id="pageTitle">Наявні лоти</h1>
       <p class="text-muted text-sm" id="totalCount" style="margin-top:.25rem">Завантаження…</p>
     </div>
     <div class="flex items-center gap-2">
@@ -37,11 +37,11 @@
         <span class="badge" id="filterBadge" style="display:none">0</span>
       </button>
       <select class="filter-select" id="sortSelect" style="width:auto;min-width:11rem" aria-label="Сортування">
-        <option value="newest">Спочатку нові</option>
+        <option value="newest">Новіші лоти</option>
         <option value="price_asc">Ціна: дешевше</option>
         <option value="price_desc">Ціна: дорожче</option>
         <option value="weight_desc">Більша вага</option>
-        <option value="name_asc">Назва А–Я</option>
+        <option value="weight_asc">Менша вага</option>
       </select>
       <div class="layout-toggle" role="tablist" aria-label="Вигляд">
         <button id="vGrid" class="active" type="button" aria-label="Сітка"><span class="icon icon-sm" data-icon="layoutGrid"></span></button>
@@ -50,6 +50,10 @@
     </div>
   </div>
 
+  <!-- When ?id=X — show product banner -->
+  <div id="productBanner" style="display:none;margin-top:1rem"></div>
+
+  <!-- Pills for top-level categories or subcategories within filtered product -->
   <div class="flex flex-wrap gap-2" id="pills" style="margin-top:1rem"></div>
 
   <div class="active-filters" id="activeFilters" style="margin-top:1rem;display:none"></div>
@@ -80,49 +84,35 @@
   </div>
 </div>
 
-<!-- Quick order modal -->
-<div class="modal" id="quickOrderModal" role="dialog" aria-label="Швидке замовлення" aria-hidden="true">
-  <div class="modal__panel">
-    <div class="modal__head">
-      <h3 class="h3">⚡ Замовлення в один клік</h3>
-      <button class="icon-btn" id="quickClose" type="button" aria-label="Закрити"><span class="icon" data-icon="x"></span></button>
-    </div>
-    <div class="modal__body" id="quickBody"></div>
-  </div>
-</div>
-
 <footer data-ltex-footer></footer>
 
 <script src="data/meta.js"></script>
 <script src="data/images.js"></script>
 <script src="data/details.js"></script>
 <script src="data/products.js"></script>
+<script src="data/lots.js"></script>
 <script src="assets/icons.js"></script>
 <script src="assets/utils.js"></script>
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
+<script src="assets/order-modal.js"></script>
 <script src="assets/header.js"></script>
 <script>
-/* ============= Lots page logic =============
-   This static project has products (window.PRODUCTS) but no per-bag "lot" records.
-   Treat each product as a virtual lot: barcode = product id, weight = product.weight,
-   priceEur = product.priceEur, video = product.youtube.
-   We only show products that have a YouTube link (proper lots have video).
-*/
+/* ============= Lots page logic — uses real LOTS_DATA from data/lots.js ============= */
 (() => {
   const L = window.LTEX;
   const ICONS = window.ICONS;
-
   document.querySelectorAll('[data-icon]').forEach(el => {
     const n = el.dataset.icon;
     if(ICONS[n]) el.innerHTML = ICONS[n]();
   });
 
   const state = {
+    productId: null,    // ?id=X — show only lots of this product
+    barcode: null,      // ?barcode=X — scroll/highlight
     cat: null, sub: null,
     quality: [], season: [], audience: [], country: [],
-    status: [],            // ['free','sale']
-    inStock: false,
+    status: [],         // ['free','sale','reserved']
     priceMin:null, priceMax:null,
     weightMin:null, weightMax:null,
     q:'', sort:'newest', layout:'grid', page:1,
@@ -130,6 +120,8 @@
 
   function readUrl(){
     const p = L.getParams();
+    state.productId = p.id || null;
+    state.barcode = p.barcode || null;
     state.cat = p.cat || null;
     state.sub = p.sub || null;
     state.quality = (p.quality||'').split(',').filter(Boolean);
@@ -137,7 +129,6 @@
     state.audience = (p.audience||'').split(',').filter(Boolean);
     state.country = (p.country||'').split(',').filter(Boolean);
     state.status = (p.status||'').split(',').filter(Boolean);
-    state.inStock = p.inStock === '1';
     state.priceMin = p.priceMin ? parseFloat(p.priceMin) : null;
     state.priceMax = p.priceMax ? parseFloat(p.priceMax) : null;
     state.weightMin = p.weightMin ? parseFloat(p.weightMin) : null;
@@ -150,11 +141,12 @@
 
   function pushUrl(){
     L.setParams({
+      id: state.productId || '',
+      barcode: state.barcode || '',
       cat: state.cat, sub: state.sub,
       quality: state.quality, season: state.season,
       audience: state.audience, country: state.country,
       status: state.status,
-      inStock: state.inStock ? '1' : '',
       priceMin: state.priceMin || '', priceMax: state.priceMax || '',
       weightMin: state.weightMin || '', weightMax: state.weightMax || '',
       q: state.q, sort: state.sort,
@@ -163,96 +155,130 @@
     }, true);
   }
 
-  /* === Filter pipeline === */
-  function applyFilters(products){
-    let list = products.filter(p => p.youtube);   // only items with video are "lots"
-    if(state.cat) list = list.filter(p => p.topCat === state.cat);
-    if(state.sub) list = list.filter(p => p.subcat === state.sub || p.category === state.sub);
-    if(state.quality.length) list = list.filter(p => state.quality.includes(p.sort));
-    if(state.season.length) list = list.filter(p => state.season.includes(p.season));
-    if(state.audience.length) list = list.filter(p => state.audience.includes(p.audience));
-    if(state.country.length) list = list.filter(p => state.country.includes(p.country));
-    if(state.inStock) list = list.filter(p => p.inStock);
+  /* === Filter pipeline (uses real LOTS_DATA from data/lots.js) === */
+  function applyFilters(){
+    let lots = L.getAllLots();
+
+    if(state.productId){
+      lots = lots.filter(l => String(l.prodId) === String(state.productId));
+    }
+
+    /* Use parent product attrs for filters (since lots.LOTS_DATA copies them onto _grp) */
+    const parentOf = l => l._grp || (l.parentProd) || {};
+    if(state.cat){
+      lots = lots.filter(l => {
+        const pp = l.parentProd || L.findProduct(l.prodId);
+        return pp && pp.topCat === state.cat;
+      });
+    }
+    if(state.sub){
+      lots = lots.filter(l => {
+        const grp = parentOf(l);
+        return grp.subcategory === state.sub || grp.category === state.sub;
+      });
+    }
+    if(state.quality.length) lots = lots.filter(l => state.quality.includes(parentOf(l).sort));
+    if(state.season.length) lots = lots.filter(l => state.season.includes(parentOf(l).season));
+    if(state.audience.length) lots = lots.filter(l => state.audience.includes(parentOf(l).audience));
+    if(state.country.length) lots = lots.filter(l => state.country.includes(parentOf(l).country));
+
     if(state.status.length){
-      list = list.filter(p => {
-        const onSale = L.hasDiscount(p);
-        const free = !onSale && p.inStock;
-        const s = onSale ? 'sale' : (free ? 'free' : 'reserved');
+      lots = lots.filter(l => {
+        const onSale = l.is_akciya;
+        const free = !l.reserved && !onSale;
+        const reserved = l.reserved;
+        const s = onSale ? 'sale' : (reserved ? 'reserved' : 'free');
         return state.status.includes(s);
       });
     }
-    if(state.priceMin != null) list = list.filter(p => (p.priceEur || 0) >= state.priceMin);
-    if(state.priceMax != null) list = list.filter(p => (p.priceEur || 0) <= state.priceMax);
-    if(state.weightMin != null) list = list.filter(p => parseFloat(String(p.weight).replace(',', '.')) >= state.weightMin);
-    if(state.weightMax != null) list = list.filter(p => parseFloat(String(p.weight).replace(',', '.')) <= state.weightMax);
+
+    if(state.priceMin != null) lots = lots.filter(l => (l.price_uah || 0) >= state.priceMin);
+    if(state.priceMax != null) lots = lots.filter(l => (l.price_uah || 0) <= state.priceMax);
+    if(state.weightMin != null) lots = lots.filter(l => (l.weight || 0) >= state.weightMin);
+    if(state.weightMax != null) lots = lots.filter(l => (l.weight || 0) <= state.weightMax);
+
     if(state.q){
-      const r = L.search(state.q, { products: list, minScore: 0.4 });
-      return r.map(x => x.p);
+      const r = L.search(state.q, { products: lots.map(l => ({
+        ...parentOf(l), id: l.prodId, name: parentOf(l).name || l.prodName, brand: parentOf(l).brand
+      })), minScore: 0.4 });
+      const allowed = new Set(r.map(x => String(x.p.id)));
+      lots = lots.filter(l => allowed.has(String(l.prodId)));
     }
-    if(state.sort === 'price_asc') list = [...list].sort((a,b) => (a.priceEur||1e9) - (b.priceEur||1e9));
-    else if(state.sort === 'price_desc') list = [...list].sort((a,b) => (b.priceEur||0) - (a.priceEur||0));
-    else if(state.sort === 'weight_desc') list = [...list].sort((a,b) => parseFloat(String(b.weight).replace(',', '.')) - parseFloat(String(a.weight).replace(',', '.')));
-    else if(state.sort === 'name_asc') list = [...list].sort((a,b) => a.name.localeCompare(b.name, 'uk'));
-    else /* newest */ list = [...list].sort((a,b) => parseInt(b.id) - parseInt(a.id));
-    return list;
+
+    if(state.sort === 'price_asc') lots = [...lots].sort((a,b) => (a.price_uah||1e12) - (b.price_uah||1e12));
+    else if(state.sort === 'price_desc') lots = [...lots].sort((a,b) => (b.price_uah||0) - (a.price_uah||0));
+    else if(state.sort === 'weight_desc') lots = [...lots].sort((a,b) => (b.weight||0) - (a.weight||0));
+    else if(state.sort === 'weight_asc') lots = [...lots].sort((a,b) => (a.weight||1e12) - (b.weight||1e12));
+    else /* newest = by prodId desc */ lots = [...lots].sort((a,b) => parseInt(b.prodId) - parseInt(a.prodId));
+
+    return lots;
   }
 
   /* === Lot card === */
-  function renderLotCard(p){
-    const wished = L.wishlist.has(p.id);
-    const inCart = L.cart.has(p.id);
-    const onSale = L.hasDiscount(p);
-    const free = !onSale && p.inStock;
-    const thumb = L.youtubeThumb(p.youtube);
+  function renderLotCard(lot){
+    const grp = lot._grp || {};
+    const prod = lot.parentProd || L.findProduct(lot.prodId);
+    const inCart = L.cart.hasLot(lot.barcode);
+    const onSale = lot.is_akciya;
+    const reserved = lot.reserved;
+    const free = !reserved && !onSale;
+
+    const thumb = L.youtubeThumb(lot.youtube || grp.youtube);
+    const watchUrl = L.youtubeWatchUrl(lot.youtube || grp.youtube);
+
     const isList = state.layout === 'list';
-    const cardCls = `lot-card ${isList ? 'list' : ''} ${onSale ? 'on-sale' : ''} ${inCart ? 'in-cart' : ''}`;
+    const cardCls = `lot-card ${isList ? 'list' : ''} ${onSale ? 'on-sale' : ''} ${inCart ? 'in-cart' : ''} ${reserved ? 'reserved' : ''}`;
 
     const statusBadge = onSale
-      ? `<span class="tag tag-status-sale">Акція${p.discount ? ' −'+p.discount+'%' : ''}</span>`
-      : free ? `<span class="tag tag-status-free">Вільний</span>`
-      : `<span class="tag tag-status-reserved">Очікує</span>`;
+      ? `<span class="tag tag-status-sale">АКЦІЯ</span>`
+      : reserved ? `<span class="tag tag-status-reserved">Заброньований</span>`
+      : `<span class="tag tag-status-free">Вільний</span>`;
 
-    const priceMain = p.priceUah != null ? L.formatUah(p.priceUah) : '—';
-    const priceEur = p.priceEur != null ? L.formatEur(p.priceEur) : '';
-    const oldEur = p.oldPriceEur != null ? `<span class="line-through" style="margin-left:.25rem">${L.formatEur(p.oldPriceEur)}</span>` : '';
+    const priceUah = lot.price_uah != null ? L.formatUah(lot.price_uah) : '—';
+    const ppk = lot.price_per_kg != null ? `€${Number(lot.price_per_kg).toFixed(2)}/${lot.unit||'кг'}` : '';
+    const oldPrice = lot.is_akciya && lot.price_regular_uah != null
+      ? `<span class="line-through" style="margin-left:.5rem;color:var(--gray-400);font-weight:400;font-size:.75rem">${L.formatUah(lot.price_regular_uah)}</span>` : '';
 
-    const weight = String(p.weight || '').replace(',', '.');
-    const watchUrl = L.youtubeWatchUrl(p.youtube);
+    const weight = Number(lot.weight || 0).toFixed(1).replace(/\.0$/, '');
 
-    return `<article class="${cardCls}" data-id="${p.id}">
-      <a class="lot-card__media" href="${watchUrl}" target="_blank" rel="noopener" aria-label="Відеоогляд лота">
+    const desc = L.cleanLotDesc(lot.desc);
+
+    return `<article class="${cardCls}" data-barcode="${L.escapeHtml(lot.barcode)}">
+      <a class="lot-card__media" href="${watchUrl}" target="_blank" rel="noopener" aria-label="Відеоогляд лота ${L.escapeHtml(lot.barcode)}">
         ${thumb
           ? `<img class="lot-card__thumb" src="${thumb}" alt="" loading="lazy">`
-          : `<div class="lot-card__media-empty"><span class="icon icon-lg" data-icon="video"></span><span class="text-xs">Плейлист</span></div>`}
+          : `<div class="lot-card__media-empty"><span class="icon icon-lg" data-icon="video"></span><span class="text-xs">Відео скоро</span></div>`}
         <div class="lot-card__play"><span class="icon icon-lg" data-icon="play"></span></div>
         <div class="lot-card__badges">
           ${statusBadge}
-          ${p.audience && p.audience !== 'Мікс' ? `<span class="badge-pill" style="background:rgba(255,255,255,.95);font-size:.625rem">${L.escapeHtml(p.audience)}</span>` : ''}
+          ${grp.audience && grp.audience !== 'Мікс' ? `<span class="badge-pill" style="background:rgba(255,255,255,.95);font-size:.625rem">${L.escapeHtml(grp.audience)}</span>` : ''}
         </div>
-        <button class="lot-card__wish ${wished ? 'active' : ''}" data-wish="${p.id}" type="button" aria-label="${wished ? 'Прибрати з обраного' : 'Додати в обране'}" onclick="event.preventDefault();event.stopPropagation()">
-          <span class="icon icon-sm">${wished ? ICONS.heartFilled() : ICONS.heart()}</span>
-        </button>
       </a>
       <div class="lot-card__body">
-        <p class="lot-card__code">№ ${L.escapeHtml(String(p.id).padStart(4,'0'))}</p>
-        <a href="${L.productHref(p.id)}" class="lot-card__title">${L.escapeHtml(p.name)}</a>
+        <p class="lot-card__code">${L.escapeHtml(lot.barcode)}</p>
+        <a href="${L.productHref(lot.prodId)}" class="lot-card__title">${L.escapeHtml(grp.name || lot.prodName)}</a>
         <div class="lot-card__stats">
-          <span><strong>${weight || '—'}</strong> ${p.unit === 'шт' ? 'шт' : 'кг'}</span>
-          ${p.sort ? `<span class="badge-pill" style="font-size:.6875rem">${L.escapeHtml(p.sort)}</span>` : ''}
-          ${p.season ? `<span class="badge-pill" style="font-size:.6875rem">${L.escapeHtml(p.season)}</span>` : ''}
+          <span><strong>${weight}</strong> ${lot.unit||'кг'}</span>
+          ${lot.qty ? `<span><strong>${lot.qty}</strong> шт</span>` : ''}
+          ${grp.sort ? `<span class="badge-pill" style="font-size:.6875rem">${L.escapeHtml(grp.sort)}</span>` : ''}
         </div>
         <div class="lot-card__price-block">
-          <p class="lot-card__price">${priceMain}<span style="font-size:.75rem;font-weight:400;color:var(--gray-500)">/${p.unit||'кг'}</span></p>
-          <p class="lot-card__price-eur">${priceEur} ${oldEur}</p>
+          <p class="lot-card__price">${priceUah}${oldPrice}</p>
+          ${ppk ? `<p class="lot-card__price-eur">${ppk}${grp.season ? ' · ' + L.escapeHtml(grp.season) : ''}</p>` : ''}
         </div>
+        ${isList && desc ? `<details style="margin-top:.5rem"><summary class="text-xs" style="color:var(--primary);cursor:pointer">Опис лоту</summary><pre style="white-space:pre-wrap;font-family:inherit;font-size:.75rem;color:var(--gray-600);margin-top:.25rem">${L.escapeHtml(desc)}</pre></details>` : ''}
         <div class="lot-card__actions">
-          <a class="btn btn-outline-primary" href="${L.productHref(p.id)}">Детальніше</a>
-          <button class="btn btn-primary" data-add-cart="${p.id}" type="button">
-            <span class="icon icon-sm">${inCart ? ICONS.check() : ICONS.plus()}</span>
-            ${inCart ? 'У кошику' : 'Додати'}
+          ${reserved
+            ? `<button class="btn btn-outline" type="button" disabled style="flex:1;opacity:.7">Заброньований</button>`
+            : `<button class="btn ${inCart?'btn-outline-primary':'btn-primary'}" type="button" data-cart="${L.escapeHtml(lot.barcode)}" data-prodid="${L.escapeHtml(lot.prodId)}" style="flex:1">
+                <span class="icon icon-sm">${inCart ? ICONS.check() : ICONS.cart()}</span>
+                ${inCart ? 'У кошику' : 'В кошик'}
+              </button>`}
+          <button class="btn btn-outline" type="button" data-order="${L.escapeHtml(lot.barcode)}" title="Запит / замовлення" aria-label="Запит">
+            <span class="icon icon-sm" data-icon="messageCircle"></span>
           </button>
         </div>
-        ${free || onSale ? `<button class="btn btn-quick lot-card__quick" data-quick="${p.id}" type="button">⚡ Замовити в один клік</button>` : ''}
+        ${reserved ? '' : `<button class="btn btn-quick lot-card__quick" type="button" data-quick="${L.escapeHtml(lot.barcode)}">⚡ Замовити в один клік</button>`}
       </div>
     </article>`;
   }
@@ -267,14 +293,14 @@
   const STATUS_OPTS = [
     { v:'free', label:'Вільні' },
     { v:'sale', label:'Акційні' },
-    { v:'reserved', label:'Очікують' },
+    { v:'reserved', label:'Заброньовані' },
   ];
 
   function buildFiltersHTML(){
     const parts = [];
     parts.push(`<div class="filter-block">
       <div class="filter-block__title">Пошук</div>
-      <input type="search" id="fSearch" class="filter-select" placeholder="Назва, ID, бренд…" value="${L.escapeHtml(state.q)}">
+      <input type="search" id="fSearch" class="filter-select" placeholder="Назва, бренд, штрихкод…" value="${L.escapeHtml(state.q)}">
     </div>`);
 
     parts.push(`<div class="filter-block">
@@ -289,8 +315,9 @@
       </div>
     </div>`);
 
-    if(!state.cat){
-      const counts = L.topCatCounts();
+    /* Skip cat picker when filtered by single product */
+    if(!state.productId && !state.cat){
+      const counts = lotsCountByTopCat();
       parts.push(`<div class="filter-block">
         <div class="filter-block__title">Категорія</div>
         <div class="filter-options">
@@ -305,27 +332,29 @@
       </div>`);
     }
 
-    for(const f of FACETS){
-      const opts = f.src();
-      parts.push(`<div class="filter-block">
-        <div class="filter-block__title">${f.title}</div>
-        <div class="filter-options">
-          ${opts.map(o => `
-            <label class="filter-option">
-              <input type="checkbox" data-facet="${f.key}" value="${L.escapeHtml(o)}" ${(state[f.key]||[]).includes(o) ? 'checked' : ''}>
-              <span>${L.escapeHtml(o)}</span>
-            </label>
-          `).join('')}
-        </div>
-      </div>`);
+    if(!state.productId){
+      for(const f of FACETS){
+        const opts = f.src();
+        parts.push(`<div class="filter-block">
+          <div class="filter-block__title">${f.title}</div>
+          <div class="filter-options">
+            ${opts.map(o => `
+              <label class="filter-option">
+                <input type="checkbox" data-facet="${f.key}" value="${L.escapeHtml(o)}" ${(state[f.key]||[]).includes(o) ? 'checked' : ''}>
+                <span>${L.escapeHtml(o)}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>`);
+      }
     }
 
     parts.push(`<div class="filter-block">
-      <div class="filter-block__title">Ціна, €</div>
+      <div class="filter-block__title">Ціна за лот, ₴</div>
       <div class="filter-range">
-        <input type="number" id="fPriceMin" placeholder="від" min="0" step="0.1" value="${state.priceMin||''}">
+        <input type="number" id="fPriceMin" placeholder="від" min="0" step="100" value="${state.priceMin||''}">
         <span>—</span>
-        <input type="number" id="fPriceMax" placeholder="до" min="0" step="0.1" value="${state.priceMax||''}">
+        <input type="number" id="fPriceMax" placeholder="до" min="0" step="100" value="${state.priceMax||''}">
       </div>
     </div>`);
 
@@ -339,16 +368,19 @@
     </div>`);
 
     parts.push(`<div class="filter-block">
-      <label class="filter-option">
-        <input type="checkbox" id="fInStock" ${state.inStock?'checked':''}>
-        <span>Тільки в наявності</span>
-      </label>
-    </div>`);
-
-    parts.push(`<div class="filter-block">
       <button class="btn btn-outline w-full" id="fReset" type="button">Скинути всі фільтри</button>
     </div>`);
     return parts.join('');
+  }
+
+  function lotsCountByTopCat(){
+    const map = new Map();
+    for(const l of L.getAllLots()){
+      const pp = l.parentProd || L.findProduct(l.prodId);
+      if(!pp || !pp.topCat) continue;
+      map.set(pp.topCat, (map.get(pp.topCat)||0)+1);
+    }
+    return map;
   }
 
   function bindFilters(root){
@@ -386,34 +418,67 @@
       state.page = 1; pushUrl(); render();
     }));
 
-    root.querySelector('#fInStock')?.addEventListener('change', e => {
-      state.inStock = e.target.checked; state.page = 1; pushUrl(); render();
-    });
     root.querySelector('#fReset')?.addEventListener('click', () => {
       Object.assign(state, {
         cat:null, sub:null, quality:[], season:[], audience:[], country:[], status:[],
-        inStock:false, priceMin:null, priceMax:null, weightMin:null, weightMax:null,
+        priceMin:null, priceMax:null, weightMin:null, weightMax:null,
         q:'', page:1
       });
       pushUrl(); render();
     });
   }
 
+  function renderProductBanner(){
+    const banner = document.getElementById('productBanner');
+    if(!state.productId){ banner.style.display = 'none'; return; }
+    const p = L.findProduct(state.productId);
+    const grp = window.LOTS_DATA && window.LOTS_DATA[String(state.productId)];
+    if(!p && !grp){ banner.style.display = 'none'; return; }
+    const name = (p && p.name) || (grp && grp.name) || 'Товар';
+    const img = p && p.image;
+    const lotsCnt = grp ? (grp.lots || []).length : 0;
+    banner.innerHTML = `
+      <div style="display:flex;gap:1rem;align-items:center;background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:.75rem 1rem">
+        ${img ? `<img src="${img}" alt="" style="width:4rem;height:4rem;object-fit:cover;border-radius:var(--radius-md);flex-shrink:0">` : ''}
+        <div style="flex:1;min-width:0">
+          <div class="text-xs text-muted">Лоти за товаром:</div>
+          <div class="font-semibold" style="line-height:1.3">${L.escapeHtml(name)}</div>
+          <div class="text-xs text-muted" style="margin-top:.125rem">№ ${L.escapeHtml(String(state.productId).padStart(4,'0'))} · ${lotsCnt} ${lotsCnt === 1 ? 'лот' : 'лотів'}</div>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <a class="btn btn-outline btn-sm" href="${L.productHref(state.productId)}">Картка товару</a>
+          <a class="btn btn-ghost btn-sm" href="lots.html">Усі лоти</a>
+        </div>
+      </div>`;
+    banner.style.display = 'block';
+  }
+
   function renderPills(){
     const el = document.getElementById('pills');
+    /* Hide pills when filtered to a single product (banner replaces them) */
+    if(state.productId){ el.innerHTML = ''; return; }
     if(!state.cat){
-      el.innerHTML = L.TOP_CATS.map(c => {
-        const cnt = (L.getProducts().filter(p => p.youtube && p.topCat === c)).length;
-        if(!cnt) return '';
-        return `<a class="chip" href="lots.html?cat=${encodeURIComponent(c)}">${L.escapeHtml(c)} <span class="text-muted">${cnt}</span></a>`;
+      const counts = lotsCountByTopCat();
+      el.innerHTML = L.TOP_CATS.filter(c => counts.get(c)).map(c => {
+        return `<a class="chip" href="lots.html?cat=${encodeURIComponent(c)}">${L.escapeHtml(c)} <span class="text-muted">${counts.get(c)}</span></a>`;
       }).join('');
       return;
     }
-    const subs = L.subcatsForTop(state.cat);
+    /* Sub-categories within the selected top category */
+    const subs = new Map();
+    for(const lot of L.getAllLots()){
+      const pp = lot.parentProd || L.findProduct(lot.prodId);
+      if(!pp || pp.topCat !== state.cat) continue;
+      const grp = lot._grp || {};
+      const sub = grp.subcategory || pp.subcat;
+      if(!sub) continue;
+      subs.set(sub, (subs.get(sub)||0)+1);
+    }
+    const sortedSubs = [...subs.entries()].sort((a,b) => b[1]-a[1]);
     el.innerHTML = `<a class="chip ${!state.sub?'active':''}" href="lots.html?cat=${encodeURIComponent(state.cat)}">Усі</a>` +
-      subs.map(s => {
-        const url = `lots.html?cat=${encodeURIComponent(state.cat)}&sub=${encodeURIComponent(s.name)}`;
-        return `<a class="chip ${state.sub===s.name?'active':''}" href="${url}">${L.escapeHtml(s.name)} <span class="text-muted">${s.count}</span></a>`;
+      sortedSubs.map(([sub,cnt]) => {
+        const url = `lots.html?cat=${encodeURIComponent(state.cat)}&sub=${encodeURIComponent(sub)}`;
+        return `<a class="chip ${state.sub===sub?'active':''}" href="${url}">${L.escapeHtml(sub)} <span class="text-muted">${cnt}</span></a>`;
       }).join('');
   }
 
@@ -425,9 +490,8 @@
     state.audience.forEach(v => chips.push({l:`Стать: ${v}`, k:'audience', v}));
     state.country.forEach(v => chips.push({l:`Країна: ${v}`, k:'country', v}));
     state.status.forEach(v => chips.push({l:`Статус: ${STATUS_OPTS.find(o=>o.v===v)?.label}`, k:'status', v}));
-    if(state.inStock) chips.push({l:'В наявності', k:'inStock'});
-    if(state.priceMin != null) chips.push({l:`від €${state.priceMin}`, k:'priceMin'});
-    if(state.priceMax != null) chips.push({l:`до €${state.priceMax}`, k:'priceMax'});
+    if(state.priceMin != null) chips.push({l:`від ${state.priceMin} ₴`, k:'priceMin'});
+    if(state.priceMax != null) chips.push({l:`до ${state.priceMax} ₴`, k:'priceMax'});
     if(state.weightMin != null) chips.push({l:`вага ≥${state.weightMin}кг`, k:'weightMin'});
     if(state.weightMax != null) chips.push({l:`вага ≤${state.weightMax}кг`, k:'weightMax'});
     if(state.q) chips.push({l:`«${state.q}»`, k:'q'});
@@ -438,7 +502,6 @@
       btn.addEventListener('click', () => {
         const c = chips[parseInt(btn.dataset.chip)];
         if(['quality','season','audience','country','status'].includes(c.k)) state[c.k] = state[c.k].filter(x => x !== c.v);
-        else if(c.k === 'inStock') state.inStock = false;
         else if(c.k === 'priceMin') state.priceMin = null;
         else if(c.k === 'priceMax') state.priceMax = null;
         else if(c.k === 'weightMin') state.weightMin = null;
@@ -451,7 +514,7 @@
 
   function activeCount(){
     return state.quality.length + state.season.length + state.audience.length + state.country.length + state.status.length
-      + (state.inStock?1:0) + (state.priceMin!=null?1:0) + (state.priceMax!=null?1:0)
+      + (state.priceMin!=null?1:0) + (state.priceMax!=null?1:0)
       + (state.weightMin!=null?1:0) + (state.weightMax!=null?1:0) + (state.q?1:0);
   }
 
@@ -490,54 +553,51 @@
     return 'лотів';
   }
 
-  /* === Quick order === */
-  function showQuick(p){
-    const m = document.getElementById('quickOrderModal');
-    document.getElementById('quickBody').innerHTML = `
-      <p class="text-muted text-sm" style="margin-bottom:1rem">Залиште номер — менеджер передзвонить впродовж 15 хвилин і підтвердить замовлення.</p>
-      <div class="key-facts" style="margin-bottom:1rem">
-        <ul>
-          <li><span class="key-facts__check">✔</span><span class="key-facts__label">Лот:</span><span class="key-facts__value">${L.escapeHtml(p.name)}</span></li>
-          <li><span class="key-facts__check">✔</span><span class="key-facts__label">Вага:</span><span class="key-facts__value">${L.escapeHtml(String(p.weight||''))} ${p.unit||'кг'}</span></li>
-          <li><span class="key-facts__check">✔</span><span class="key-facts__label">Ціна:</span><span class="key-facts__value">${L.formatUah(p.priceUah||0)} (${L.formatEur(p.priceEur||0)})/${p.unit||'кг'}</span></li>
-        </ul>
-      </div>
-      <form class="form-field" id="quickForm" autocomplete="on" novalidate>
-        <div class="form-field"><label>Ваше ім'я</label><input type="text" id="qName" required></div>
-        <div class="form-field"><label>Телефон *</label><input type="tel" id="qPhone" required placeholder="+380..."></div>
-        <div class="form-field"><label>Коментар (необов'язково)</label><textarea id="qNote" rows="2"></textarea></div>
-        <button class="btn btn-primary w-full" type="submit">Надіслати заявку</button>
-        <p class="text-muted text-xs text-center" style="margin-top:.75rem">Або просто <a href="${L.CONFIG.TELEGRAM}" target="_blank" style="color:var(--primary);font-weight:600">напишіть в Telegram</a> · <a href="tel:${L.CONFIG.PHONES[0].tel}" style="color:var(--primary);font-weight:600">${L.CONFIG.PHONES[0].display}</a></p>
-      </form>
-    `;
-    m.classList.add('open'); m.setAttribute('aria-hidden','false');
-    document.body.style.overflow = 'hidden';
-
-    document.getElementById('quickForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const name = document.getElementById('qName').value.trim();
-      const phone = document.getElementById('qPhone').value.trim();
-      const note = document.getElementById('qNote').value.trim();
-      if(!phone){ L.toast('Вкажіть телефон', 'error'); return; }
-      const text = `Замовлення лоту ${String(p.id).padStart(4,'0')}\n${p.name}\nВага: ${p.weight} ${p.unit||'кг'}\nЦіна: ${L.formatUah(p.priceUah)}/${p.unit||'кг'}\n\nКлієнт: ${name || '(не вказано)'}\nТелефон: ${phone}\n${note ? 'Коментар: '+note : ''}`;
-      const url = `${L.CONFIG.TELEGRAM}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
-      L.toast('Заявку відправлено в Telegram', 'success');
-      hideQuick();
-    });
-  }
-  function hideQuick(){
-    const m = document.getElementById('quickOrderModal');
-    m.classList.remove('open'); m.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
+  function buildOrderText(lot){
+    const grp = lot._grp || {};
+    const lines = [];
+    lines.push(`Лот № ${lot.barcode}`);
+    lines.push(`${grp.name || lot.prodName}`);
+    lines.push(`Артикул товару: ${String(lot.prodId).padStart(4,'0')}`);
+    lines.push(`Вага: ${lot.weight} ${lot.unit||'кг'}`);
+    if(lot.qty) lines.push(`К-сть: ${lot.qty} шт`);
+    if(lot.price_uah) lines.push(`Ціна: ${L.formatUah(lot.price_uah)} (€${(lot.price_uah/lot.eur_rate).toFixed(2)})`);
+    if(grp.sort) lines.push(`Сорт: ${grp.sort}`);
+    if(grp.season) lines.push(`Сезон: ${grp.season}`);
+    if(lot.youtube) lines.push(`Відео: ${lot.youtube}`);
+    return lines.join('\n');
   }
 
   function render(){
-    const all = L.getProducts();
-    const filtered = applyFilters(all);
+    const filtered = applyFilters();
     const total = filtered.length;
 
     document.getElementById('totalCount').textContent = `${total} ${plural(total)}`;
+    if(state.productId){
+      const p = L.findProduct(state.productId);
+      document.getElementById('pageTitle').textContent = p ? `Лоти: ${p.name}` : 'Лоти товару';
+      document.title = (p ? p.name + ' · Лоти' : 'Лоти товару') + ' — L-TEX';
+    } else {
+      document.getElementById('pageTitle').textContent = 'Наявні лоти';
+      document.title = 'Наявні лоти — L-TEX';
+    }
+
+    /* breadcrumbs */
+    const ol = document.getElementById('bcList');
+    if(state.productId){
+      const p = L.findProduct(state.productId);
+      ol.innerHTML = `<li><a href="index.html">Головна</a></li>
+        <li><a href="lots.html">Лоти</a></li>
+        <li>${L.escapeHtml(p ? p.name : 'Товар')}</li>`;
+    } else if(state.cat){
+      ol.innerHTML = `<li><a href="index.html">Головна</a></li>
+        <li><a href="lots.html">Лоти</a></li>
+        <li>${L.escapeHtml(state.cat)}</li>${state.sub ? `<li>${L.escapeHtml(state.sub)}</li>` : ''}`;
+    } else {
+      ol.innerHTML = `<li><a href="index.html">Головна</a></li><li>Наявні лоти</li>`;
+    }
+
+    renderProductBanner();
     renderPills();
     renderActive();
 
@@ -554,30 +614,39 @@
     const start = (state.page - 1) * L.CONFIG.PER_PAGE;
     const slice = filtered.slice(start, start + L.CONFIG.PER_PAGE);
     if(!slice.length){
-      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>Немає лотів за цими фільтрами</h3><p>Спробуйте змінити пошук або скинути фільтри.</p></div>`;
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <h3>Лотів не знайдено</h3>
+        <p>${state.productId ? 'Цього товару немає в наявних лотах. Залиште запит — менеджер скаже, коли з\'явиться.' : 'Спробуйте змінити фільтри або скинути їх.'}</p>
+        ${state.productId ? `<button class="btn btn-primary" id="emptyOrderBtn" type="button" style="margin-top:1rem">📩 Замовити відеоогляд</button>` : `<a class="btn btn-outline" href="lots.html" style="margin-top:1rem">Усі лоти</a>`}
+      </div>`;
+      const eo = document.getElementById('emptyOrderBtn');
+      if(eo){
+        eo.addEventListener('click', () => {
+          const p = L.findProduct(state.productId);
+          L.openOrderModal({
+            title: '🎬 Замовити відеоогляд',
+            subject: 'Запит відеоогляду',
+            intent: 'video',
+            presetText: `Прошу зняти відеоогляд для:\n${p ? p.name : 'товару'} (артикул ${String(state.productId).padStart(4,'0')})`,
+          });
+        });
+      }
     } else {
       grid.innerHTML = slice.map(renderLotCard).join('');
       grid.querySelectorAll('[data-icon]').forEach(el => {
         const n = el.dataset.icon;
         if(ICONS[n]) el.innerHTML = ICONS[n]();
       });
-      grid.querySelectorAll('[data-wish]').forEach(btn => {
-        btn.addEventListener('click', e => {
-          e.preventDefault(); e.stopPropagation();
-          const id = btn.dataset.wish;
-          const p = L.findProduct(id);
-          const on = L.wishlist.toggle(id, p?.name);
-          btn.classList.toggle('active', on);
-          btn.querySelector('.icon').innerHTML = on ? ICONS.heartFilled({size:16}) : ICONS.heart({size:16});
-        });
-      });
-      grid.querySelectorAll('[data-add-cart]').forEach(btn => {
+      grid.querySelectorAll('[data-cart]').forEach(btn => {
         btn.addEventListener('click', e => {
           e.preventDefault();
-          const id = btn.dataset.addCart;
-          const p = L.findProduct(id);
-          if(L.cart.has(id)){ location.href = 'cart.html'; return; }
-          L.cart.add(id, 1, p?.name);
+          const bc = btn.dataset.cart;
+          const pid = btn.dataset.prodid;
+          if(L.cart.hasLot(bc)){ location.href = 'cart.html'; return; }
+          const lot = L.lotByBarcode(bc);
+          const grp = lot && lot._grp;
+          L.cart.addLot(bc, pid, grp ? grp.name : 'Лот');
+          btn.classList.remove('btn-primary'); btn.classList.add('btn-outline-primary');
           btn.innerHTML = `<span class="icon icon-sm">${ICONS.check({size:16})}</span> У кошику`;
           btn.closest('.lot-card')?.classList.add('in-cart');
         });
@@ -585,10 +654,39 @@
       grid.querySelectorAll('[data-quick]').forEach(btn => {
         btn.addEventListener('click', e => {
           e.preventDefault();
-          const p = L.findProduct(btn.dataset.quick);
-          if(p) showQuick(p);
+          const lot = L.lotByBarcode(btn.dataset.quick);
+          if(!lot) return;
+          L.openOrderModal({
+            title: '⚡ Замовлення в один клік',
+            subject: `Замовлення лоту ${lot.barcode}`,
+            intent: 'order',
+            presetText: buildOrderText(lot),
+          });
         });
       });
+      grid.querySelectorAll('[data-order]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          const lot = L.lotByBarcode(btn.dataset.order);
+          if(!lot) return;
+          L.openOrderModal({
+            title: '📩 Запит по лоту',
+            subject: `Запит по лоту ${lot.barcode}`,
+            intent: 'consult',
+            presetText: buildOrderText(lot),
+          });
+        });
+      });
+
+      /* If barcode in URL, scroll to that card */
+      if(state.barcode){
+        const target = grid.querySelector(`[data-barcode="${CSS.escape(state.barcode)}"]`);
+        if(target){
+          target.scrollIntoView({ behavior:'smooth', block:'center' });
+          target.style.boxShadow = '0 0 0 3px var(--primary)';
+          setTimeout(() => { target.style.boxShadow = ''; }, 2400);
+        }
+      }
     }
     renderPagination(total);
   }
@@ -618,16 +716,11 @@
     document.getElementById('resetFiltersMobile').addEventListener('click', () => {
       Object.assign(state, {
         cat:null, sub:null, quality:[], season:[], audience:[], country:[], status:[],
-        inStock:false, priceMin:null, priceMax:null, weightMin:null, weightMax:null,
+        priceMin:null, priceMax:null, weightMin:null, weightMax:null,
         q:'', page:1
       });
       pushUrl(); render();
       mRoot.innerHTML = buildFiltersHTML(); bindFilters(mRoot);
-    });
-
-    document.getElementById('quickClose').addEventListener('click', hideQuick);
-    document.getElementById('quickOrderModal').addEventListener('click', e => {
-      if(e.target.id === 'quickOrderModal') hideQuick();
     });
 
     window.addEventListener('popstate', () => { readUrl(); render(); });

@@ -51,10 +51,12 @@
 <script src="data/images.js"></script>
 <script src="data/details.js"></script>
 <script src="data/products.js"></script>
+<script src="data/lots.js"></script>
 <script src="assets/icons.js"></script>
 <script src="assets/utils.js"></script>
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
+<script src="assets/order-modal.js"></script>
 <script src="assets/header.js"></script>
 <script>
 (() => {
@@ -105,6 +107,8 @@
   const isAkciya = L.hasDiscount(p);
   const wished = L.wishlist.has(p.id);
   const inCart = L.cart.has(p.id);
+  const productLots = L.lotsForProduct(p.id);
+  const hasLots = productLots.length > 0;
 
   const cleanDesc = (() => {
     if(!p.detailRaw) return '';
@@ -238,15 +242,49 @@
           <p class="text-xs text-muted text-center" style="margin-top:.75rem">Замовлення обробляє менеджер. Передоплата не потрібна.</p>
         </div>
 
+        <!-- Action grid: order request + lots / video request -->
+        <div class="grid md:grid-cols-2 gap-2">
+          <button class="btn btn-outline-primary" id="btnOrder" type="button">
+            <span class="icon icon-sm" data-icon="mail"></span>
+            📩 Замовити / Запит
+          </button>
+          ${p.youtube ? `
+            <a class="btn btn-outline" href="${L.youtubeWatchUrl(p.youtube)}" target="_blank" rel="noopener">
+              <span class="icon icon-sm" data-icon="play"></span>
+              YouTube огляд
+            </a>` : ''}
+          ${hasLots ? `
+            <a class="btn btn-primary" href="${L.lotsForProductHref(p.id)}" style="grid-column:1/-1">
+              <span class="icon icon-sm" data-icon="package"></span>
+              📹 Відеоогляди лотів (${productLots.length})
+            </a>` : `
+            <button class="btn btn-outline" id="btnReqVideo" type="button" style="grid-column:1/-1">
+              <span class="icon icon-sm" data-icon="video"></span>
+              🎬 Замовити відеоогляд
+            </button>`}
+        </div>
+
+        ${hasLots ? `
+          <div style="display:flex;gap:.75rem;align-items:center;background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:.75rem 1rem">
+            <span class="icon" style="color:var(--green-700);flex-shrink:0" data-icon="package"></span>
+            <div style="font-size:.875rem;line-height:1.4">
+              <strong style="color:var(--green-900)">Є ${productLots.length} ${productLots.length === 1 ? 'лот' : (productLots.length < 5 ? 'лоти' : 'лотів')} на складі</strong><br>
+              <span style="color:var(--green-700)">Конкретні мішки з відео, вагою та ціною в грн</span>
+            </div>
+          </div>` : ''}
+
         <div class="flex flex-wrap gap-2">
-          <a class="btn btn-outline" href="${L.CONFIG.TELEGRAM}" target="_blank" rel="noopener">
+          <a class="btn btn-ghost btn-sm" href="${L.CONFIG.TELEGRAM}" target="_blank" rel="noopener">
             <span class="icon icon-sm" data-icon="send"></span> Telegram
           </a>
-          <a class="btn btn-outline" href="viber://chat?number=%2B380676710516">
+          <a class="btn btn-ghost btn-sm" href="viber://chat?number=%2B380676710516">
             <span class="icon icon-sm" data-icon="messageCircle"></span> Viber
           </a>
-          <a class="btn btn-outline" href="tel:${L.CONFIG.PHONES[0].tel}">
+          <a class="btn btn-ghost btn-sm" href="tel:${L.CONFIG.PHONES[0].tel}">
             <span class="icon icon-sm" data-icon="phone"></span> ${L.CONFIG.PHONES[0].display}
+          </a>
+          <a class="btn btn-ghost btn-sm" href="mailto:${L.CONFIG.EMAIL}">
+            <span class="icon icon-sm" data-icon="mail"></span> Email
           </a>
         </div>
 
@@ -270,6 +308,21 @@
         </div>
       </div>
     </div>
+
+    ${hasLots ? `
+      <section style="margin-top:3rem">
+        <div class="flex items-center justify-between" style="margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+          <div>
+            <h2 class="h2">📦 Наявні лоти на складі</h2>
+            <p class="text-sm text-muted">Конкретні мішки з відеооглядом, вагою та ціною в гривнях</p>
+          </div>
+          <a href="${L.lotsForProductHref(p.id)}" class="btn btn-outline-primary">
+            Усі ${productLots.length} →
+          </a>
+        </div>
+        <div class="lots-grid" id="productLots"></div>
+      </section>
+    ` : ''}
 
     <section style="margin-top:3rem">
       <div class="flex items-center justify-between" style="margin-bottom:1rem">
@@ -406,6 +459,90 @@
   qm.addEventListener('click', e => { if(e.target === qm){
     qm.classList.remove('open'); qm.setAttribute('aria-hidden','true'); document.body.style.overflow='';
   }});
+
+  /* === Order request modal (uses assets/order-modal.js) === */
+  function buildOrderPreset(){
+    const lines = [];
+    lines.push(`Товар: ${p.name}`);
+    lines.push(`Артикул: ${String(p.id).padStart(4,'0')}`);
+    if(p.priceUah) lines.push(`Ціна: ${L.formatUah(p.priceUah)}/${p.unit||'кг'}`);
+    if(p.weight) lines.push(`Вага лоту: ${p.weight} ${p.unit||'кг'}`);
+    if(p.season) lines.push(`Сезон: ${p.season}`);
+    if(p.sort) lines.push(`Сорт: ${p.sort}`);
+    return lines.join('\n');
+  }
+  document.getElementById('btnOrder').addEventListener('click', () => {
+    L.openOrderModal({
+      title: '📩 Замовити / запит',
+      subject: `Запит товару: ${p.name}`,
+      intent: 'order',
+      presetText: buildOrderPreset(),
+    });
+  });
+  const btnReqVideo = document.getElementById('btnReqVideo');
+  if(btnReqVideo){
+    btnReqVideo.addEventListener('click', () => {
+      L.openOrderModal({
+        title: '🎬 Замовити відеоогляд',
+        subject: `Запит відеоогляду: ${p.name}`,
+        intent: 'video',
+        presetText: `Прошу зняти відеоогляд для:\n${p.name}\nАртикул: ${String(p.id).padStart(4,'0')}`,
+      });
+    });
+  }
+
+  /* === Render product lots (mini cards) === */
+  if(hasLots){
+    const lotsEl = document.getElementById('productLots');
+    const slice = productLots.slice(0, 8);
+    lotsEl.innerHTML = slice.map(lot => {
+      const inCart = L.cart.hasLot(lot.barcode);
+      const reserved = lot.reserved;
+      const onSale = lot.is_akciya;
+      const thumb = L.youtubeThumb(lot.youtube || p.youtube);
+      const watchUrl = L.youtubeWatchUrl(lot.youtube || p.youtube);
+      const status = onSale ? `<span class="tag tag-status-sale">АКЦІЯ</span>`
+        : reserved ? `<span class="tag tag-status-reserved">Заброньований</span>`
+        : `<span class="tag tag-status-free">Вільний</span>`;
+      return `<article class="lot-card ${reserved?'reserved':''} ${onSale?'on-sale':''} ${inCart?'in-cart':''}" data-barcode="${L.escapeHtml(lot.barcode)}">
+        <a class="lot-card__media" href="${watchUrl}" target="_blank" rel="noopener">
+          ${thumb ? `<img class="lot-card__thumb" src="${thumb}" alt="" loading="lazy">` : `<div class="lot-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
+          <div class="lot-card__play"><span class="icon icon-lg">${ICONS.play()}</span></div>
+          <div class="lot-card__badges">${status}</div>
+        </a>
+        <div class="lot-card__body">
+          <p class="lot-card__code">${L.escapeHtml(lot.barcode)}</p>
+          <div class="lot-card__stats" style="margin-top:.25rem">
+            <span><strong>${Number(lot.weight||0).toFixed(1).replace(/\\.0$/,'')}</strong> ${lot.unit||'кг'}</span>
+            ${lot.qty ? `<span><strong>${lot.qty}</strong> шт</span>` : ''}
+          </div>
+          <div class="lot-card__price-block">
+            <p class="lot-card__price">${lot.price_uah ? L.formatUah(lot.price_uah) : '—'}</p>
+            ${lot.price_per_kg ? `<p class="lot-card__price-eur">€${Number(lot.price_per_kg).toFixed(2)}/${lot.unit||'кг'}</p>` : ''}
+          </div>
+          <div class="lot-card__actions">
+            ${reserved
+              ? `<button class="btn btn-outline" type="button" disabled style="flex:1;opacity:.7">Заброньований</button>`
+              : `<button class="btn ${inCart?'btn-outline-primary':'btn-primary'}" type="button" data-lotcart="${L.escapeHtml(lot.barcode)}" style="flex:1">
+                  <span class="icon icon-sm">${inCart ? ICONS.check() : ICONS.cart()}</span>
+                  ${inCart ? 'У кошику' : 'В кошик'}
+                </button>`}
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+    lotsEl.querySelectorAll('[data-lotcart]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const bc = btn.dataset.lotcart;
+        if(L.cart.hasLot(bc)){ location.href = 'cart.html'; return; }
+        L.cart.addLot(bc, p.id, p.name);
+        btn.classList.remove('btn-primary'); btn.classList.add('btn-outline-primary');
+        btn.innerHTML = `<span class="icon icon-sm">${ICONS.check({size:16})}</span> У кошику`;
+        btn.closest('.lot-card')?.classList.add('in-cart');
+      });
+    });
+  }
 
   /* Related */
   const rel = L.getProducts()

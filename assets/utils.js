@@ -257,6 +257,51 @@ window.LTEX = window.LTEX || {};
   };
   L.productHref = (id) => `product.html?id=${encodeURIComponent(id)}`;
 
+  /* === Lot helpers (works with window.LOTS_DATA from data/lots.js) === */
+  L.lotsForProduct = (prodId) => {
+    const lots = window.LOTS_DATA && window.LOTS_DATA[String(prodId)];
+    return lots ? lots.lots || [] : [];
+  };
+  L.hasLots = (prodId) => L.lotsForProduct(prodId).length > 0;
+  L.getAllLots = () => {
+    const map = window.LOTS_DATA || {};
+    const out = [];
+    for(const pid of Object.keys(map)){
+      const grp = map[pid];
+      for(const lot of (grp.lots || [])){
+        /* enrich with parent context */
+        out.push({
+          ...lot,
+          _grp: grp,
+          parentProd: L.findProduct(pid),
+        });
+      }
+    }
+    return out;
+  };
+  L.lotByBarcode = (barcode) => {
+    const all = L.getAllLots();
+    return all.find(l => String(l.barcode) === String(barcode)) || null;
+  };
+
+  /* Clean lot description text from generator artefacts */
+  L.cleanLotDesc = (desc) => {
+    if(!desc) return '';
+    let t = String(desc);
+    t = t.replace(/¶/g, '\n');
+    t = t.replace(/\\n/g, '\n');
+    t = t.replace(/ /g, ' ');
+    t = t.replace(/\s+\n/g, '\n').replace(/\n\s+/g, '\n').trim();
+    return t;
+  };
+
+  /* === Order request — reusable Telegram + Email targets === */
+  L.tgOrderUrl = (text) => `${L.CONFIG.TELEGRAM}?text=${encodeURIComponent(String(text).slice(0, 1000))}`;
+  L.mailOrderUrl = (subject, text) => `mailto:${L.CONFIG.EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+
+  L.lotHref = (barcode) => `lots.html?barcode=${encodeURIComponent(barcode)}`;
+  L.lotsForProductHref = (prodId) => `lots.html?id=${encodeURIComponent(prodId)}`;
+
   /* === sortMatch (relevance heuristic) === */
   L.byRelevance = (a, b, query) => {
     if(!query) return 0;

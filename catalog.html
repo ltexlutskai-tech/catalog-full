@@ -94,10 +94,12 @@
 <script src="data/images.js"></script>
 <script src="data/details.js"></script>
 <script src="data/products.js"></script>
+<script src="data/lots.js"></script>
 <script src="assets/icons.js"></script>
 <script src="assets/utils.js"></script>
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
+<script src="assets/order-modal.js"></script>
 <script src="assets/header.js"></script>
 <script>
 /* ============= Catalog page logic ============= */
@@ -208,6 +210,7 @@
     const inCart = L.cart.has(p.id);
     const img = p.image;
     const isAkciya = L.hasDiscount(p);
+    const lotsCount = L.lotsForProduct(p.id).length;
     const isNew = false; // not enough data to mark NEW reliably
     const tags = [];
     if(p.sort) tags.push(`<span class="badge-pill">${L.escapeHtml(p.sort)}</span>`);
@@ -230,6 +233,7 @@
           <div class="product-card__badges">
             ${isNew ? `<span class="tag tag-new">NEW</span>` : ''}
             ${isAkciya ? `<span class="tag tag-sale">SALE${p.discount ? ' −' + p.discount + '%' : ''}</span>` : ''}
+            ${lotsCount ? `<span class="tag" style="background:var(--green-700);color:#fff">📦 ${lotsCount}</span>` : ''}
           </div>
           ${p.youtube ? `<span class="product-card__video"><span class="icon icon-sm" data-icon="play"></span>Відео</span>` : ''}
         </div>
@@ -248,12 +252,10 @@
           </div>
           ${priceEur ? `<div class="product-card__price-eur">${priceEur}</div>` : ''}
         </div>
-        ${isList ? `<div class="flex gap-2" style="margin-top:.75rem">
-          <a class="btn btn-outline-primary" href="${L.productHref(p.id)}">Детальніше</a>
-          <button class="btn btn-primary" data-add-cart="${p.id}" type="button">
-            <span class="icon icon-sm">${inCart ? ICONS.check() : ICONS.plus()}</span>
-            ${inCart ? 'У кошику' : 'В кошик'}
-          </button>
+        ${isList ? `<div class="flex flex-wrap gap-2" style="margin-top:.75rem">
+          <a class="btn btn-outline-primary btn-sm" href="${L.productHref(p.id)}">Детальніше →</a>
+          ${lotsCount ? `<a class="btn btn-primary btn-sm" href="${L.lotsForProductHref(p.id)}">📦 Лоти (${lotsCount})</a>` : ''}
+          <button class="btn btn-outline btn-sm" type="button" data-order-id="${p.id}">📩 Запит</button>
         </div>` : ''}
       </div>
     </article>`;
@@ -618,6 +620,22 @@
           if(L.cart.has(id)){ location.href = 'cart.html'; return; }
           L.cart.add(id, 1, p?.name);
           btn.innerHTML = `<span class="icon icon-sm">${ICONS.check({size:16})}</span> У кошику`;
+        });
+      });
+      grid.querySelectorAll('[data-order-id]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          const p = L.findProduct(btn.dataset.orderId);
+          if(!p) return;
+          const lines = [`Товар: ${p.name}`, `Артикул: ${String(p.id).padStart(4,'0')}`];
+          if(p.priceUah) lines.push(`Ціна: ${L.formatUah(p.priceUah)}/${p.unit||'кг'}`);
+          if(p.weight) lines.push(`Вага: ${p.weight} ${p.unit||'кг'}`);
+          L.openOrderModal({
+            title: '📩 Запит по товару',
+            subject: `Запит: ${p.name}`,
+            intent: 'order',
+            presetText: lines.join('\n'),
+          });
         });
       });
     }
