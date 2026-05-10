@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16a34a">
+<title>Кошик — L-TEX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+<link rel="stylesheet" href="assets/components.css">
+<style>
+.cart-row{
+  display:grid;
+  grid-template-columns:6rem 1fr auto;
+  gap:1rem;
+  padding:1rem;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:#fff;
+  align-items:start;
+}
+.cart-row.lot{border-color:var(--green-200);background:var(--green-50)}
+.cart-row__media{
+  width:6rem;height:6rem;
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  background:var(--gray-100);
+  flex-shrink:0;
+}
+.cart-row__media img{width:100%;height:100%;object-fit:cover}
+.cart-row__title{font-weight:600;line-height:1.3;margin-bottom:.25rem}
+.cart-row__title a{color:inherit;transition:color var(--transition)}
+.cart-row__title a:hover{color:var(--primary)}
+.cart-row__meta{font-size:.8125rem;color:var(--gray-500);line-height:1.5}
+.cart-row__actions{
+  display:flex;flex-direction:column;align-items:flex-end;
+  gap:.5rem;flex-shrink:0;text-align:right;
+}
+.cart-row__price{font-weight:700;color:var(--red-600);font-size:1rem;white-space:nowrap}
+.cart-row__price-eur{font-size:.75rem;color:var(--gray-400);font-weight:400}
+.qty-control{
+  display:inline-flex;align-items:center;gap:.25rem;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  background:#fff;
+  overflow:hidden;
+}
+.qty-control button{
+  width:2rem;height:2rem;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--gray-600);
+  transition:background var(--transition);
+  font-size:1.125rem;font-weight:600;
+}
+.qty-control button:hover{background:var(--gray-100)}
+.qty-control input{
+  width:3rem;height:2rem;
+  text-align:center;border:none;outline:none;
+  font-weight:600;
+  -moz-appearance:textfield;
+  background:transparent;
+}
+.qty-control input::-webkit-outer-spin-button,
+.qty-control input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+.summary{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.25rem;
+  position:sticky;top:5rem;
+}
+.summary h3{margin-bottom:1rem}
+.summary__row{
+  display:flex;justify-content:space-between;
+  padding:.5rem 0;
+  font-size:.9375rem;
+}
+.summary__row.total{
+  border-top:1px solid var(--border);
+  margin-top:.5rem;padding-top:.875rem;
+  font-size:1.125rem;font-weight:700;
+}
+.summary__row.total .val{color:var(--red-600)}
+.summary__warning{
+  background:var(--amber-50);
+  border:1px solid var(--amber-500);
+  color:var(--amber-800);
+  border-radius:var(--radius-md);
+  padding:.625rem .75rem;
+  font-size:.8125rem;
+  margin-bottom:1rem;
+}
+
+@media(max-width:640px){
+  .cart-row{grid-template-columns:4.5rem 1fr;gap:.75rem;padding:.75rem}
+  .cart-row__media{width:4.5rem;height:4.5rem}
+  .cart-row__actions{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center;text-align:left}
+}
+</style>
+</head>
+<body>
+
+<header data-ltex-header></header>
+
+<main class="container" style="padding-top:1.5rem;padding-bottom:3rem">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="index.html">Головна</a></li>
+      <li>Кошик</li>
+    </ol>
+  </nav>
+
+  <div class="catalog-toolbar" style="margin-top:1rem">
+    <div>
+      <h1 class="h1">Кошик</h1>
+      <p class="text-muted text-sm" id="cartCount" style="margin-top:.25rem">—</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="btn btn-outline" id="clearAll" type="button" style="display:none">
+        <span class="icon icon-sm" data-icon="trash"></span>
+        Очистити кошик
+      </button>
+    </div>
+  </div>
+
+  <div id="empty" style="display:none">
+    <div class="empty-state">
+      <div style="font-size:3rem;margin-bottom:.5rem">🛒</div>
+      <h3>Кошик порожній</h3>
+      <p>Додавайте товари та лоти, натискаючи «В кошик».</p>
+      <div class="flex gap-2 justify-center" style="margin-top:1rem;flex-wrap:wrap">
+        <a class="btn btn-primary" href="catalog.html">Перейти у каталог</a>
+        <a class="btn btn-outline" href="lots.html">Наявні лоти</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6" id="cartLayout" style="margin-top:1.5rem;display:none">
+    <!-- LEFT: items -->
+    <div class="lg:col-span-2" style="display:flex;flex-direction:column;gap:.75rem" id="rows"></div>
+
+    <!-- RIGHT: summary -->
+    <aside>
+      <div class="summary">
+        <h3 class="h3">Підсумок</h3>
+        <div id="summaryWarning"></div>
+        <div class="summary__row">
+          <span class="text-muted">Позицій</span>
+          <span class="val" id="sumItems">0</span>
+        </div>
+        <div class="summary__row">
+          <span class="text-muted">Загальна вага</span>
+          <span class="val" id="sumKg">0 кг</span>
+        </div>
+        <div class="summary__row">
+          <span class="text-muted">У валюті</span>
+          <span class="val" id="sumEur">€0</span>
+        </div>
+        <div class="summary__row total">
+          <span>Разом</span>
+          <span class="val" id="sumUah">0 ₴</span>
+        </div>
+        <div class="text-xs text-muted" style="margin:.5rem 0 1rem">
+          Курс: €1 = <span id="rateBox" data-loading>43</span> ₴.
+          Точна сума підтверджується при замовленні (актуальний курс НБУ).
+        </div>
+
+        <button class="btn btn-primary btn-lg w-full" id="btnCheckout" type="button">
+          <span class="icon icon-sm" data-icon="send"></span>
+          Оформити замовлення
+        </button>
+        <p class="text-xs text-muted text-center" style="margin-top:.625rem">
+          Або:
+          <a href="https://t.me/L_TEX" target="_blank" rel="noopener" style="color:var(--primary);font-weight:600">@L_TEX</a> ·
+          <a href="tel:+380676710516" style="color:var(--primary);font-weight:600">+380 67 671 05 16</a>
+        </p>
+        <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
+        <ul style="font-size:.75rem;color:var(--gray-500);line-height:1.6">
+          <li>✓ Передоплата не потрібна</li>
+          <li>✓ Менеджер зв'яжеться для підтвердження</li>
+          <li>✓ Доставка: Нова Пошта · Justin · самовивіз</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer data-ltex-footer></footer>
+
+<script src="data/meta.js"></script>
+<script src="data/images.js"></script>
+<script src="data/details.js"></script>
+<script src="data/products.js"></script>
+<script src="data/lots.js"></script>
+<script src="assets/icons.js"></script>
+<script src="assets/utils.js"></script>
+<script src="assets/wishlist.js"></script>
+<script src="assets/search.js"></script>
+<script src="assets/order-modal.js"></script>
+<script src="assets/header.js"></script>
+<script>
+(() => {
+  const L = window.LTEX;
+  const ICONS = window.ICONS;
+
+  document.querySelectorAll('[data-icon]').forEach(el => {
+    const n = el.dataset.icon;
+    if(ICONS[n]) el.innerHTML = ICONS[n]();
+  });
+
+  const rowsEl = document.getElementById('rows');
+  const emptyEl = document.getElementById('empty');
+  const layoutEl = document.getElementById('cartLayout');
+  const clearBtn = document.getElementById('clearAll');
+
+  /* === Render single row (product or lot) === */
+  function renderRow(it){
+    if(it.kind === 'lot' || (it.barcode && !it.id)){
+      const lot = L.lotByBarcode(it.barcode);
+      if(!lot) return ''; // stale
+      const grp = lot._grp || {};
+      const prod = lot.parentProd;
+      const img = prod && prod.image;
+      const watchUrl = L.youtubeWatchUrl(lot.youtube || grp.youtube);
+      const thumbUrl = L.youtubeThumb(lot.youtube || grp.youtube) || img;
+      const status = lot.is_akciya ? '<span class="tag tag-status-sale">АКЦІЯ</span>'
+        : lot.reserved ? '<span class="tag tag-status-reserved">Заброньований</span>'
+        : '<span class="tag tag-status-free">Вільний</span>';
+      return `<div class="cart-row lot" data-key="lot:${L.escapeHtml(lot.barcode)}">
+        <a class="cart-row__media" href="${watchUrl}" target="_blank" rel="noopener" aria-label="Відеоогляд">
+          ${thumbUrl ? `<img src="${thumbUrl}" alt="" loading="lazy">` : ''}
+        </a>
+        <div class="min-w-0">
+          <div class="cart-row__title">
+            <a href="${L.productHref(lot.prodId)}">${L.escapeHtml(grp.name || lot.prodName)}</a>
+          </div>
+          <div class="cart-row__meta">
+            ${status}
+            <span class="font-mono" style="margin-left:.5rem">№ ${L.escapeHtml(lot.barcode)}</span><br>
+            <strong>${Number(lot.weight||0).toFixed(1).replace(/\\.0$/,'')}</strong> ${lot.unit||'кг'}
+            ${lot.qty ? ` · ${lot.qty} шт` : ''}
+            · €${lot.price_per_kg ? Number(lot.price_per_kg).toFixed(2) : '—'}/${lot.unit||'кг'}
+          </div>
+        </div>
+        <div class="cart-row__actions">
+          <div class="cart-row__price">${lot.price_uah ? L.formatUah(lot.price_uah) : '—'}</div>
+          <div class="cart-row__price-eur">за весь лот</div>
+          <button class="btn btn-ghost btn-sm" data-rmlot="${L.escapeHtml(lot.barcode)}" type="button" aria-label="Прибрати">
+            <span class="icon icon-sm" data-icon="trash"></span>
+          </button>
+        </div>
+      </div>`;
+    }
+    /* product */
+    const p = L.findProduct(it.id);
+    if(!p) return '';
+    const qty = Number(it.qty || 1);
+    const lineUah = (p.priceUah || 0) * qty;
+    const lineEur = (p.priceEur || 0) * qty;
+    return `<div class="cart-row" data-key="prod:${L.escapeHtml(p.id)}">
+      <a class="cart-row__media" href="${L.productHref(p.id)}">
+        ${p.image ? `<img src="${p.image}" alt="${L.escapeHtml(p.name)}" loading="lazy">` : ''}
+      </a>
+      <div class="min-w-0">
+        <div class="cart-row__title">
+          <a href="${L.productHref(p.id)}">${L.escapeHtml(p.name)}</a>
+        </div>
+        <div class="cart-row__meta">
+          № ${L.escapeHtml(String(p.id).padStart(4,'0'))}
+          ${p.sort ? ` · ${L.escapeHtml(p.sort)}` : ''}
+          ${p.season ? ` · ${L.escapeHtml(p.season)}` : ''}
+          <br>
+          ${L.formatUah(p.priceUah || 0)}/${p.unit||'кг'}
+          ${p.priceEur ? ` <span class="text-muted">(${L.formatEur(p.priceEur)})</span>` : ''}
+        </div>
+        <div style="margin-top:.625rem">
+          <div class="qty-control" data-id="${L.escapeHtml(p.id)}">
+            <button data-step="-1" type="button" aria-label="Зменшити">−</button>
+            <input type="number" value="${qty}" min="1" max="9999" step="1" aria-label="Кількість">
+            <button data-step="+1" type="button" aria-label="Збільшити">+</button>
+          </div>
+          <span class="text-muted text-xs" style="margin-left:.5rem">${p.unit||'кг'}</span>
+        </div>
+      </div>
+      <div class="cart-row__actions">
+        <div class="cart-row__price">${L.formatUah(lineUah)}</div>
+        <div class="cart-row__price-eur">${L.formatEur(lineEur)}</div>
+        <button class="btn btn-ghost btn-sm" data-rmprod="${L.escapeHtml(p.id)}" type="button" aria-label="Прибрати">
+          <span class="icon icon-sm" data-icon="trash"></span>
+        </button>
+      </div>
+    </div>`;
+  }
+
+  /* === Build checkout text for Telegram/Email === */
+  function buildOrderPreset(){
+    const items = L.cart.items();
+    const lines = [];
+    lines.push('=== ЗАМОВЛЕННЯ ===');
+    items.forEach((it, i) => {
+      if(it.kind === 'lot' || (it.barcode && !it.id)){
+        const lot = L.lotByBarcode(it.barcode);
+        if(!lot) return;
+        const grp = lot._grp || {};
+        lines.push(`${i+1}. ${grp.name || lot.prodName}`);
+        lines.push(`   Лот № ${lot.barcode} · ${lot.weight} ${lot.unit||'кг'}`);
+        if(lot.price_uah) lines.push(`   Ціна: ${L.formatUah(lot.price_uah)}`);
+      } else {
+        const p = L.findProduct(it.id);
+        if(!p) return;
+        lines.push(`${i+1}. ${p.name}`);
+        lines.push(`   ${it.qty} ${p.unit||'кг'} × ${L.formatUah(p.priceUah||0)} = ${L.formatUah((p.priceUah||0)*it.qty)}`);
+      }
+    });
+    lines.push('');
+    lines.push(`ВАГА: ${L.cart.totalKg()} кг`);
+    lines.push(`СУМА: ${L.formatUah(L.cart.totalUah())} (€${L.cart.totalEur().toFixed(2)})`);
+    return lines.join('\n');
+  }
+
+  /* === Render === */
+  function render(){
+    const items = L.cart.items();
+    if(!items.length){
+      emptyEl.style.display = 'block';
+      layoutEl.style.display = 'none';
+      clearBtn.style.display = 'none';
+      document.getElementById('cartCount').textContent = 'Порожньо';
+      document.title = 'Кошик — L-TEX';
+      return;
+    }
+    emptyEl.style.display = 'none';
+    layoutEl.style.display = 'grid';
+    clearBtn.style.display = 'inline-flex';
+
+    document.getElementById('cartCount').textContent = `${items.length} ${plural(items.length, ['позиція','позиції','позицій'])}`;
+    document.title = `Кошик (${items.length}) — L-TEX`;
+
+    rowsEl.innerHTML = items.map(renderRow).join('');
+    rowsEl.querySelectorAll('[data-icon]').forEach(el => {
+      const n = el.dataset.icon;
+      if(ICONS[n]) el.innerHTML = ICONS[n]();
+    });
+
+    /* Quantity changes */
+    rowsEl.querySelectorAll('.qty-control').forEach(qc => {
+      const id = qc.dataset.id;
+      const input = qc.querySelector('input');
+      qc.querySelector('[data-step="-1"]').addEventListener('click', () => {
+        const v = Math.max(1, parseInt(input.value) - 1);
+        input.value = v; L.cart.set(id, v); render();
+      });
+      qc.querySelector('[data-step="+1"]').addEventListener('click', () => {
+        const v = Math.min(9999, parseInt(input.value) + 1);
+        input.value = v; L.cart.set(id, v); render();
+      });
+      input.addEventListener('change', () => {
+        const v = Math.max(1, Math.min(9999, parseInt(input.value) || 1));
+        input.value = v; L.cart.set(id, v); render();
+      });
+    });
+
+    /* Removals */
+    rowsEl.querySelectorAll('[data-rmprod]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        L.cart.remove(btn.dataset.rmprod); render();
+      });
+    });
+    rowsEl.querySelectorAll('[data-rmlot]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        L.cart.removeLot(btn.dataset.rmlot); render();
+      });
+    });
+
+    /* Summary */
+    const totalKg = L.cart.totalKg();
+    const totalUah = L.cart.totalUah();
+    const totalEur = L.cart.totalEur();
+    document.getElementById('sumItems').textContent = items.length;
+    document.getElementById('sumKg').textContent = totalKg.toFixed(1).replace(/\.0$/,'') + ' кг';
+    document.getElementById('sumEur').textContent = L.formatEur(totalEur);
+    document.getElementById('sumUah').textContent = L.formatUah(totalUah);
+    document.getElementById('rateBox').textContent = L.CONFIG.EUR_UAH_RATE;
+
+    /* Min order warning */
+    const warn = document.getElementById('summaryWarning');
+    const min = L.CONFIG.MIN_ORDER_KG;
+    if(totalKg < min){
+      const need = (min - totalKg).toFixed(1).replace(/\.0$/,'');
+      warn.innerHTML = `<div class="summary__warning">⚠️ Мінімальне замовлення — ${min} кг. Доберіть ще ${need} кг або напишіть менеджеру для уточнення.</div>`;
+    } else {
+      warn.innerHTML = '';
+    }
+  }
+
+  function plural(n, forms){
+    const ten = n % 100;
+    if(ten >= 11 && ten <= 14) return forms[2];
+    const o = n % 10;
+    if(o === 1) return forms[0];
+    if(o >= 2 && o <= 4) return forms[1];
+    return forms[2];
+  }
+
+  /* Clear all */
+  clearBtn.addEventListener('click', () => {
+    if(confirm('Очистити кошик? Усі позиції будуть видалені.')){
+      L.cart.clear(); render();
+    }
+  });
+
+  /* Checkout */
+  document.getElementById('btnCheckout').addEventListener('click', () => {
+    const items = L.cart.items();
+    if(!items.length){ L.toast('Кошик порожній', 'error'); return; }
+    const totalKg = L.cart.totalKg();
+    L.openOrderModal({
+      title: '📩 Оформити замовлення',
+      subject: `Замовлення на ${L.formatUah(L.cart.totalUah())} (${totalKg.toFixed(1)} кг)`,
+      intent: 'order',
+      presetText: buildOrderPreset(),
+    });
+  });
+
+  window.addEventListener('ltex:cart-changed', render);
+  render();
+})();
+</script>
+</body>
+</html>
