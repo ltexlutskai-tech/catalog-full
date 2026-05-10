@@ -208,7 +208,7 @@
   function renderProductCard(p){
     const wished = L.wishlist.has(p.id);
     const inCart = L.cart.has(p.id);
-    const img = p.image;
+    const img = p.thumb || p.image;
     const isAkciya = L.hasDiscount(p);
     const lotsCount = L.lotsForProduct(p.id).length;
     const isNew = false; // not enough data to mark NEW reliably
@@ -227,7 +227,7 @@
       <a href="${L.productHref(p.id)}" class="product-card__media-link" aria-label="${L.escapeHtml(p.name)}">
         <div class="product-card__media">
           ${img
-            ? `<img class="product-card__img" src="${img}" alt="${L.escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            ? `<img class="product-card__img" src="${img}" data-fallback="${p.image||''}" alt="${L.escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="if(this.dataset.fallback&&this.src!==this.dataset.fallback){this.src=this.dataset.fallback;return;}this.style.display='none';this.nextElementSibling.style.display='flex'">
                <div class="product-card__media-empty" style="display:none"><span class="icon" data-icon="video"></span><span class="text-xs">Зображення невдовзі</span></div>`
             : `<div class="product-card__media-empty"><span class="icon" data-icon="video"></span><span class="text-xs">Зображення невдовзі</span></div>`}
           <div class="product-card__badges">

@@ -294,7 +294,7 @@
       <a href="${L.productHref(p.id)}">
         <div class="product-card__media">
           ${p.image
-            ? `<img class="product-card__img" src="${p.image}" alt="${L.escapeHtml(p.name)}" loading="lazy">`
+            ? `<img class="product-card__img" src="${p.thumb || p.image}" alt="${L.escapeHtml(p.name)}" loading="lazy">`
             : `<div class="product-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
           <div class="product-card__badges">
             ${isAk ? `<span class="tag tag-sale">SALE</span>` : ''}

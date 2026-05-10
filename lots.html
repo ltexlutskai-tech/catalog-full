@@ -435,7 +435,7 @@
     const grp = window.LOTS_DATA && window.LOTS_DATA[String(state.productId)];
     if(!p && !grp){ banner.style.display = 'none'; return; }
     const name = (p && p.name) || (grp && grp.name) || 'Товар';
-    const img = p && p.image;
+    const img = p && (p.thumb || p.image);
     const lotsCnt = grp ? (grp.lots || []).length : 0;
     banner.innerHTML = `
       <div style="display:flex;gap:1rem;align-items:center;background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--radius-lg);padding:.75rem 1rem">

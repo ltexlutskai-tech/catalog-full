@@ -112,7 +112,7 @@ window.LTEX = window.LTEX || {};
           return;
         }
         results.innerHTML = matches.map(({p}) => {
-          const img = p.image;
+          const img = p.thumb || p.image;
           const price = p.priceUah != null ? L.formatUah(p.priceUah) : '';
           const unit = p.unit ? `/${p.unit}` : '';
           return `<a class="search-result" href="${L.productHref(p.id)}">
