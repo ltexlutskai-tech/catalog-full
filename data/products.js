@@ -461,7 +461,7 @@ window.PRODUCTS=[
   },
   {
     id:'1052',name:'Домовий мікс (обіход) 1й сорт',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'1й сорт',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'50',
@@ -1280,7 +1280,7 @@ window.PRODUCTS=[
   },
   {
     id:'0168',name:'Шоломи велосипедні мікс',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Аксесуари',subcategory:'Шапки та головні убори',
     brand:'',sort:'Мікс',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'5-10',
@@ -1316,7 +1316,7 @@ window.PRODUCTS=[
   },
   {
     id:'0174',name:'Мотоциклетні шоломи мікс',
-    category:'Одяг',subcategory:'Робочий одяг',
+    category:'Аксесуари',subcategory:'Шапки та головні убори',
     brand:'',sort:'Мікс',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'10-15',
@@ -1892,7 +1892,7 @@ window.PRODUCTS=[
   },
   {
     id:'1026',name:'Домашній мікс (обіход) Екстра',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Екстра',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'20-25',
@@ -1910,7 +1910,7 @@ window.PRODUCTS=[
   },
   {
     id:'0108',name:'Домовий мікс (обіход) Екстра',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Екстра',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'50-60',
@@ -3080,7 +3080,7 @@ window.PRODUCTS=[
   },
   {
     id:'1456',name:'Лежаки сток Simply Southern',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Товари для тварин',
     brand:'',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'шт',weight:'12',
@@ -3305,7 +3305,7 @@ window.PRODUCTS=[
   },
   {
     id:'0437',name:'Ремні мікс C&A Сток',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Аксесуари',subcategory:'Сумки та рюкзаки',
     brand:'C&A',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'10-15',
@@ -4385,7 +4385,7 @@ window.PRODUCTS=[
   },
   {
     id:'1893',name:'М`ячі футбольні Crivit  #5 Сток',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Іграшки',subcategory:'Тверді іграшки',
     brand:'Crivit',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'8',
@@ -4430,7 +4430,7 @@ window.PRODUCTS=[
   },
   {
     id:'0418',name:'Домовий мікс (обіход) L.mix HHR Сток',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'',
@@ -4439,7 +4439,7 @@ window.PRODUCTS=[
   },
   {
     id:'1692',name:'Домовий мікс (обіход) L.mix HHR Сток',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'90-130',
@@ -4502,7 +4502,7 @@ window.PRODUCTS=[
   },
   {
     id:'1711',name:'Новорічні аксесуари мікс сток',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'100',
@@ -4529,7 +4529,7 @@ window.PRODUCTS=[
   },
   {
     id:'1892',name:'Щітки електричні для очистки швів бруківки Parkside PUB 150 Сток',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'шт',weight:'10',
@@ -5240,7 +5240,7 @@ window.PRODUCTS=[
   },
   {
     id:'1617',name:'Ручки офісні мікс сток (нові)',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'10',
@@ -5429,7 +5429,7 @@ window.PRODUCTS=[
   },
   {
     id:'1580',name:'Светри новорічні унісекс REVOLT Happy Christmas  сток Зима',
-    category:'Одяг',subcategory:'Светри та кардигани',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Сток',season:'Зима',
     audience:'Мікс',country:'',
     unit:'кг',weight:'10',
@@ -5636,7 +5636,7 @@ window.PRODUCTS=[
   },
   {
     id:'1843',name:'Ремні мікс Sinsay Сток',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Аксесуари',subcategory:'Сумки та рюкзаки',
     brand:'',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'10',
@@ -5933,7 +5933,7 @@ window.PRODUCTS=[
   },
   {
     id:'1918',name:'Спальники мікс 1й сорт, Німеччина',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'1й сорт',season:'Всесезонне',
     audience:'Мікс',country:'Німеччина',
     unit:'кг',weight:'',
@@ -5942,7 +5942,7 @@ window.PRODUCTS=[
   },
   {
     id:'1860',name:'Кераміка, декор Stone the Crows',
-    category:'Одяг',subcategory:'Одяг мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Мікс',season:'Всесезонне',
     audience:'Мікс',country:'',
     unit:'кг',weight:'300',
