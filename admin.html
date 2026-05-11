@@ -222,14 +222,25 @@
     <p>Адмінка завантажує фото товарів напряму до репозиторію GitHub. Для цього потрібен Personal Access Token із доступом до запису у <code>catalog-full</code>.</p>
 
     <div class="auth-steps">
-      <strong>Як отримати токен (один раз):</strong>
+      <strong>Як отримати токен (простіше — Classic):</strong>
       <ol>
-        <li>Відкрий <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a></li>
-        <li>Token name: <code>ltex-admin</code>, Expiration — на рік</li>
-        <li>Repository access: <strong>Only select repositories</strong> → <code>catalog-full</code></li>
-        <li>Permissions → Repository permissions → <strong>Contents</strong>: <strong>Read and write</strong></li>
-        <li>Натисни <strong>Generate token</strong> → скопіюй (починається з <code>github_pat_…</code>)</li>
+        <li>Відкрий <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener">github.com/settings/tokens/new</a></li>
+        <li><strong>Note:</strong> <code>ltex-admin</code></li>
+        <li><strong>Expiration:</strong> <code>1 year</code> (або No expiration)</li>
+        <li><strong>Select scopes:</strong> постав ✅ на <code>repo</code></li>
+        <li>Натисни <strong>Generate token</strong> внизу → скопіюй (<code>ghp_…</code>)</li>
       </ol>
+      <details style="margin-top:.625rem">
+        <summary style="cursor:pointer;font-weight:600;color:var(--gray-600)">Або Fine-grained (з обмеженим доступом)</summary>
+        <ol style="margin-top:.375rem">
+          <li>Відкрий <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">settings/personal-access-tokens/new</a></li>
+          <li>Name: <code>ltex-admin</code>, Expiration: 1 year</li>
+          <li><strong>Repository access</strong> → <code>Only select repositories</code> → обери <code>catalog-full</code></li>
+          <li>Прокрути ВНИЗ → секція <strong>Permissions → Repository permissions</strong></li>
+          <li>Знайди <strong>Contents</strong> → справа dropdown → <code>Read and write</code></li>
+          <li>Generate token → скопіюй (<code>github_pat_…</code>)</li>
+        </ol>
+      </details>
     </div>
 
     <div class="form-field">
