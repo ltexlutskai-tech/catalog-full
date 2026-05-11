@@ -717,25 +717,6 @@
 /* Make any [data-video] trigger feel clickable */
 [data-video]{cursor:pointer}
 
-/* === RATE EDIT WIDGET === */
-.rate-edit{
-  display:inline-flex;align-items:center;gap:.25rem;
-  padding:.125rem .5rem;
-  border-radius:var(--radius-md);
-  background:transparent;
-  color:inherit;font:inherit;
-  border:1px dashed transparent;
-  transition:all var(--transition);
-}
-.rate-edit:hover{
-  border-color:var(--green-200);
-  background:var(--green-50);
-  color:var(--green-700);
-}
-.rate-edit .icon{color:var(--gray-400);transition:color var(--transition)}
-.rate-edit:hover .icon{color:var(--green-600)}
-.rate-edit:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
-
 /* === LOTS PAGE PRODUCT BANNER === */
 .lots-banner{
   display:grid;

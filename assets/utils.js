@@ -135,64 +135,16 @@ window.LTEX = window.LTEX || {};
     return best;
   };
 
-  /* User-editable rate.
-     Priority: localStorage user override → auto-detected from lots → CONFIG default. */
+  /* Rate is auto-detected from lot data (mode of lot.eur_rate). Any legacy
+     user override stored from earlier builds is ignored to keep prices in
+     sync with what 1C actually exports. */
   const RATE_KEY = 'ltex-rate';
+  /* One-time cleanup of stale localStorage user override */
+  try { localStorage.removeItem(RATE_KEY); } catch(e){}
   L.getRate = () => {
-    try {
-      const v = localStorage.getItem(RATE_KEY);
-      const n = v == null ? null : parseFloat(v);
-      if(n && n > 0) return n;
-    } catch(e){}
     const auto = L.detectRateFromLots();
     if(auto && auto > 0) return auto;
     return L.CONFIG.EUR_UAH_RATE;
-  };
-  L.getUserRate = () => {
-    try {
-      const v = localStorage.getItem(RATE_KEY);
-      const n = v == null ? null : parseFloat(v);
-      return n && n > 0 ? n : null;
-    } catch(e){ return null; }
-  };
-  L.setRate = (n) => {
-    n = Number(n);
-    if(!n || n <= 0) return false;
-    try { localStorage.setItem(RATE_KEY, String(n)); } catch(e){}
-    L.recomputePrices();
-    window.dispatchEvent(new CustomEvent('ltex:rate-changed', { detail: { rate: n } }));
-    return true;
-  };
-  L.resetRate = () => {
-    try { localStorage.removeItem(RATE_KEY); } catch(e){}
-    L.recomputePrices();
-    window.dispatchEvent(new CustomEvent('ltex:rate-changed', { detail: { rate: L.getRate() } }));
-  };
-  L.openRateEditor = () => {
-    const auto = L.detectRateFromLots();
-    const userRate = L.getUserRate();
-    const cur = L.getRate();
-    const lines = [
-      'Курс EUR → UAH (1€ = ? ₴)',
-      '',
-      auto ? `Автоматично з лотів: ${auto}` : '',
-      userRate ? `Поточне (ваше): ${userRate}` : `Поточне: ${cur} (авто)`,
-      '',
-      'Введіть нове значення (порожньо = повернутися на авто)',
-    ].filter(Boolean).join('\n');
-    const v = prompt(lines, userRate || cur);
-    if(v == null) return;
-    if(String(v).trim() === ''){
-      if(L.getUserRate()){
-        L.resetRate();
-        L.toast(`Курс відновлено: 1€ = ${L.getRate()} ₴ (авто)`, 'success');
-      }
-      return;
-    }
-    const n = parseFloat(String(v).replace(',', '.'));
-    if(isNaN(n) || n <= 0){ L.toast('Невірне значення', 'error'); return; }
-    L.setRate(n);
-    L.toast(`Курс оновлено: 1€ = ${n} ₴`, 'success');
   };
   L.eurToUah = (eur) => Math.round(eur * L.getRate());
   L.formatUah = (uah) => {

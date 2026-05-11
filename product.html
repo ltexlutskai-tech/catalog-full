@@ -204,10 +204,7 @@
           </div>
           <p class="text-sm text-gray-500" style="margin-top:.25rem">
             ${L.formatEur(p.priceEur || 0)}/${p.unit || 'кг'} ·
-            <button type="button" class="rate-edit" id="rateEditBtn" title="Змінити курс">
-              курс €1 = <span id="rateValBox">${L.getRate()}</span> ₴
-              <span class="icon icon-sm" style="vertical-align:-2px;margin-left:.125rem" data-icon="sliders"></span>
-            </button>
+            <span class="text-muted">курс €1 = <span id="rateValBox">${L.getRate()}</span> ₴</span>
           </p>
         </div>
 
@@ -520,15 +517,7 @@
     });
   }
 
-  /* === Rate edit + reactive price update === */
-  const rateBtn = document.getElementById('rateEditBtn');
-  if(rateBtn){
-    rateBtn.addEventListener('click', () => L.openRateEditor());
-    rateBtn.querySelectorAll('[data-icon]').forEach(el => {
-      const n = el.dataset.icon;
-      if(ICONS[n]) el.innerHTML = ICONS[n]({size:14});
-    });
-  }
+  /* === Reactive price update on rate change (rate is auto-detected, not editable) === */
   function refreshPriceBlocks(){
     /* update visible price elements after rate change */
     const rate = L.getRate();

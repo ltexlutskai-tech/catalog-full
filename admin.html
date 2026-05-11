@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16a34a">
+<meta name="robots" content="noindex,nofollow">
+<title>Адмінка — L-TEX</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+<link rel="stylesheet" href="assets/components.css">
+<style>
+.admin-header{
+  background:linear-gradient(135deg,var(--green-700),var(--green-600));
+  color:#fff;padding:1rem 0;
+}
+.admin-header__inner{
+  max-width:var(--container);margin-inline:auto;padding:0 1rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.admin-header__title{font-weight:700;font-size:1.125rem;letter-spacing:-.01em}
+.admin-header__sub{color:rgba(255,255,255,.85);font-size:.8125rem}
+.admin-header__actions{margin-left:auto;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.admin-header__chip{
+  display:inline-flex;align-items:center;gap:.375rem;
+  padding:.25rem .625rem;border-radius:var(--radius-full);
+  background:rgba(255,255,255,.18);
+  font-size:.75rem;font-weight:600;
+}
+
+.auth-card{
+  max-width:32rem;margin:3rem auto;
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.5rem;
+  box-shadow:var(--shadow-md);
+}
+.auth-card h2{font-size:1.25rem;margin-bottom:.5rem}
+.auth-card p{color:var(--gray-600);font-size:.875rem;margin-bottom:1rem;line-height:1.6}
+.auth-steps{
+  background:var(--gray-50);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:1rem;margin-bottom:1rem;
+  font-size:.8125rem;line-height:1.6;
+}
+.auth-steps ol{list-style:decimal;padding-left:1.25rem;margin-top:.25rem}
+.auth-steps code{
+  background:#fff;border:1px solid var(--border);
+  border-radius:.25rem;padding:.0625rem .375rem;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;
+}
+.auth-steps a{color:var(--primary);font-weight:600;text-decoration:underline}
+
+.product-list{display:grid;gap:.75rem;margin-top:1rem}
+.product-row{
+  display:grid;
+  grid-template-columns:5rem 1fr auto;
+  gap:1rem;
+  align-items:center;
+  padding:.75rem;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  transition:border var(--transition),box-shadow var(--transition);
+}
+.product-row:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
+.product-row__media{
+  width:5rem;height:5rem;
+  background:var(--gray-100);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  position:relative;
+  flex-shrink:0;
+}
+.product-row__media img{width:100%;height:100%;object-fit:cover}
+.product-row__media-empty{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--gray-400);font-size:1.5rem;
+}
+.product-row__photo-count{
+  position:absolute;bottom:.125rem;right:.125rem;
+  background:rgba(0,0,0,.7);color:#fff;
+  border-radius:9999px;
+  padding:.0625rem .375rem;
+  font-size:.625rem;font-weight:700;
+}
+.product-row__info{min-width:0}
+.product-row__name{
+  font-weight:600;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.product-row__meta{font-size:.75rem;color:var(--gray-500);margin-top:.25rem}
+.product-row__id{font-family:'JetBrains Mono',monospace;color:var(--gray-400)}
+
+.product-edit{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.25rem;margin-bottom:1rem;
+}
+.product-edit__head{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding-bottom:1rem;margin-bottom:1rem;
+  border-bottom:1px solid var(--border);
+}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(8rem,1fr));
+  gap:.5rem;margin-bottom:1rem;
+}
+.gallery-item{
+  position:relative;
+  aspect-ratio:1;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  background:var(--gray-100);
+}
+.gallery-item img{width:100%;height:100%;object-fit:cover}
+.gallery-item__name{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,.6);color:#fff;
+  font-size:.625rem;
+  padding:.125rem .375rem;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.gallery-item.new::after{
+  content:'NEW';
+  position:absolute;top:.25rem;left:.25rem;
+  background:var(--green-600);color:#fff;
+  font-size:.625rem;font-weight:700;
+  padding:.0625rem .25rem;border-radius:.25rem;
+}
+
+.dropzone{
+  border:2px dashed var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.5rem;
+  text-align:center;
+  color:var(--gray-500);
+  cursor:pointer;
+  transition:all var(--transition);
+  background:var(--gray-50);
+}
+.dropzone:hover,.dropzone.dragover{
+  border-color:var(--primary);
+  background:var(--green-50);
+  color:var(--green-700);
+}
+.dropzone input[type=file]{display:none}
+.dropzone__icon{font-size:2rem;margin-bottom:.25rem}
+.dropzone__hint{font-size:.75rem;margin-top:.25rem;color:var(--gray-400)}
+
+.upload-queue{display:grid;gap:.5rem;margin-top:1rem}
+.upload-item{
+  display:grid;
+  grid-template-columns:4rem 1fr auto;
+  gap:.75rem;align-items:center;
+  padding:.5rem;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  background:#fff;
+}
+.upload-item.uploading{border-color:var(--amber-500);background:var(--amber-50)}
+.upload-item.done{border-color:var(--primary);background:var(--green-50)}
+.upload-item.error{border-color:var(--red-500);background:var(--red-50)}
+.upload-item__thumb{
+  width:4rem;height:4rem;
+  background:var(--gray-100);
+  border-radius:var(--radius-sm);
+  overflow:hidden;
+}
+.upload-item__thumb img{width:100%;height:100%;object-fit:cover}
+.upload-item__info{min-width:0;font-size:.8125rem}
+.upload-item__name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upload-item__meta{font-size:.6875rem;color:var(--gray-500);margin-top:.125rem}
+
+.search-bar{
+  display:flex;align-items:center;gap:.5rem;
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:0 .875rem;
+  flex:1;max-width:32rem;
+}
+.search-bar input{
+  flex:1;border:none;outline:none;
+  padding:.625rem 0;font-size:.875rem;background:transparent;
+}
+.search-bar .icon{color:var(--gray-400)}
+
+@media(max-width:640px){
+  .product-row{grid-template-columns:3.5rem 1fr}
+  .product-row__media{width:3.5rem;height:3.5rem}
+  .product-row > button{grid-column:1/-1;justify-self:start}
+}
+</style>
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="admin-header__inner">
+    <a href="index.html" style="color:#fff;text-decoration:none;display:flex;align-items:center;gap:.625rem">
+      <span style="font-size:1.375rem;font-weight:800;letter-spacing:-.02em">L-TEX</span>
+      <span class="admin-header__chip">Адмінка</span>
+    </a>
+    <div class="admin-header__sub" id="hdrAuthStatus">Не авторизовано</div>
+    <div class="admin-header__actions">
+      <a class="admin-header__chip" href="catalog.html" style="text-decoration:none">↩ Каталог</a>
+      <button class="admin-header__chip" id="logoutBtn" type="button" style="display:none;border:none;cursor:pointer">Вийти</button>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top:1.5rem;padding-bottom:3rem">
+
+  <!-- Auth screen (hidden after successful login) -->
+  <div class="auth-card" id="authCard">
+    <h2>🔐 Введіть GitHub-токен</h2>
+    <p>Адмінка завантажує фото товарів напряму до репозиторію GitHub. Для цього потрібен Personal Access Token із доступом до запису у <code>catalog-full</code>.</p>
+
+    <div class="auth-steps">
+      <strong>Як отримати токен (один раз):</strong>
+      <ol>
+        <li>Відкрий <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a></li>
+        <li>Token name: <code>ltex-admin</code>, Expiration — на рік</li>
+        <li>Repository access: <strong>Only select repositories</strong> → <code>catalog-full</code></li>
+        <li>Permissions → Repository permissions → <strong>Contents</strong>: <strong>Read and write</strong></li>
+        <li>Натисни <strong>Generate token</strong> → скопіюй (починається з <code>github_pat_…</code>)</li>
+      </ol>
+    </div>
+
+    <div class="form-field">
+      <label for="patInput">Токен</label>
+      <input type="password" id="patInput" autocomplete="off" placeholder="github_pat_…" style="font-family:'JetBrains Mono',monospace">
+    </div>
+    <button class="btn btn-primary w-full" id="authBtn" type="button">
+      <span class="icon icon-sm" data-icon="shieldCheck"></span>
+      Перевірити та зберегти
+    </button>
+    <p class="text-xs text-muted text-center" style="margin-top:.75rem">
+      Токен зберігається тільки на цьому пристрої (localStorage), не передається на інші сервери.
+    </p>
+  </div>
+
+  <!-- Admin workspace (hidden until authorised) -->
+  <div id="workspace" style="display:none">
+
+    <!-- Search bar -->
+    <div class="flex items-center gap-2" style="margin-bottom:1rem;flex-wrap:wrap">
+      <div class="search-bar">
+        <span class="icon icon-sm" data-icon="search"></span>
+        <input type="search" id="searchInput" placeholder="Пошук товару за назвою або ID…" autocomplete="off">
+      </div>
+      <select class="filter-select" id="filterSelect" style="width:auto;min-width:11rem">
+        <option value="all">Усі товари</option>
+        <option value="no-photo">Тільки без фото</option>
+        <option value="has-photo">Тільки з фото</option>
+      </select>
+      <span class="text-sm text-muted" id="resultCount" style="margin-left:auto"></span>
+    </div>
+
+    <!-- Selected product editor -->
+    <div id="editor" style="display:none"></div>
+
+    <!-- Product list -->
+    <div class="product-list" id="productList"></div>
+    <div id="paginationBox" class="pagination" style="display:none"></div>
+  </div>
+
+</main>
+
+<script src="data/meta.js"></script>
+<script src="data/images.js"></script>
+<script src="data/details.js"></script>
+<script src="data/products.js"></script>
+<script src="data/lots.js"></script>
+<script src="assets/icons.js"></script>
+<script src="assets/utils.js"></script>
+<script src="assets/wishlist.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+(() => {
+  const L = window.LTEX;
+  const A = L.Admin;
+  const ICONS = window.ICONS;
+
+  document.querySelectorAll('[data-icon]').forEach(el => {
+    const n = el.dataset.icon;
+    if(ICONS[n]) el.innerHTML = ICONS[n]();
+  });
+
+  const authCard = document.getElementById('authCard');
+  const workspace = document.getElementById('workspace');
+  const hdrAuth = document.getElementById('hdrAuthStatus');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  function showWorkspace(login){
+    authCard.style.display = 'none';
+    workspace.style.display = 'block';
+    hdrAuth.textContent = login ? `✓ Авторизовано як ${login}` : '✓ Авторизовано';
+    logoutBtn.style.display = 'inline-flex';
+    renderProducts();
+  }
+  function showAuth(){
+    authCard.style.display = 'block';
+    workspace.style.display = 'none';
+    hdrAuth.textContent = 'Не авторизовано';
+    logoutBtn.style.display = 'none';
+  }
+
+  /* === Auth handlers === */
+  document.getElementById('authBtn').addEventListener('click', async () => {
+    const tok = document.getElementById('patInput').value.trim();
+    if(!tok){ L.toast('Введіть токен', 'error'); return; }
+    A.setToken(tok);
+    L.toast('Перевіряємо токен…');
+    const r = await A.checkToken();
+    if(!r.ok){
+      A.clearToken();
+      L.toast(`Помилка: ${r.error}`, 'error');
+      return;
+    }
+    L.toast(`Авторизовано як ${r.login}`, 'success');
+    showWorkspace(r.login);
+  });
+  logoutBtn.addEventListener('click', () => {
+    if(!confirm('Прибрати збережений токен з цього браузера?')) return;
+    A.clearToken();
+    L.toast('Токен прибрано');
+    showAuth();
+  });
+
+  /* === Search & filter === */
+  const PER_PAGE = 30;
+  const state = { q: '', filter: 'all', page: 1, selectedId: null };
+  document.getElementById('searchInput').addEventListener('input', L.debounce(e => {
+    state.q = e.target.value.trim().toLowerCase();
+    state.page = 1;
+    renderProducts();
+  }, 200));
+  document.getElementById('filterSelect').addEventListener('change', e => {
+    state.filter = e.target.value;
+    state.page = 1;
+    renderProducts();
+  });
+
+  function getFilteredProducts(){
+    const all = L.getProducts();
+    let list = all;
+    if(state.q){
+      list = L.search(state.q, { products: all, minScore: 0.4 }).map(x => x.p);
+    }
+    if(state.filter === 'no-photo'){
+      list = list.filter(p => {
+        const img = L.imagesFor(p.id);
+        return !img || !img.length;
+      });
+    } else if(state.filter === 'has-photo'){
+      list = list.filter(p => {
+        const img = L.imagesFor(p.id);
+        return img && img.length;
+      });
+    }
+    return list;
+  }
+
+  /* === Product list render === */
+  function renderProducts(){
+    const filtered = getFilteredProducts();
+    document.getElementById('resultCount').textContent = `${filtered.length} ${pluralProducts(filtered.length)}`;
+    const start = (state.page - 1) * PER_PAGE;
+    const slice = filtered.slice(start, start + PER_PAGE);
+    const list = document.getElementById('productList');
+    if(!slice.length){
+      list.innerHTML = `<div class="empty-state"><h3>Нічого не знайдено</h3></div>`;
+    } else {
+      list.innerHTML = slice.map(p => {
+        const photos = L.imagesFor(p.id);
+        const first = photos[0];
+        return `<div class="product-row" data-id="${p.id}">
+          <div class="product-row__media">
+            ${first
+              ? `<img src="${first}" alt="" loading="lazy">`
+              : `<div class="product-row__media-empty">🖼️</div>`}
+            <span class="product-row__photo-count">${photos.length}</span>
+          </div>
+          <div class="product-row__info">
+            <div class="product-row__name">${L.escapeHtml(p.name)}</div>
+            <div class="product-row__meta">
+              <span class="product-row__id">№ ${String(p.id).padStart(4,'0')}</span>
+              ${p.sort ? ' · ' + L.escapeHtml(p.sort) : ''}
+              ${p.season ? ' · ' + L.escapeHtml(p.season) : ''}
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" data-edit="${p.id}" type="button">
+            <span class="icon icon-sm" data-icon="plus"></span>
+            Фото
+          </button>
+        </div>`;
+      }).join('');
+      list.querySelectorAll('[data-icon]').forEach(el => {
+        const n = el.dataset.icon;
+        if(ICONS[n]) el.innerHTML = ICONS[n]({size:16});
+      });
+      list.querySelectorAll('[data-edit]').forEach(btn => {
+        btn.addEventListener('click', () => openEditor(btn.dataset.edit));
+      });
+    }
+    renderPagination(filtered.length);
+  }
+
+  function renderPagination(total){
+    const el = document.getElementById('paginationBox');
+    const pages = Math.ceil(total / PER_PAGE);
+    if(pages <= 1){ el.style.display='none'; return; }
+    el.style.display='flex';
+    const cur = state.page;
+    const items = [];
+    items.push(`<a class="${cur===1?'disabled':''}" data-page="${Math.max(1,cur-1)}">‹</a>`);
+    for(let n = 1; n <= pages; n++){
+      if(n === 1 || n === pages || Math.abs(n - cur) <= 2){
+        items.push(`<a class="${n===cur?'current':''}" data-page="${n}">${n}</a>`);
+      } else if(n === 2 && cur > 4){
+        items.push(`<span class="gap">…</span>`);
+      } else if(n === pages - 1 && cur < pages - 3){
+        items.push(`<span class="gap">…</span>`);
+      }
+    }
+    items.push(`<a class="${cur===pages?'disabled':''}" data-page="${Math.min(pages,cur+1)}">›</a>`);
+    el.innerHTML = items.join('');
+    el.querySelectorAll('[data-page]').forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      state.page = parseInt(a.dataset.page);
+      renderProducts(); window.scrollTo({top:0, behavior:'smooth'});
+    }));
+  }
+
+  function pluralProducts(n){
+    const ten = n % 100;
+    if(ten >= 11 && ten <= 14) return 'товарів';
+    const o = n % 10;
+    if(o === 1) return 'товар';
+    if(o >= 2 && o <= 4) return 'товари';
+    return 'товарів';
+  }
+
+  /* === Editor === */
+  let editorState = null;
+  function openEditor(id){
+    state.selectedId = id;
+    const p = L.findProduct(id);
+    if(!p) return;
+    editorState = { product: p, files: [], statuses: new Map() };
+    renderEditor();
+    document.getElementById('editor').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function closeEditor(){
+    state.selectedId = null;
+    editorState = null;
+    document.getElementById('editor').style.display = 'none';
+  }
+  function renderEditor(){
+    const ed = document.getElementById('editor');
+    if(!editorState){ ed.style.display='none'; return; }
+    const p = editorState.product;
+    const photos = L.imagesFor(p.id);
+    const newOnes = (editorState.statuses && [...editorState.statuses.values()]
+      .filter(s => s.status === 'done').map(s => s.fname)) || [];
+
+    ed.style.display = 'block';
+    ed.innerHTML = `
+      <div class="product-edit">
+        <div class="product-edit__head">
+          <div style="flex:1;min-width:0">
+            <div class="text-xs text-muted">№ ${String(p.id).padStart(4,'0')}</div>
+            <div class="h3" style="margin-top:.125rem">${L.escapeHtml(p.name)}</div>
+            <div class="text-sm text-muted" style="margin-top:.25rem">
+              ${photos.length} ${photos.length === 1 ? 'фото' : (photos.length < 5 ? 'фото' : 'фото')}
+              ${p.sort ? ' · ' + L.escapeHtml(p.sort) : ''}
+            </div>
+          </div>
+          <button class="icon-btn" id="closeEditor" type="button" aria-label="Закрити">
+            <span class="icon" data-icon="x"></span>
+          </button>
+        </div>
+
+        ${photos.length ? `
+          <h4 class="text-sm font-semibold" style="margin-bottom:.5rem">Існуючі фото</h4>
+          <div class="gallery-grid">
+            ${photos.map(fn => {
+              const isNew = newOnes.includes(fn);
+              return `<div class="gallery-item ${isNew?'new':''}">
+                <img src="${A.imageRawUrl(fn)}" alt="" loading="lazy">
+                <span class="gallery-item__name">${L.escapeHtml(fn)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        ` : `<p class="text-sm text-muted" style="margin-bottom:1rem">Поки що немає фото для цього товару.</p>`}
+
+        <h4 class="text-sm font-semibold" style="margin:1rem 0 .5rem">Додати нові фото</h4>
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple>
+          <div class="dropzone__icon">📷</div>
+          <div><strong>Перетягни фото сюди</strong> або клацни щоб вибрати</div>
+          <div class="dropzone__hint">JPEG / PNG / WebP, до 30 MB на файл. Можна декілька одразу.</div>
+        </label>
+
+        <div class="upload-queue" id="uploadQueue"></div>
+
+        <div class="flex gap-2" style="margin-top:1rem;justify-content:flex-end">
+          <button class="btn btn-outline" id="cancelUpload" type="button">Скасувати</button>
+          <button class="btn btn-primary" id="startUpload" type="button" disabled>
+            <span class="icon icon-sm" data-icon="send"></span>
+            <span id="startUploadLabel">Завантажити</span>
+          </button>
+        </div>
+      </div>
+    `;
+    ed.querySelectorAll('[data-icon]').forEach(el => {
+      const n = el.dataset.icon;
+      if(ICONS[n]) el.innerHTML = ICONS[n]({size:16});
+    });
+
+    document.getElementById('closeEditor').addEventListener('click', closeEditor);
+    document.getElementById('cancelUpload').addEventListener('click', closeEditor);
+
+    const dz = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    dz.addEventListener('click', e => { if(e.target !== fileInput) fileInput.click(); });
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault(); dz.classList.remove('dragover');
+      addFiles([...e.dataTransfer.files].filter(f => f.type.startsWith('image/')));
+    });
+    fileInput.addEventListener('change', () => addFiles([...fileInput.files]));
+
+    document.getElementById('startUpload').addEventListener('click', startUpload);
+  }
+
+  function addFiles(files){
+    if(!files.length) return;
+    editorState.files.push(...files);
+    renderQueue();
+  }
+
+  function renderQueue(){
+    const q = document.getElementById('uploadQueue');
+    if(!editorState.files.length){
+      q.innerHTML = '';
+      document.getElementById('startUpload').disabled = true;
+      document.getElementById('startUploadLabel').textContent = 'Завантажити';
+      return;
+    }
+    q.innerHTML = editorState.files.map((f, i) => {
+      const st = editorState.statuses.get(i) || { status: 'pending' };
+      const stCls = st.status === 'uploading' ? 'uploading' :
+                    st.status === 'done' ? 'done' :
+                    st.status === 'error' ? 'error' : '';
+      const url = URL.createObjectURL(f);
+      const statusText = st.status === 'uploading' ? '⏳ Завантажується…' :
+                         st.status === 'done' ? `✓ Готово: ${st.fname || ''}` :
+                         st.status === 'error' ? `❌ ${st.message || 'Помилка'}` :
+                         'У черзі';
+      return `<div class="upload-item ${stCls}">
+        <div class="upload-item__thumb"><img src="${url}" alt=""></div>
+        <div class="upload-item__info">
+          <div class="upload-item__name">${L.escapeHtml(f.name)}</div>
+          <div class="upload-item__meta">${(f.size/1024/1024).toFixed(2)} MB · ${statusText}</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" data-remove="${i}" type="button" ${st.status==='uploading' ? 'disabled' : ''} aria-label="Прибрати">
+          ${ICONS.x({size:16})}
+        </button>
+      </div>`;
+    }).join('');
+    q.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.remove);
+        editorState.files.splice(idx, 1);
+        const newStatuses = new Map();
+        for(const [k, v] of editorState.statuses){
+          if(k < idx) newStatuses.set(k, v);
+          else if(k > idx) newStatuses.set(k - 1, v);
+        }
+        editorState.statuses = newStatuses;
+        renderQueue();
+      });
+    });
+    document.getElementById('startUpload').disabled = !editorState.files.length;
+    document.getElementById('startUploadLabel').textContent = `Завантажити ${editorState.files.length}`;
+  }
+
+  async function startUpload(){
+    if(!editorState || !editorState.files.length) return;
+    const btn = document.getElementById('startUpload');
+    btn.disabled = true;
+    const label = document.getElementById('startUploadLabel');
+    const p = editorState.product;
+    try {
+      const onProgress = (p) => {
+        if(p.stage === 'uploading' || p.stage === 'encoding'){
+          /* Mark current file as uploading */
+          const idx = p.current - 1;
+          editorState.statuses.set(idx, { status: 'uploading' });
+          renderQueue();
+          label.textContent = `Завантаження ${p.current} / ${p.total}…`;
+        } else if(p.stage === 'updating-index'){
+          label.textContent = 'Оновлюємо індекс…';
+        }
+      };
+      const added = await A.uploadPhotos(p, editorState.files, onProgress);
+      /* Mark all done */
+      added.forEach((fname, i) => {
+        editorState.statuses.set(i, { status: 'done', fname });
+      });
+      L.toast(`Завантажено ${added.length} фото. Сайт оновиться через ~1 хв.`, 'success');
+      renderEditor();
+      /* Refresh thumbnail in product list */
+      renderProducts();
+    } catch(e){
+      L.toast(`Помилка: ${e.message}`, 'error');
+      btn.disabled = false;
+      label.textContent = `Завантажити ${editorState.files.length}`;
+    }
+  }
+
+  /* === Boot === */
+  if(A.getToken()){
+    /* Optimistically show workspace; if API later fails, user sees toast */
+    A.checkToken().then(r => {
+      if(r.ok) showWorkspace(r.login);
+      else {
+        L.toast('Токен недійсний. Введіть новий.', 'error');
+        showAuth();
+      }
+    });
+  } else {
+    showAuth();
+  }
+})();
+</script>
+</body>
+</html>
