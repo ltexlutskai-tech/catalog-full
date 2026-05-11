@@ -261,6 +261,7 @@
 <script src="assets/utils.js"></script>
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
+<script src="assets/video-modal.js"></script>
 <script src="assets/seo.js"></script>
 <script src="assets/header.js"></script>
 <script>
@@ -321,7 +322,7 @@
               ${p.isNew ? `<span class="tag tag-new">NEW</span>` : ''}
               ${isAk ? `<span class="tag tag-sale">SALE</span>` : ''}
             </div>
-            ${p.youtube ? `<span class="product-card__video"><span class="icon icon-sm">${ICONS.play({size:12})}</span>Відео</span>` : ''}
+            ${p.youtube ? `<button class="product-card__video" type="button" data-video="${L.escapeHtml(L.youtubeWatchUrl(p.youtube))}" data-video-title="${L.escapeHtml(p.name)}" aria-label="Переглянути відео"><span class="icon icon-sm">${ICONS.play({size:12})}</span>Відео</button>` : ''}
           </div>
         </a>
         <div class="product-card__body">

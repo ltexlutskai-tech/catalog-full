@@ -258,12 +258,16 @@
 .product-card__wish.active{color:var(--red-500)}
 .product-card__wish.active svg{fill:currentColor}
 .product-card__video{
-  position:absolute;bottom:.5rem;right:.5rem;z-index:10;
+  position:absolute;bottom:.5rem;right:.5rem;z-index:15;
   display:inline-flex;align-items:center;gap:.25rem;
   padding:.25rem .5rem;border-radius:var(--radius-full);
   background:rgba(0,0,0,.65);color:#fff;
   font-size:.6875rem;font-weight:600;
+  cursor:pointer;transition:background var(--transition),transform var(--transition);
+  border:none;
 }
+.product-card__video:hover{background:rgba(220,38,38,.9);transform:scale(1.05)}
+.product-card__video:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .product-card__body{
   padding:.75rem;flex:1;
   display:flex;flex-direction:column;gap:.5rem;
@@ -664,6 +668,55 @@
   display:inline-flex;align-items:center;gap:.5rem;
   font-size:.875rem;
 }
+/* === VIDEO MODAL === */
+.video-modal{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.92);
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+  opacity:0;visibility:hidden;
+  transition:opacity var(--transition),visibility var(--transition);
+}
+.video-modal.open{opacity:1;visibility:visible}
+.video-modal__panel{
+  position:relative;
+  width:100%;max-width:64rem;
+  aspect-ratio:16/9;
+  background:#000;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  box-shadow:var(--shadow-2xl);
+  transform:scale(.96);
+  transition:transform var(--transition);
+}
+.video-modal.open .video-modal__panel{transform:scale(1)}
+.video-modal__close{
+  position:absolute;top:.5rem;right:.5rem;z-index:5;
+  width:2.5rem;height:2.5rem;border-radius:9999px;
+  background:rgba(0,0,0,.55);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:background var(--transition);
+}
+.video-modal__close:hover{background:rgba(0,0,0,.85)}
+.video-modal__close:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.video-modal__title{
+  position:absolute;top:.625rem;left:1rem;z-index:1;
+  color:#fff;font-weight:600;font-size:.9375rem;
+  padding-right:3.25rem;line-height:1.3;
+  text-shadow:0 1px 4px rgba(0,0,0,.7);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  pointer-events:none;
+}
+.video-modal__frame{width:100%;height:100%}
+.video-modal__frame iframe{width:100%;height:100%;border:none;display:block}
+@media(max-width:640px){
+  .video-modal{padding:0}
+  .video-modal__panel{border-radius:0;max-width:none;aspect-ratio:auto;height:100%}
+}
+
+/* Make any [data-video] trigger feel clickable */
+[data-video]{cursor:pointer}
+
 /* === RATE EDIT WIDGET === */
 .rate-edit{
   display:inline-flex;align-items:center;gap:.25rem;

@@ -344,6 +344,16 @@ window.LTEX = window.LTEX || {};
     if(typeof id === 'string') return `https://www.youtube.com/watch?v=${id}`;
     return url;
   };
+  /* Build an embeddable iframe URL (privacy-enhanced, autoplay).
+     Single videos use /embed/<id>; playlists use /embed/videoseries?list=<id>. */
+  L.youtubeEmbedUrl = (url) => {
+    const id = L.youtubeId(url);
+    if(!id) return null;
+    const base = 'https://www.youtube-nocookie.com/embed';
+    const common = 'autoplay=1&rel=0&modestbranding=1&playsinline=1';
+    if(typeof id === 'string') return `${base}/${id}?${common}`;
+    return `${base}/videoseries?list=${id.playlist}&${common}`;
+  };
 
   /* === Debounce === */
   L.debounce = (fn, ms = 200) => {

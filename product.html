@@ -59,6 +59,7 @@
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
 <script src="assets/order-modal.js"></script>
+<script src="assets/video-modal.js"></script>
 <script src="assets/seo.js"></script>
 <script src="assets/header.js"></script>
 <script>
@@ -263,9 +264,9 @@
             📩 Замовити / Запит
           </button>
           ${p.youtube ? `
-            <a class="btn btn-outline" href="${L.youtubeWatchUrl(p.youtube)}" target="_blank" rel="noopener">
+            <a class="btn btn-outline" href="${L.youtubeWatchUrl(p.youtube)}" target="_blank" rel="noopener" data-video="${L.youtubeWatchUrl(p.youtube)}" data-video-title="${L.escapeHtml(p.name)}">
               <span class="icon icon-sm" data-icon="play"></span>
-              YouTube огляд
+              ▶ Відеоогляд
             </a>` : ''}
           ${hasLots ? `
             <a class="btn btn-primary" href="${L.lotsForProductHref(p.id)}" style="grid-column:1/-1">
@@ -570,7 +571,7 @@
         : reserved ? `<span class="tag tag-status-reserved">Заброньований</span>`
         : `<span class="tag tag-status-free">Вільний</span>`;
       return `<article class="lot-card ${reserved?'reserved':''} ${onSale?'on-sale':''} ${inCart?'in-cart':''}" data-barcode="${L.escapeHtml(lot.barcode)}">
-        <a class="lot-card__media" href="${watchUrl}" target="_blank" rel="noopener">
+        <a class="lot-card__media" href="${watchUrl}" target="_blank" rel="noopener" data-video="${watchUrl}" data-video-title="Лот ${L.escapeHtml(lot.barcode)} — ${L.escapeHtml(p.name)}">
           ${thumb ? `<img class="lot-card__thumb" src="${thumb}" alt="" loading="lazy">` : `<div class="lot-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
           <div class="lot-card__play"><span class="icon icon-lg">${ICONS.play()}</span></div>
           <div class="lot-card__badges">${status}</div>

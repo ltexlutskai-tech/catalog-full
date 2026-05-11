@@ -207,6 +207,7 @@
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
 <script src="assets/order-modal.js"></script>
+<script src="assets/video-modal.js"></script>
 <script src="assets/header.js"></script>
 <script>
 (() => {
@@ -237,7 +238,7 @@
         : lot.reserved ? '<span class="tag tag-status-reserved">Заброньований</span>'
         : '<span class="tag tag-status-free">Вільний</span>';
       return `<div class="cart-row lot" data-key="lot:${L.escapeHtml(lot.barcode)}">
-        <a class="cart-row__media" href="${watchUrl}" target="_blank" rel="noopener" aria-label="Відеоогляд">
+        <a class="cart-row__media" href="${watchUrl}" target="_blank" rel="noopener" data-video="${watchUrl}" data-video-title="Лот ${L.escapeHtml(lot.barcode)} — ${L.escapeHtml(grp.name || lot.prodName)}" aria-label="Відеоогляд">
           ${thumbUrl ? `<img src="${thumbUrl}" alt="" loading="lazy">` : ''}
         </a>
         <div class="min-w-0">

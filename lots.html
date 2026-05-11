@@ -98,6 +98,7 @@
 <script src="assets/wishlist.js"></script>
 <script src="assets/search.js"></script>
 <script src="assets/order-modal.js"></script>
+<script src="assets/video-modal.js"></script>
 <script src="assets/seo.js"></script>
 <script src="assets/header.js"></script>
 <script>
@@ -249,7 +250,7 @@
     const desc = L.cleanLotDesc(lot.desc);
 
     return `<article class="${cardCls}" data-barcode="${L.escapeHtml(lot.barcode)}">
-      <a class="lot-card__media" href="${watchUrl}" target="_blank" rel="noopener" aria-label="Відеоогляд лота ${L.escapeHtml(lot.barcode)}">
+      <a class="lot-card__media" href="${watchUrl}" target="_blank" rel="noopener" data-video="${watchUrl}" data-video-title="Лот ${L.escapeHtml(lot.barcode)} — ${L.escapeHtml(grp.name || lot.prodName)}" aria-label="Відеоогляд лота ${L.escapeHtml(lot.barcode)}">
         ${thumb
           ? `<img class="lot-card__thumb" src="${thumb}" alt="" loading="lazy">`
           : `<div class="lot-card__media-empty"><span class="icon icon-lg" data-icon="video"></span><span class="text-xs">Відео скоро</span></div>`}
