@@ -7,12 +7,19 @@
        cta: 'Надіслати запит',                // optional submit label
        intent: 'order' | 'video' | 'consult'  // optional preset variant
      })
+
+   Email submission goes through formsubmit.co/ajax/<email> — a free relay
+   that pre-confirmed our address once and now forwards every POST as a
+   regular email. No mailto: client launching, no extra setup for the
+   customer. Telegram path still uses the share-url scheme.
 */
 window.LTEX = window.LTEX || {};
 (() => {
   const L = window.LTEX;
   const ICONS = window.ICONS;
   const STORE_KEY = 'ltex-client';
+  const FORMSUBMIT_EMAIL = 'ltex.lutsk.ai@gmail.com';
+  const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${FORMSUBMIT_EMAIL}`;
 
   function ensureModal(){
     let m = document.getElementById('ltexOrderModal');
@@ -61,11 +68,12 @@ window.LTEX = window.LTEX || {};
                 <span class="icon icon-sm">${ICONS.send()}</span>
                 Надіслати в Telegram
               </button>
-              <a class="btn btn-outline flex-1" href="#" id="ltexOrdSendMail">
+              <button class="btn btn-outline flex-1" type="button" id="ltexOrdSendMail">
                 <span class="icon icon-sm">${ICONS.mail()}</span>
-                Email
-              </a>
+                <span id="ltexOrdSendMailLabel">Надіслати Email</span>
+              </button>
             </div>
+            <div id="ltexOrdStatus" style="display:none;margin-top:.75rem;padding:.625rem .75rem;border-radius:var(--radius-md);font-size:.8125rem;text-align:center"></div>
             <p class="text-xs text-muted text-center" style="margin-top:.75rem">
               Або одразу:
               <a href="${L.CONFIG.TELEGRAM}" target="_blank" rel="noopener" style="color:var(--primary);font-weight:600">@L_TEX</a>
@@ -151,11 +159,26 @@ window.LTEX = window.LTEX || {};
       return lines.join('\n');
     };
 
-    /* Wire actions */
+    /* Status helper */
+    const statusEl = document.getElementById('ltexOrdStatus');
+    function setStatus(kind, msg){
+      if(!msg){ statusEl.style.display = 'none'; statusEl.textContent = ''; return; }
+      statusEl.style.display = 'block';
+      statusEl.textContent = msg;
+      statusEl.style.background = kind === 'success' ? 'var(--green-50)'
+        : kind === 'error'   ? 'var(--red-50)'
+        : 'var(--gray-100)';
+      statusEl.style.color = kind === 'success' ? 'var(--green-700)'
+        : kind === 'error'   ? 'var(--red-700)'
+        : 'var(--gray-700)';
+      statusEl.style.border = '1px solid ' + (kind === 'success' ? 'var(--green-200)'
+        : kind === 'error'   ? 'var(--red-200)'
+        : 'var(--border)');
+    }
+
+    /* Wire actions — replace clones to drop previous listeners */
     const tgBtn = document.getElementById('ltexOrdSendTg');
     const mailBtn = document.getElementById('ltexOrdSendMail');
-
-    /* Replace buttons by clones to drop previous listeners */
     const tgClone = tgBtn.cloneNode(true);
     tgBtn.replaceWith(tgClone);
     const mailClone = mailBtn.cloneNode(true);
@@ -163,18 +186,61 @@ window.LTEX = window.LTEX || {};
 
     tgClone.addEventListener('click', () => {
       const c = collect();
-      if(!c.phone){ L.toast('Вкажіть телефон', 'error'); return; }
+      if(!c.phone){ L.toast('Вкажіть телефон', 'error'); setStatus('error', 'Потрібен телефон'); return; }
       window.open(L.tgOrderUrl(buildText(c)), '_blank', 'noopener');
+      setStatus('success', 'Відкрито Telegram. Натисніть «Надіслати» там, щоб завершити.');
       L.toast('Відкрито Telegram', 'success');
-      m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';
-    });
-    mailClone.addEventListener('click', e => {
-      e.preventDefault();
-      const c = collect();
-      if(!c.phone && !c.email){ L.toast('Вкажіть телефон або email', 'error'); return; }
-      location.href = L.mailOrderUrl(subject, buildText(c));
     });
 
+    mailClone.addEventListener('click', async () => {
+      const c = collect();
+      if(!c.phone && !c.email){
+        L.toast('Вкажіть телефон або email', 'error');
+        setStatus('error', 'Потрібен телефон або email');
+        return;
+      }
+      const label = document.getElementById('ltexOrdSendMailLabel');
+      const origLabel = label.textContent;
+      mailClone.disabled = true; tgClone.disabled = true;
+      label.textContent = 'Надсилаємо…';
+      setStatus('info', 'Відправляємо листа менеджеру…');
+      try {
+        const body = buildText(c);
+        const payload = {
+          name: c.name || '(не вказано)',
+          /* FormSubmit needs an email field; use the customer's or a no-reply placeholder */
+          email: c.email || 'noreply@ltex.com.ua',
+          phone: c.phone,
+          region: c.region || '',
+          subject,
+          _subject: subject,
+          _template: 'table',
+          message: body,
+        };
+        const res = await fetch(FORMSUBMIT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if(res.ok){
+          setStatus('success', '✅ Заявку надіслано! Менеджер передзвонить впродовж 15 хв у робочий час.');
+          L.toast('Заявку надіслано', 'success');
+          /* Close after a short delay so the user sees confirmation */
+          setTimeout(() => {
+            m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';
+          }, 1800);
+        } else {
+          throw new Error(`HTTP ${res.status}`);
+        }
+      } catch(err) {
+        setStatus('error', `⚠️ Email не надіслано (${err.message}). Спробуйте Telegram або зателефонуйте: ${L.CONFIG.PHONES[0].display}`);
+        L.toast('Помилка відправки email', 'error');
+        mailClone.disabled = false; tgClone.disabled = false;
+        label.textContent = origLabel;
+      }
+    });
+
+    setStatus(null);
     m.classList.add('open');
     m.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
