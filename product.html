@@ -60,6 +60,7 @@
 <script src="assets/search.js"></script>
 <script src="assets/order-modal.js"></script>
 <script src="assets/video-modal.js"></script>
+<script src="assets/share.js"></script>
 <script src="assets/seo.js"></script>
 <script src="assets/header.js"></script>
 <script>
@@ -286,6 +287,9 @@
           </div>` : ''}
 
         <div class="flex flex-wrap gap-2">
+          <button class="btn btn-ghost btn-sm" data-share data-share-title="${L.escapeHtml(p.name)} — L-TEX" data-share-text="${L.escapeHtml(p.name)} — ${L.formatUah(p.priceUah || 0)}/${p.unit||'кг'}" type="button">
+            <span class="icon icon-sm" data-icon="share"></span> Поділитися
+          </button>
           <a class="btn btn-ghost btn-sm" href="${L.CONFIG.TELEGRAM}" target="_blank" rel="noopener">
             <span class="icon icon-sm" data-icon="send"></span> Telegram
           </a>
