@@ -136,14 +136,24 @@
 }
 
 .dropzone{
+  /* The label was inline by default — when its content wrapped, the border
+     fragmented into two boxes ('ати нові фото' bug). flex column fixes it. */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.375rem;
+  width:100%;
+  min-height:9rem;
+  padding:1.75rem 1rem;
+  text-align:center;
   border:2px dashed var(--border);
   border-radius:var(--radius-lg);
-  padding:1.5rem;
-  text-align:center;
-  color:var(--gray-500);
+  background:var(--gray-50);
+  color:var(--gray-600);
   cursor:pointer;
   transition:all var(--transition);
-  background:var(--gray-50);
+  user-select:none;
 }
 .dropzone:hover,.dropzone.dragover{
   border-color:var(--primary);
@@ -151,8 +161,11 @@
   color:var(--green-700);
 }
 .dropzone input[type=file]{display:none}
-.dropzone__icon{font-size:2rem;margin-bottom:.25rem}
-.dropzone__hint{font-size:.75rem;margin-top:.25rem;color:var(--gray-400)}
+.dropzone__icon{font-size:1.75rem;line-height:1}
+.dropzone__title{font-weight:700;font-size:1rem;color:var(--fg)}
+.dropzone:hover .dropzone__title,
+.dropzone.dragover .dropzone__title{color:var(--green-700)}
+.dropzone__hint{font-size:.75rem;color:var(--gray-400)}
 
 .upload-queue{display:grid;gap:.5rem;margin-top:1rem}
 .upload-item{
@@ -541,12 +554,11 @@
           </div>
         ` : `<p class="text-sm text-muted" style="margin-bottom:1rem">Поки що немає фото для цього товару.</p>`}
 
-        <h4 class="text-sm font-semibold" style="margin:1rem 0 .5rem">Додати нові фото</h4>
         <label class="dropzone" id="dropzone">
           <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple>
-          <div class="dropzone__icon">📷</div>
-          <div><strong>Перетягни фото сюди</strong> або клацни щоб вибрати</div>
-          <div class="dropzone__hint">JPEG / PNG / WebP, до 30 MB на файл. Можна декілька одразу.</div>
+          <span class="dropzone__icon">📷</span>
+          <span class="dropzone__title">Додати фото</span>
+          <span class="dropzone__hint">Клацни щоб вибрати або перетягни сюди · JPEG / PNG / WebP, до 30 MB</span>
         </label>
 
         <div class="upload-queue" id="uploadQueue"></div>
