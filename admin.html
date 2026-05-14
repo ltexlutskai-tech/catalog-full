@@ -291,6 +291,7 @@
 <script src="assets/icons.js"></script>
 <script src="assets/utils.js"></script>
 <script src="assets/wishlist.js"></script>
+<script src="assets/search.js"></script>
 <script src="assets/admin.js"></script>
 <script>
 (() => {
@@ -358,11 +359,32 @@
     renderProducts();
   });
 
+  /* Admin search is intentionally simpler than the public site's smart-search:
+     we want exact-ID match (no fuzzy/synonyms surprises) and broad name match
+     so the manager finds the right row by typing either '0215' or 'тюль'. */
+  function adminMatch(p, query){
+    if(!query) return true;
+    const q = query.trim().toLowerCase();
+    if(!q) return true;
+    /* ID match (with or without leading zeros, in any direction) */
+    const pidStr = String(p.id);
+    const pidStripped = pidStr.replace(/^0+/, '') || pidStr;
+    const qStripped = q.replace(/^0+/, '') || q;
+    if(pidStr === q || pidStripped === qStripped) return true;
+    if(pidStr.includes(q) || pidStripped.includes(qStripped)) return true;
+    /* Name / brand / sort / category substring (split on whitespace; ALL tokens
+       must hit somewhere in the product blob) */
+    const hay = [p.name, p.brand, p.sort, p.season, p.audience, p.country, p.subcategory, p.category]
+      .filter(Boolean).join(' ').toLowerCase();
+    const tokens = q.split(/\s+/).filter(Boolean);
+    return tokens.every(t => hay.includes(t));
+  }
+
   function getFilteredProducts(){
     const all = L.getProducts();
     let list = all;
     if(state.q){
-      list = L.search(state.q, { products: all, minScore: 0.4 }).map(x => x.p);
+      list = all.filter(p => adminMatch(p, state.q));
     }
     if(state.filter === 'no-photo'){
       list = list.filter(p => {
