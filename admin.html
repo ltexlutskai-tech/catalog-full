@@ -247,6 +247,7 @@
     <div class="admin-header__sub" id="hdrAuthStatus">Не авторизовано</div>
     <div class="admin-header__actions">
       <a class="admin-header__chip" href="catalog.html" style="text-decoration:none">↩ Каталог</a>
+      <button class="admin-header__chip" id="diagBtn" type="button" style="display:none;border:none;cursor:pointer" title="Перевірити доступ до GitHub">🩺 Тест</button>
       <button class="admin-header__chip" id="logoutBtn" type="button" style="display:none;border:none;cursor:pointer">Вийти</button>
     </div>
   </div>
@@ -352,6 +353,7 @@
     workspace.style.display = 'block';
     hdrAuth.textContent = login ? `✓ Авторизовано як ${login}` : '✓ Авторизовано';
     logoutBtn.style.display = 'inline-flex';
+    document.getElementById('diagBtn').style.display = 'inline-flex';
     renderProducts();
   }
   function showAuth(){
@@ -359,7 +361,36 @@
     workspace.style.display = 'none';
     hdrAuth.textContent = 'Не авторизовано';
     logoutBtn.style.display = 'none';
+    document.getElementById('diagBtn').style.display = 'none';
   }
+
+  /* Quick diagnostic — verifies token + can read data/images.js */
+  document.getElementById('diagBtn').addEventListener('click', async () => {
+    const lines = [];
+    const log = (msg) => { lines.push(msg); console.log('[diag]', msg); };
+    log('🩺 Тест доступу до GitHub…');
+    L.toast('Тест триває…');
+    try {
+      const tokOk = await A.checkToken();
+      if(!tokOk.ok){ log('❌ Токен: ' + tokOk.error); throw new Error(tokOk.error); }
+      log(`✅ Токен: ${tokOk.login}`);
+      /* Read data/images.js */
+      const meta = await fetch(`https://api.github.com/repos/ltexlutskai-tech/catalog-full/contents/data/images.js?ref=main&_=${Date.now()}`, {
+        headers: { Authorization: 'Bearer ' + A.getToken(), Accept: 'application/vnd.github+json' },
+      });
+      if(!meta.ok) throw new Error('GET images.js: HTTP ' + meta.status);
+      const j = await meta.json();
+      log(`✅ data/images.js: sha ${j.sha.slice(0,8)}…, size ${(j.size/1024).toFixed(1)} KB`);
+      const photos = window.IMAGES_BY_ID ? Object.keys(window.IMAGES_BY_ID).length : 0;
+      log(`✅ IMAGES_BY_ID у пам'яті: ${photos} записів`);
+      alert(lines.join('\n') + '\n\n✅ Усе OK — можна завантажувати фото.');
+      L.toast('Тест пройдено успішно', 'success');
+    } catch(e){
+      lines.push('❌ ' + e.message);
+      alert(lines.join('\n'));
+      L.toast('Тест провалився: ' + e.message, 'error');
+    }
+  });
 
   /* === Auth handlers === */
   document.getElementById('authBtn').addEventListener('click', async () => {
@@ -696,35 +727,53 @@
   async function startUpload(){
     if(!editorState || !editorState.files.length) return;
     const btn = document.getElementById('startUpload');
-    btn.disabled = true;
     const label = document.getElementById('startUploadLabel');
     const p = editorState.product;
-    try {
-      const onProgress = (p) => {
-        if(p.stage === 'uploading' || p.stage === 'encoding'){
-          /* Mark current file as uploading */
-          const idx = p.current - 1;
-          editorState.statuses.set(idx, { status: 'uploading' });
-          renderQueue();
-          label.textContent = `Завантаження ${p.current} / ${p.total}…`;
-        } else if(p.stage === 'updating-index'){
-          label.textContent = 'Оновлюємо індекс…';
-        }
+    btn.disabled = true;
+
+    const files = editorState.files.slice();
+    let okCount = 0;
+    const errors = [];
+
+    for(let i = 0; i < files.length; i++){
+      const file = files[i];
+      label.textContent = `Завантаження ${i + 1} / ${files.length}…`;
+      editorState.statuses.set(i, { status: 'uploading' });
+      renderQueue();
+
+      const onProgress = (info) => {
+        const stage = ({
+          'preparing':         'Підготовка…',
+          'encoding':          'Кодування…',
+          'uploading-original':'Завантаження оригіналу…',
+          'uploading-thumb':   'Завантаження мініатюри…',
+          'updating-index':    'Оновлення індексу…',
+        })[info.stage] || info.stage;
+        label.textContent = `${i + 1}/${files.length}: ${stage}`;
       };
-      const added = await A.uploadPhotos(p, editorState.files, onProgress);
-      /* Mark all done */
-      added.forEach((fname, i) => {
-        editorState.statuses.set(i, { status: 'done', fname });
-      });
-      L.toast(`Завантажено ${added.length} фото. Сайт оновиться через ~1 хв.`, 'success');
-      renderEditor();
-      /* Refresh thumbnail in product list */
-      renderProducts();
-    } catch(e){
-      L.toast(`Помилка: ${e.message}`, 'error');
-      btn.disabled = false;
-      label.textContent = `Завантажити ${editorState.files.length}`;
+
+      try {
+        const result = await A.uploadOne(p, file, onProgress);
+        editorState.statuses.set(i, { status: 'done', fname: result.filename });
+        okCount++;
+        renderQueue();
+      } catch(err) {
+        console.error('Upload failed for', file.name, err);
+        editorState.statuses.set(i, { status: 'error', message: err.message });
+        errors.push(`${file.name}: ${err.message}`);
+        renderQueue();
+        /* Continue with remaining files instead of aborting the whole batch */
+      }
     }
+
+    if(okCount > 0){
+      L.toast(`Завантажено ${okCount} з ${files.length} фото. Сайт оновлюється…`, 'success');
+    }
+    if(errors.length){
+      L.toast(`Помилки (${errors.length}): ${errors[0]}`, 'error');
+    }
+    renderEditor();
+    renderProducts();
   }
 
   /* === Boot === */
