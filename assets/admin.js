@@ -211,8 +211,15 @@ window.LTEX = window.LTEX || {};
     return added;
   };
 
-  /* === Image URL builder for previews (raw.githubusercontent or relative) === */
+  /* === Image URL for admin previews ===
+     Use raw.githubusercontent.com so freshly-uploaded photos appear instantly
+     without waiting for the ~1 minute GitHub Pages CDN deploy.
+     Encode each path segment separately so spaces/Cyrillic survive,
+     but parentheses (commonly in our filenames) stay as-is. */
+  function encPathSeg(s){
+    return encodeURIComponent(s).replace(/'/g, '%27').replace(/%28/g, '(').replace(/%29/g, ')');
+  }
   A.imageRawUrl = (filename) => {
-    return `${IMAGES_DIR}/${encodeURIComponent(filename).replace(/'/g, '%27')}`;
+    return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${IMAGES_DIR}/${encPathSeg(filename)}`;
   };
 })();
