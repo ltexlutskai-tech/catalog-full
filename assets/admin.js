@@ -279,14 +279,15 @@ window.LTEX = window.LTEX || {};
   };
 
   /* === Image URL for admin previews ===
-     Use raw.githubusercontent.com so freshly-uploaded photos appear instantly
-     without waiting for the ~1 minute GitHub Pages CDN deploy.
-     Encode each path segment separately so spaces/Cyrillic survive,
-     but parentheses (commonly in our filenames) stay as-is. */
+     raw.githubusercontent.com has a 'sandbox' CSP that blocks <img> embedding
+     on other origins, so freshly uploaded photos showed as broken images even
+     though the file existed. jsdelivr.net proxies the same repo with proper
+     CORS / cross-origin-resource-policy headers and refreshes within ~1 min
+     after a commit — perfect for admin previews. */
   function encPathSeg(s){
     return encodeURIComponent(s).replace(/'/g, '%27').replace(/%28/g, '(').replace(/%29/g, ')');
   }
   A.imageRawUrl = (filename) => {
-    return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${IMAGES_DIR}/${encPathSeg(filename)}`;
+    return `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@${BRANCH}/${IMAGES_DIR}/${encPathSeg(filename)}`;
   };
 })();
