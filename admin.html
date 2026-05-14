@@ -322,11 +322,13 @@
 
 </main>
 
-<script src="data/meta.js"></script>
-<script src="data/images.js"></script>
-<script src="data/details.js"></script>
-<script src="data/products.js"></script>
-<script src="data/lots.js"></script>
+<script>
+/* Cache-bust data files on every load. */
+(function(){ var v = Date.now();
+  ['data/meta.js','data/images.js','data/details.js','data/products.js','data/lots.js']
+    .forEach(function(s){ document.write('<script src="' + s + '?v=' + v + '"><' + '/script>'); });
+})();
+</script>
 <script src="assets/icons.js"></script>
 <script src="assets/utils.js"></script>
 <script src="assets/wishlist.js"></script>

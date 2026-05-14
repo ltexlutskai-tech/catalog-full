@@ -253,10 +253,16 @@
 
 <footer data-ltex-footer></footer>
 
-<script src="data/meta.js"></script>
-<script src="data/images.js"></script>
-<script src="data/details.js"></script>
-<script src="data/products.js"></script>
+<script>
+/* Cache-bust data files on every page load — GitHub Pages CDN and the
+   browser both cache /data/*.js for several minutes, so fresh uploads
+   were invisible until Ctrl+Shift+R. document.write preserves the
+   synchronous load order of subsequent <script> tags. */
+(function(){ var v = Date.now();
+  ['data/meta.js','data/images.js','data/details.js','data/products.js']
+    .forEach(function(s){ document.write('<script src="' + s + '?v=' + v + '"><' + '/script>'); });
+})();
+</script>
 <script src="assets/icons.js"></script>
 <script src="assets/utils.js"></script>
 <script src="assets/wishlist.js"></script>
