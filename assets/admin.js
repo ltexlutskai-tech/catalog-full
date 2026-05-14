@@ -84,6 +84,51 @@ window.LTEX = window.LTEX || {};
     });
   }
 
+  /* === Canvas-side thumbnail generation ===
+     Mirrors optimize_images.py: max 800px wide, JPEG q82. Lets the catalog
+     load fast right after a fresh upload, without waiting for the Python
+     pipeline to re-run. Returns base64 (no data: prefix) for direct PUT. */
+  async function makeThumbBase64(file, maxWidth = 800, quality = 0.82){
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const scale = Math.min(1, maxWidth / img.naturalWidth);
+          const w = Math.max(1, Math.round(img.naturalWidth * scale));
+          const h = Math.max(1, Math.round(img.naturalHeight * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          /* Solid white background covers PNG transparency */
+          ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob(blob => {
+            URL.revokeObjectURL(url);
+            if(!blob){ reject(new Error('Canvas thumbnail encode failed')); return; }
+            const reader = new FileReader();
+            reader.onload = () => {
+              const b64 = String(reader.result).split(',')[1] || '';
+              resolve(b64);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          }, 'image/jpeg', quality);
+        } catch(e){
+          URL.revokeObjectURL(url);
+          reject(e);
+        }
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image load failed')); };
+      img.src = url;
+    });
+  }
+
+  /* Same name as the original, but always .jpg (thumbnails are JPEG) */
+  function thumbName(fname){
+    return fname.replace(/\.[^./]+$/, '') + '.jpg';
+  }
+
   /* === Filename helpers ===
      Convention used by extract_products/generate_assets:
        "(0215) Тюль тонка, фіранки, занавіски мікс.jpg"
@@ -191,10 +236,32 @@ window.LTEX = window.LTEX || {};
         .replace(/[^a-z0-9]/g, '') || 'jpg';
       const fname = targetFilename(product, [...existing, ...added], ext);
       onProgress && onProgress({ stage: 'encoding', file: file.name, target: fname, current: i, total: files.length });
-      const b64 = await fileToBase64(file);
+
+      /* Encode original + generate 800px thumbnail in parallel */
+      const [origB64, thumbB64] = await Promise.all([
+        fileToBase64(file),
+        makeThumbBase64(file).catch(err => {
+          console.warn('Thumbnail failed for', file.name, err);
+          return null;
+        }),
+      ]);
+
       onProgress && onProgress({ stage: 'uploading', file: file.name, target: fname, current: i, total: files.length });
       const path = `${IMAGES_DIR}/${fname}`;
-      await uploadFile(path, b64, `Add photo: ${fname}`);
+      await uploadFile(path, origB64, `Add photo: ${fname}`);
+
+      /* Upload thumbnail to thumbs/ subfolder, same name, always .jpg */
+      if(thumbB64){
+        const tName = thumbName(fname);
+        const tPath = `${IMAGES_DIR}/thumbs/${tName}`;
+        try {
+          await uploadFile(tPath, thumbB64, `Add thumbnail: ${tName}`);
+        } catch(e){
+          console.warn('Thumb upload failed:', e.message);
+          /* Non-fatal — catalog falls back to original on 404 */
+        }
+      }
+
       added.push(fname);
       /* Update in-page state immediately so the UI reflects it */
       const m = window.IMAGES_BY_ID || (window.IMAGES_BY_ID = {});

@@ -77,6 +77,17 @@ window.LTEX = window.LTEX || {};
   L.thumbFor = (id) => L.thumbsFor(id)[0] || L.imagesFor(id)[0] || null;
   L.firstImageFor = (id) => L.imagesFor(id)[0] || null;
 
+  /* Build the attribute string for a card <img> that falls back from thumb to
+     full-size original if the 800px thumbnail is missing (covers freshly
+     uploaded photos that haven't been processed by optimize_images.py yet). */
+  L.imgAttrs = (thumb, original, alt) => {
+    const src = thumb || original || '';
+    const fb = (original && original !== thumb) ? original : '';
+    const altEsc = L.escapeHtml(alt || '');
+    if(!fb) return `src="${src}" alt="${altEsc}" loading="lazy" decoding="async"`;
+    return `src="${src}" data-fallback="${fb}" alt="${altEsc}" loading="lazy" decoding="async" onerror="if(this.dataset.fallback&&this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}"`;
+  };
+
   L.detailFor = (id) => (window.DETAILS_BY_ID && window.DETAILS_BY_ID[String(id)]) || '';
 
   L.parseDetails = (text) => {

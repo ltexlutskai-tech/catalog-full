@@ -317,7 +317,7 @@
         <a href="${L.productHref(p.id)}">
           <div class="product-card__media">
             ${p.image
-              ? `<img class="product-card__img" src="${p.thumb || p.image}" alt="${L.escapeHtml(p.name)}" loading="lazy">`
+              ? `<img class="product-card__img" ${L.imgAttrs(p.thumb, p.image, p.name)}>`
               : `<div class="product-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
             <div class="product-card__badges">
               ${p.isNew ? `<span class="tag tag-new">NEW</span>` : ''}
