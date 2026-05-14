@@ -359,21 +359,29 @@
     renderProducts();
   });
 
-  /* Admin search is intentionally simpler than the public site's smart-search:
-     we want exact-ID match (no fuzzy/synonyms surprises) and broad name match
-     so the manager finds the right row by typing either '0215' or 'тюль'. */
+  /* Admin search: ID-by-prefix OR full-token name match. */
   function adminMatch(p, query){
     if(!query) return true;
     const q = query.trim().toLowerCase();
     if(!q) return true;
-    /* ID match (with or without leading zeros, in any direction) */
     const pidStr = String(p.id);
     const pidStripped = pidStr.replace(/^0+/, '') || pidStr;
-    const qStripped = q.replace(/^0+/, '') || q;
-    if(pidStr === q || pidStripped === qStripped) return true;
-    if(pidStr.includes(q) || pidStripped.includes(qStripped)) return true;
-    /* Name / brand / sort / category substring (split on whitespace; ALL tokens
-       must hit somewhere in the product blob) */
+
+    /* Numeric query → match ID only by exact value or prefix (no middle
+       substring — otherwise '0037' also matches 1378 because both contain "37") */
+    if(/^\d+$/.test(q)){
+      const qStripped = q.replace(/^0+/, '') || q;
+      if(pidStripped === qStripped) return true;
+      if(pidStripped.startsWith(qStripped)) return true;
+      /* Pad both to 4 digits and prefix-match in that form too — covers '037'
+         finding '0370' style queries */
+      const pidPadded = pidStripped.padStart(4, '0');
+      if(pidPadded.startsWith(q.padStart(Math.min(q.length,4), '0'))) return true;
+      return false;
+    }
+
+    /* Text query → ALL whitespace-split tokens must appear in
+       name+brand+sort+season+gender+country+(sub)category */
     const hay = [p.name, p.brand, p.sort, p.season, p.audience, p.country, p.subcategory, p.category]
       .filter(Boolean).join(' ').toLowerCase();
     const tokens = q.split(/\s+/).filter(Boolean);
