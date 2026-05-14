@@ -134,6 +134,31 @@
   font-size:.625rem;font-weight:700;
   padding:.0625rem .25rem;border-radius:.25rem;
 }
+.gallery-item__delete{
+  position:absolute;top:.25rem;right:.25rem;
+  width:1.5rem;height:1.5rem;
+  border-radius:50%;
+  background:rgba(0,0,0,.55);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:.875rem;font-weight:700;line-height:1;
+  border:none;
+  transition:background var(--transition),transform var(--transition);
+  z-index:2;
+}
+.gallery-item__delete:hover,.gallery-item__delete:focus-visible{
+  background:var(--red-600);
+  transform:scale(1.08);
+}
+.gallery-item.deleting{opacity:.5;pointer-events:none}
+.gallery-item.deleting::before{
+  content:'⏳';
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.7);
+  font-size:1.5rem;
+  z-index:3;
+}
 
 .dropzone{
   /* The label was inline by default — when its content wrapped, the border
@@ -542,12 +567,13 @@
         </div>
 
         ${photos.length ? `
-          <h4 class="text-sm font-semibold" style="margin-bottom:.5rem">Існуючі фото</h4>
+          <h4 class="text-sm font-semibold" style="margin-bottom:.5rem">Існуючі фото · клацни ✕ щоб видалити</h4>
           <div class="gallery-grid">
             ${photos.map(fn => {
               const isNew = newOnes.includes(fn);
-              return `<div class="gallery-item ${isNew?'new':''}">
+              return `<div class="gallery-item ${isNew?'new':''}" data-fname="${L.escapeHtml(fn)}">
                 <img src="${A.imageRawUrl(fn)}" alt="" loading="lazy">
+                <button class="gallery-item__delete" type="button" data-delete="${L.escapeHtml(fn)}" aria-label="Видалити" title="Видалити фото">✕</button>
                 <span class="gallery-item__name">${L.escapeHtml(fn)}</span>
               </div>`;
             }).join('')}
@@ -592,6 +618,27 @@
     fileInput.addEventListener('change', () => addFiles([...fileInput.files]));
 
     document.getElementById('startUpload').addEventListener('click', startUpload);
+
+    /* Delete-photo buttons */
+    ed.querySelectorAll('[data-delete]').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const fname = btn.dataset.delete;
+        if(!confirm(`Видалити фото?\n\n${fname}\n\nЦе незворотна дія.`)) return;
+        const item = btn.closest('.gallery-item');
+        item && item.classList.add('deleting');
+        try {
+          await A.deletePhoto(editorState.product, fname);
+          L.toast(`Фото видалено`, 'success');
+          renderEditor();      // refresh gallery
+          renderProducts();    // refresh product list count + thumb
+        } catch(err){
+          item && item.classList.remove('deleting');
+          L.toast(`Помилка видалення: ${err.message}`, 'error');
+        }
+      });
+    });
   }
 
   function addFiles(files){
