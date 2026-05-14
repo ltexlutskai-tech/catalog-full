@@ -271,6 +271,27 @@ window.LTEX = window.LTEX || {};
     return [...new Set([...(m[padded] || []), ...(m[trimmed] || [])])];
   };
 
+  /* ---------- Public: refresh in-memory IMAGES_BY_ID from the live repo ----------
+     The data/images.js shipped with the HTML page is heavily cached (GH Pages
+     CDN + browser). Pull the canonical file straight from the Contents API
+     after every successful operation (and on page load), so the admin always
+     sees what's really committed — no stale local view. */
+  A.reloadImagesIndex = async () => {
+    try {
+      const meta = await gh(`/contents/${IMAGES_JS_PATH}?ref=${encodeURIComponent(BRANCH)}&_=${Date.now()}`);
+      const text = b64ToStr(meta.content);
+      const loc = findObjectLiteral(text, 'IMAGES_BY_ID');
+      if(!loc) throw new Error('IMAGES_BY_ID не знайдено');
+      const data = JSON.parse(text.slice(loc.start, loc.end + 1));
+      window.IMAGES_BY_ID = data;
+      console.log('[reloadImagesIndex]', Object.keys(data).length, 'keys loaded from repo');
+      return data;
+    } catch(e){
+      console.warn('[reloadImagesIndex] failed:', e.message);
+      throw e;
+    }
+  };
+
   /* ---------- Public: upload ONE photo ----------
      Steps:
        1) read file → base64
@@ -288,6 +309,11 @@ window.LTEX = window.LTEX || {};
     if(file.size > MAX_BYTES) throw new Error(`${file.name}: ${(file.size/1024/1024).toFixed(1)} MB > 30 MB`);
 
     onProgress && onProgress({ stage: 'preparing' });
+
+    /* Always base the new filename on the live committed state, not the
+       maybe-stale cached data/images.js — avoids the case where two recent
+       uploads ended up with the same name because the page didn't see them. */
+    try { await A.reloadImagesIndex(); } catch(e){ /* network glitch — fall back to local state */ }
 
     const existing = A.listPhotos(product);
     const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';

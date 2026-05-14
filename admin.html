@@ -348,12 +348,16 @@
   const hdrAuth = document.getElementById('hdrAuthStatus');
   const logoutBtn = document.getElementById('logoutBtn');
 
-  function showWorkspace(login){
+  async function showWorkspace(login){
     authCard.style.display = 'none';
     workspace.style.display = 'block';
     hdrAuth.textContent = login ? `✓ Авторизовано як ${login}` : '✓ Авторизовано';
     logoutBtn.style.display = 'inline-flex';
     document.getElementById('diagBtn').style.display = 'inline-flex';
+    /* Pull the freshest IMAGES_BY_ID from the live repo — the data/images.js
+       bundled with the page can lag behind by several minutes due to CDN
+       cache, which made just-uploaded photos appear to "disappear" on reload. */
+    try { await A.reloadImagesIndex(); } catch(e){ console.warn(e); }
     renderProducts();
   }
   function showAuth(){
