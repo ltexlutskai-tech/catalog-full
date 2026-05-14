@@ -3,6 +3,19 @@
 */
 window.LTEX = window.LTEX || {};
 
+/* Register a Service Worker that bypasses GitHub Pages cache for HTML
+   pages and /data/*.js — so freshly uploaded photos appear without a
+   hard reload. Safe no-op when SW is unavailable (file://, http://,
+   ancient browsers). */
+if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
+   && location.protocol === 'https:'){
+  /* sw.js lives at the site root; with the registration scope being the
+     same root, it can intercept everything below. */
+  navigator.serviceWorker.register('sw.js').catch(err => {
+    console.warn('SW registration failed:', err.message);
+  });
+}
+
 (() => {
   const L = window.LTEX;
 
