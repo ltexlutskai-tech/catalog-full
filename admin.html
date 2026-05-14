@@ -464,15 +464,9 @@
       list = all.filter(p => adminMatch(p, state.q));
     }
     if(state.filter === 'no-photo'){
-      list = list.filter(p => {
-        const img = L.imagesFor(p.id);
-        return !img || !img.length;
-      });
+      list = list.filter(p => A.listPhotos(p).length === 0);
     } else if(state.filter === 'has-photo'){
-      list = list.filter(p => {
-        const img = L.imagesFor(p.id);
-        return img && img.length;
-      });
+      list = list.filter(p => A.listPhotos(p).length > 0);
     }
     return list;
   }
@@ -488,12 +482,12 @@
       list.innerHTML = `<div class="empty-state"><h3>Нічого не знайдено</h3></div>`;
     } else {
       list.innerHTML = slice.map(p => {
-        const photos = L.imagesFor(p.id);
+        const photos = A.listPhotos(p);    /* raw filenames (no dir prefix) */
         const first = photos[0];
         return `<div class="product-row" data-id="${p.id}">
           <div class="product-row__media">
             ${first
-              ? `<img src="${first}" alt="" loading="lazy">`
+              ? `<img src="${A.imageRawUrl(first)}" alt="" loading="lazy">`
               : `<div class="product-row__media-empty">🖼️</div>`}
             <span class="product-row__photo-count">${photos.length}</span>
           </div>
@@ -576,7 +570,7 @@
     const ed = document.getElementById('editor');
     if(!editorState){ ed.style.display='none'; return; }
     const p = editorState.product;
-    const photos = L.imagesFor(p.id);
+    const photos = A.listPhotos(p);  /* raw filenames so data-delete is plain UTF-8 */
     const newOnes = (editorState.statuses && [...editorState.statuses.values()]
       .filter(s => s.status === 'done').map(s => s.fname)) || [];
 
