@@ -50,6 +50,16 @@ window.LTEX = window.LTEX || {};
   }
 
   L.openVideoModal = (url, title) => {
+    /* Playlists open on YouTube in a new tab rather than embedding — the
+       in-site player loses the playlist sidebar and feels like a single
+       video, which is the opposite of what we promise on cards labelled
+       "Відеоогляд". Single-video URLs (per-lot reviews) still play in
+       the modal so visitors don't leave the page mid-browse. */
+    const id = L.youtubeId(url);
+    if(id && typeof id !== 'string'){
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
     const embedUrl = L.youtubeEmbedUrl(url);
     if(!embedUrl){
       /* Unknown URL format — let the browser handle it */
