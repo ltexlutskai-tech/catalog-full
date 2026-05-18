@@ -39,7 +39,7 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
        bot. Set to the deployed Worker URL (without trailing slash) — see
        scripts/cloudflare-worker/worker.js. While empty, the modal only
        exposes the manual "Open in Telegram" button. */
-    LEAD_WORKER_URL: '',
+    LEAD_WORKER_URL: 'https://ltex-catalog-forms.ltex-lutsk-ai.workers.dev',
   };
 
   /* Make a relative path absolute against SITE_URL (or location.origin if same host). */
