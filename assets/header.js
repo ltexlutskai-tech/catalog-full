@@ -16,6 +16,26 @@ window.LTEX = window.LTEX || {};
     { key: 'contacts', label: 'Контакти',  href: 'index.html#contacts' },
   ];
 
+  const CAT_EMOJI = {
+    'Одяг':'👕','Взуття':'👟','Аксесуари':'👜','Дім та побут':'🏠',
+    'Іграшки':'🧸','Косметика':'💄','Bric-a-Brac':'🎁'
+  };
+
+  function mobileMenuCategoriesHTML(){
+    try {
+      const counts = L.topCatCounts();
+      return L.TOP_CATS.map(c => {
+        const cnt = counts.get(c) || 0;
+        if(!cnt) return '';
+        return `<a href="${L.catalogHref({cat:c})}" class="mobile-menu__cat">
+          <span class="mobile-menu__cat-emoji" aria-hidden="true">${CAT_EMOJI[c]||'📦'}</span>
+          <span class="mobile-menu__cat-label">${c}</span>
+          <span class="mobile-menu__cat-count">${cnt}</span>
+        </a>`;
+      }).join('');
+    } catch(e){ return ''; }
+  }
+
   function renderHeader(host){
     const active = host.dataset.active || '';
     const html = `
@@ -57,14 +77,42 @@ window.LTEX = window.LTEX || {};
               <span class="icon">${ICONS.x()}</span>
             </button>
           </div>
+
+          <div class="mobile-menu__search">
+            <input type="search" id="mobMenuSearchInput" placeholder="Пошук товарів…" autocomplete="off" aria-label="Пошук">
+            <span class="icon icon-sm" aria-hidden="true">${ICONS.search()}</span>
+          </div>
+
           <nav class="mobile-menu__nav" aria-label="Мобільне меню">
-            ${NAV.map(n => `<a href="${n.href}" class="${active === n.key ? 'active' : ''}">${n.label}</a>`).join('')}
-            <a href="wishlist.html"><span class="icon icon-sm" style="margin-right:.25rem">${ICONS.heart()}</span> Список бажань</a>
-            <a href="cart.html"><span class="icon icon-sm" style="margin-right:.25rem">${ICONS.cart()}</span> Кошик</a>
+            ${NAV.map(n => {
+              const icn = n.key === 'lots' ? ICONS.package() :
+                          n.key === 'new' ? ICONS.zap() :
+                          n.key === 'sale' ? ICONS.star() :
+                          n.key === 'catalog' ? ICONS.layoutGrid() :
+                          n.key === 'about' ? ICONS.info() :
+                          n.key === 'contacts' ? ICONS.phone() : '';
+              return `<a href="${n.href}" class="${active === n.key ? 'active' : ''}">
+                ${icn ? `<span class="icon icon-sm">${icn}</span>` : ''}<span>${n.label}</span>
+              </a>`;
+            }).join('')}
           </nav>
+
+          <div class="mobile-menu__section">
+            <div class="mobile-menu__section-title">Категорії</div>
+            <div class="mobile-menu__cats" id="mobMenuCats">${mobileMenuCategoriesHTML()}</div>
+          </div>
+
+          <div class="mobile-menu__section">
+            <div class="mobile-menu__section-title">Швидкі дії</div>
+            <nav class="mobile-menu__nav">
+              <a href="wishlist.html"><span class="icon icon-sm">${ICONS.heart()}</span><span>Список бажань</span><span class="mobile-menu__badge" id="mobMenuWishCount" style="display:none">0</span></a>
+              <a href="cart.html"><span class="icon icon-sm">${ICONS.cart()}</span><span>Кошик</span><span class="mobile-menu__badge cart" id="mobMenuCartCount" style="display:none">0</span></a>
+            </nav>
+          </div>
+
           <div class="mobile-menu__foot">
             <div style="display:flex;flex-direction:column;gap:.5rem">
-              ${L.CONFIG.PHONES.map(p => `<a href="tel:${p.tel}" style="font-weight:600">${p.display}</a>`).join('')}
+              ${L.CONFIG.PHONES.map(p => `<a href="tel:${p.tel}" style="font-weight:600;display:inline-flex;align-items:center;gap:.5rem"><span class="icon icon-sm">${ICONS.phone()}</span>${p.display}</a>`).join('')}
               <a href="${L.CONFIG.TELEGRAM}" target="_blank" rel="noopener" class="btn btn-primary">
                 <span class="icon icon-sm">${ICONS.send()}</span> Telegram
               </a>
@@ -82,20 +130,48 @@ window.LTEX = window.LTEX || {};
     const menu = document.getElementById('mobileMenu');
     const burger = document.getElementById('hdrBurger');
     const closeBtn = document.getElementById('mobileMenuClose');
-    const open = () => { menu.classList.add('open'); menu.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; };
+    const open = () => {
+      menu.classList.add('open');
+      menu.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      /* (Re)populate categories — data may have loaded after first render. */
+      const catsHost = document.getElementById('mobMenuCats');
+      if(catsHost && !catsHost.dataset.filled){
+        const html = mobileMenuCategoriesHTML();
+        if(html){ catsHost.innerHTML = html; catsHost.dataset.filled = '1'; }
+      }
+    };
     const close = () => { menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; };
     burger?.addEventListener('click', open);
     closeBtn?.addEventListener('click', close);
     menu?.addEventListener('click', e => { if(e.target === menu) close(); });
+    /* Close drawer when an in-drawer link is followed (smoother SPA-like feel). */
+    menu?.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', () => { setTimeout(close, 50); });
+    });
+
+    /* Mobile menu search → catalog with ?q= */
+    const mobSearch = document.getElementById('mobMenuSearchInput');
+    mobSearch?.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const q = mobSearch.value.trim();
+        if(q) location.href = L.catalogHref({ q });
+      }
+    });
 
     /* Wishlist + cart count */
     const updCounts = () => {
       const wc = document.getElementById('hdrWishCount');
       const cc = document.getElementById('hdrCartCount');
+      const mw = document.getElementById('mobMenuWishCount');
+      const mc = document.getElementById('mobMenuCartCount');
       const wn = L.wishlist.count();
       const cn = L.cart.count();
       if(wc){ wc.textContent = wn; wc.style.display = wn ? 'flex' : 'none'; }
       if(cc){ cc.textContent = cn; cc.style.display = cn ? 'flex' : 'none'; }
+      if(mw){ mw.textContent = wn; mw.style.display = wn ? 'inline-flex' : 'none'; }
+      if(mc){ mc.textContent = cn; mc.style.display = cn ? 'inline-flex' : 'none'; }
     };
     updCounts();
     window.addEventListener('ltex:wishlist-changed', updCounts);
