@@ -38,7 +38,7 @@ window.LTEX = window.LTEX || {};
 
   function renderHeader(host){
     const active = host.dataset.active || '';
-    const html = `
+    const headerHtml = `
       <div class="site-header__inner">
         <a href="index.html" class="site-header__logo" aria-label="L-TEX — головна">L-TEX</a>
 
@@ -67,8 +67,13 @@ window.LTEX = window.LTEX || {};
           </button>
         </div>
       </div>
+    `;
 
-      <!-- Mobile drawer -->
+    /* Mobile drawer markup — appended to <body>, NOT to the header.
+       The header uses backdrop-filter, which creates a containing block
+       for position:fixed descendants — putting the drawer inside it would
+       clip it to the header's height. */
+    const drawerHtml = `
       <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Меню" aria-hidden="true">
         <div class="mobile-menu__panel">
           <div class="mobile-menu__head">
@@ -121,7 +126,12 @@ window.LTEX = window.LTEX || {};
         </div>
       </div>
     `;
-    host.innerHTML = html;
+
+    host.innerHTML = headerHtml;
+    /* Remove any previous drawer (e.g. when re-rendering during tests) before
+       appending the fresh one to <body>. */
+    document.getElementById('mobileMenu')?.remove();
+    document.body.insertAdjacentHTML('beforeend', drawerHtml);
     bindHeader();
   }
 
