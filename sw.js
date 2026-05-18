@@ -10,7 +10,7 @@
    browser cache — those rarely change, so we keep the speed-up.
 */
 
-const VERSION = 'ltex-sw-v2';
+const VERSION = 'ltex-sw-v3';
 
 self.addEventListener('install',  (e) => { self.skipWaiting(); });
 self.addEventListener('activate', (e) => { e.waitUntil(self.clients.claim()); });
