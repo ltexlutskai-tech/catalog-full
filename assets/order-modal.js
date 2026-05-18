@@ -2,24 +2,22 @@
    Usage:
      LTEX.openOrderModal({
        title: '📩 Замовити',
-       subject: 'Замовлення товару',          // email subject + Telegram heading
-       presetText: 'Назва товару (1234)\n…',  // pre-filled message body
+       subject: 'Замовлення товару',          // becomes the Telegram heading
+       presetText: 'Назва товару (1234)\n…',  // pre-filled details block
        cta: 'Надіслати запит',                // optional submit label
        intent: 'order' | 'video' | 'consult'  // optional preset variant
      })
 
-   Email submission goes through formsubmit.co/ajax/<email> — a free relay
-   that pre-confirmed our address once and now forwards every POST as a
-   regular email. No mailto: client launching, no extra setup for the
-   customer. Telegram path still uses the share-url scheme.
-*/
+   Primary submit posts JSON to L.CONFIG.LEAD_WORKER_URL (a Cloudflare
+   Worker that forwards the lead to a Telegram bot — see
+   scripts/cloudflare-worker/worker.js). If the worker URL is empty, that
+   button is hidden and the user still has the manual "Open in Telegram"
+   share-url fallback. */
 window.LTEX = window.LTEX || {};
 (() => {
   const L = window.LTEX;
   const ICONS = window.ICONS;
   const STORE_KEY = 'ltex-client';
-  const FORMSUBMIT_EMAIL = 'ltex.lutsk.ai@gmail.com';
-  const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${FORMSUBMIT_EMAIL}`;
 
   function ensureModal(){
     let m = document.getElementById('ltexOrderModal');
@@ -63,14 +61,16 @@ window.LTEX = window.LTEX || {};
               <label for="ltexOrdMsg">Коментар</label>
               <textarea id="ltexOrdMsg" rows="2" placeholder="Уточнення, питання…"></textarea>
             </div>
+            <!-- Honeypot — bots fill it, humans don't see it -->
+            <input type="text" name="website" id="ltexOrdHp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none" aria-hidden="true">
             <div class="flex gap-2" style="margin-top:.75rem">
-              <button class="btn btn-primary flex-1" type="button" id="ltexOrdSendTg">
+              <button class="btn btn-primary flex-1" type="button" id="ltexOrdSubmit">
                 <span class="icon icon-sm">${ICONS.send()}</span>
-                Надіслати в Telegram
+                <span id="ltexOrdSubmitLabel">Надіслати заявку</span>
               </button>
-              <button class="btn btn-outline flex-1" type="button" id="ltexOrdSendMail">
-                <span class="icon icon-sm">${ICONS.mail()}</span>
-                <span id="ltexOrdSendMailLabel">Надіслати Email</span>
+              <button class="btn btn-outline flex-1" type="button" id="ltexOrdSendTg" title="Відкрити Telegram з готовим текстом">
+                <span class="icon icon-sm">${ICONS.send()}</span>
+                Telegram
               </button>
             </div>
             <div id="ltexOrdStatus" style="display:none;margin-top:.75rem;padding:.625rem .75rem;border-radius:var(--radius-md);font-size:.8125rem;text-align:center"></div>
@@ -176,13 +176,23 @@ window.LTEX = window.LTEX || {};
         : 'var(--border)');
     }
 
-    /* Wire actions — replace clones to drop previous listeners */
+    /* Hide the primary "Надіслати заявку" button if the Worker URL is not
+       configured — fall back to the manual Telegram share button so the form
+       still works during initial setup. */
+    const submitBtn = document.getElementById('ltexOrdSubmit');
     const tgBtn = document.getElementById('ltexOrdSendTg');
-    const mailBtn = document.getElementById('ltexOrdSendMail');
+    const workerUrl = (L.CONFIG.LEAD_WORKER_URL || '').replace(/\/+$/, '');
+    if(!workerUrl){
+      submitBtn.style.display = 'none';
+      tgBtn.classList.remove('btn-outline');
+      tgBtn.classList.add('btn-primary');
+    }
+
+    /* Replace with clones to drop listeners from previous opens */
+    const submitClone = submitBtn.cloneNode(true);
+    submitBtn.replaceWith(submitClone);
     const tgClone = tgBtn.cloneNode(true);
     tgBtn.replaceWith(tgClone);
-    const mailClone = mailBtn.cloneNode(true);
-    mailBtn.replaceWith(mailClone);
 
     tgClone.addEventListener('click', () => {
       const c = collect();
@@ -192,50 +202,50 @@ window.LTEX = window.LTEX || {};
       L.toast('Відкрито Telegram', 'success');
     });
 
-    mailClone.addEventListener('click', async () => {
+    submitClone.addEventListener('click', async () => {
+      if(!workerUrl) return;
       const c = collect();
-      if(!c.phone && !c.email){
-        L.toast('Вкажіть телефон або email', 'error');
-        setStatus('error', 'Потрібен телефон або email');
-        return;
-      }
-      const label = document.getElementById('ltexOrdSendMailLabel');
+      if(!c.phone){ L.toast('Вкажіть телефон', 'error'); setStatus('error', 'Потрібен телефон'); return; }
+      const hp = document.getElementById('ltexOrdHp')?.value || '';
+      const label = document.getElementById('ltexOrdSubmitLabel');
       const origLabel = label.textContent;
-      mailClone.disabled = true; tgClone.disabled = true;
+      submitClone.disabled = true; tgClone.disabled = true;
       label.textContent = 'Надсилаємо…';
-      setStatus('info', 'Відправляємо листа менеджеру…');
+      setStatus('info', 'Надсилаємо заявку менеджеру…');
       try {
-        const body = buildText(c);
         const payload = {
-          name: c.name || '(не вказано)',
-          /* FormSubmit needs an email field; use the customer's or a no-reply placeholder */
-          email: c.email || 'noreply@ltex.com.ua',
-          phone: c.phone,
-          region: c.region || '',
+          form: opts.formId || 'orderModal',
           subject,
-          _subject: subject,
-          _template: 'table',
-          message: body,
+          intent,
+          name: c.name,
+          phone: c.phone,
+          email: c.email,
+          region: c.region,
+          comment: c.msg,
+          preset,
+          page: location.href,
+          ua: navigator.userAgent,
+          website: hp, // honeypot
         };
-        const res = await fetch(FORMSUBMIT_URL, {
+        const res = await fetch(workerUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if(res.ok){
+        const data = await res.json().catch(() => ({}));
+        if(res.ok && data.ok){
           setStatus('success', '✅ Заявку надіслано! Менеджер передзвонить впродовж 15 хв у робочий час.');
           L.toast('Заявку надіслано', 'success');
-          /* Close after a short delay so the user sees confirmation */
           setTimeout(() => {
             m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '';
           }, 1800);
         } else {
-          throw new Error(`HTTP ${res.status}`);
+          throw new Error(data.error || `HTTP ${res.status}`);
         }
       } catch(err) {
-        setStatus('error', `⚠️ Email не надіслано (${err.message}). Спробуйте Telegram або зателефонуйте: ${L.CONFIG.PHONES[0].display}`);
-        L.toast('Помилка відправки email', 'error');
-        mailClone.disabled = false; tgClone.disabled = false;
+        setStatus('error', `⚠️ Не вдалося надіслати (${err.message}). Скористайтесь кнопкою «Telegram» або зателефонуйте: ${L.CONFIG.PHONES[0].display}`);
+        L.toast('Помилка відправки', 'error');
+        submitClone.disabled = false; tgClone.disabled = false;
         label.textContent = origLabel;
       }
     });
