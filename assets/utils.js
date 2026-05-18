@@ -35,6 +35,11 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     BRAND: 'L-TEX',
     /* Public site URL — used to build absolute URLs for SEO / Open Graph / JSON-LD. */
     SITE_URL: 'https://ltexlutskai-tech.github.io/catalog-full',
+    /* Cloudflare Worker endpoint that forwards lead form POSTs to a Telegram
+       bot. Set to the deployed Worker URL (without trailing slash) — see
+       scripts/cloudflare-worker/worker.js. While empty, the modal only
+       exposes the manual "Open in Telegram" button. */
+    LEAD_WORKER_URL: '',
   };
 
   /* Make a relative path absolute against SITE_URL (or location.origin if same host). */

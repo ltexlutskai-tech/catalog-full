@@ -464,7 +464,9 @@
         <div class="form-field"><label>Ваше ім'я</label><input type="text" id="qfName" autocomplete="name"></div>
         <div class="form-field"><label>Телефон *</label><input type="tel" id="qfPhone" required placeholder="+380..." autocomplete="tel"></div>
         <div class="form-field"><label>Коментар</label><textarea id="qfNote" rows="2"></textarea></div>
-        <button class="btn btn-primary w-full" type="submit">Надіслати</button>
+        <input type="text" name="website" id="qfHp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none" aria-hidden="true">
+        <button class="btn btn-primary w-full" type="submit" id="qfSubmit">Надіслати</button>
+        <div id="qfStatus" style="display:none;margin-top:.75rem;padding:.625rem .75rem;border-radius:var(--radius-md);font-size:.8125rem;text-align:center"></div>
         <p class="text-muted text-xs text-center" style="margin-top:.75rem">
           Або: <a href="${L.CONFIG.TELEGRAM}" target="_blank" style="color:var(--primary);font-weight:600">Telegram</a> ·
           <a href="tel:${L.CONFIG.PHONES[0].tel}" style="color:var(--primary);font-weight:600">${L.CONFIG.PHONES[0].display}</a>
@@ -474,15 +476,61 @@
     qm.classList.add('open'); qm.setAttribute('aria-hidden','false');
     document.body.style.overflow='hidden';
 
-    document.getElementById('qForm').addEventListener('submit', e => {
+    document.getElementById('qForm').addEventListener('submit', async e => {
       e.preventDefault();
       const phone = document.getElementById('qfPhone').value.trim();
       if(!phone){ L.toast('Вкажіть телефон','error'); return; }
       const name = document.getElementById('qfName').value.trim();
       const note = document.getElementById('qfNote').value.trim();
-      const txt = `Замовлення\n${p.name}\nАртикул: ${String(p.id).padStart(4,'0')}\nКількість: ${qIn.value} ${p.unit || 'кг'}\nСума: ${qTot.textContent}\n\nКлієнт: ${name || '(не вказано)'}\nТелефон: ${phone}\n${note ? 'Коментар: '+note : ''}`;
+      const hp = document.getElementById('qfHp')?.value || '';
+      const preset = `Товар: ${p.name}\nАртикул: ${String(p.id).padStart(4,'0')}\nКількість: ${qIn.value} ${p.unit || 'кг'}\nСума: ${qTot.textContent}`;
+      const statusEl = document.getElementById('qfStatus');
+      const submitBtn = document.getElementById('qfSubmit');
+      const setStatus = (kind, msg) => {
+        if(!msg){ statusEl.style.display='none'; return; }
+        statusEl.style.display='block';
+        statusEl.textContent=msg;
+        statusEl.style.background = kind==='success'?'var(--green-50)':kind==='error'?'var(--red-50)':'var(--gray-100)';
+        statusEl.style.color      = kind==='success'?'var(--green-700)':kind==='error'?'var(--red-700)':'var(--gray-700)';
+        statusEl.style.border     = '1px solid ' + (kind==='success'?'var(--green-200)':kind==='error'?'var(--red-200)':'var(--border)');
+      };
+
+      const workerUrl = (L.CONFIG.LEAD_WORKER_URL || '').replace(/\/+$/, '');
+      if(workerUrl){
+        submitBtn.disabled = true;
+        const orig = submitBtn.textContent;
+        submitBtn.textContent = 'Надсилаємо…';
+        setStatus('info','Надсилаємо заявку…');
+        try {
+          const res = await fetch(workerUrl, {
+            method:'POST',
+            headers:{ 'Content-Type':'application/json','Accept':'application/json' },
+            body: JSON.stringify({
+              form:'quickOrder',
+              subject:`Швидке замовлення: ${p.name}`,
+              name, phone, comment: note, preset,
+              page: location.href, ua: navigator.userAgent, website: hp,
+            }),
+          });
+          const data = await res.json().catch(()=>({}));
+          if(res.ok && data.ok){
+            setStatus('success','✅ Заявку надіслано! Менеджер передзвонить впродовж 15 хв.');
+            L.toast('Заявку надіслано','success');
+            setTimeout(()=>{ qm.classList.remove('open'); qm.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }, 1800);
+            return;
+          }
+          throw new Error(data.error || `HTTP ${res.status}`);
+        } catch(err){
+          setStatus('error', `⚠️ ${err.message}. Спробую відкрити Telegram з готовим текстом.`);
+          submitBtn.disabled = false;
+          submitBtn.textContent = orig;
+          /* fall through to share-url fallback below */
+        }
+      }
+
+      const txt = `Замовлення\n${preset}\n\nКлієнт: ${name || '(не вказано)'}\nТелефон: ${phone}\n${note ? 'Коментар: '+note : ''}`;
       window.open(`${L.CONFIG.TELEGRAM}?text=${encodeURIComponent(txt)}`, '_blank');
-      L.toast('Заявку надіслано в Telegram', 'success');
+      L.toast('Відкрито Telegram', 'success');
       qm.classList.remove('open'); qm.setAttribute('aria-hidden','true'); document.body.style.overflow='';
     });
   });
