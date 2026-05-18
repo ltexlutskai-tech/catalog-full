@@ -200,8 +200,11 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     return map[q] || '';
   };
 
-  /* === In stock === */
-  L.inStock = (p) => Number(p?.qty_stock || 0) > 0 || p?.qty_stock === null /* unknown == in catalog */;
+  /* === In stock ===
+     Source of truth is the "Кількість" column from the price list
+     (`перелік позицій`). Only a positive integer counts as in-stock —
+     0 and an empty cell both mean we're awaiting delivery. */
+  L.inStock = (p) => Number(p?.qty_stock || 0) > 0;
 
   /* === Top categories === */
   L.TOP_CATS = [
