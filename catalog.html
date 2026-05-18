@@ -295,6 +295,23 @@
         </div>
       </div>
     `);
+    /* Quick status pills — sale / new / in-stock */
+    blocks.push(`
+      <div class="filter-block">
+        <div class="filter-block__title">Статус</div>
+        <div class="status-pills">
+          <button type="button" class="status-pill sale ${state.sale ? 'active' : ''}" data-toggle="sale" aria-pressed="${state.sale ? 'true' : 'false'}">
+            <span>🔥</span><span>Акційні</span>
+          </button>
+          <button type="button" class="status-pill new ${state.onlyNew ? 'active' : ''}" data-toggle="new" aria-pressed="${state.onlyNew ? 'true' : 'false'}">
+            <span>🆕</span><span>Новинки</span>
+          </button>
+          <button type="button" class="status-pill stock ${state.inStock ? 'active' : ''}" data-toggle="inStock" aria-pressed="${state.inStock ? 'true' : 'false'}">
+            <span>✓</span><span>В наявності</span>
+          </button>
+        </div>
+      </div>
+    `);
     /* Categories quick links */
     if(!state.cat){
       const counts = L.topCatCounts();
@@ -363,19 +380,6 @@
         </div>
       </div>
     `);
-    /* Toggles */
-    blocks.push(`
-      <div class="filter-block">
-        <label class="filter-option">
-          <input type="checkbox" id="fInStock" ${state.inStock ? 'checked' : ''}>
-          <span>Тільки в наявності</span>
-        </label>
-        <label class="filter-option">
-          <input type="checkbox" id="fSale" ${state.sale ? 'checked' : ''}>
-          <span>Тільки акції</span>
-        </label>
-      </div>
-    `);
     /* Reset */
     blocks.push(`
       <div class="filter-block">
@@ -438,18 +442,21 @@
       state.weightMax = fwmax?.value ? parseFloat(fwmax.value) : null;
       state.page = 1; pushUrl(); render();
     }));
-    /* Toggles */
-    root.querySelector('#fInStock')?.addEventListener('change', e => {
-      state.inStock = e.target.checked; state.page = 1; pushUrl(); render();
-    });
-    root.querySelector('#fSale')?.addEventListener('change', e => {
-      state.sale = e.target.checked; state.page = 1; pushUrl(); render();
+    /* Status pills */
+    root.querySelectorAll('[data-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const k = btn.dataset.toggle;
+        if(k === 'sale') state.sale = !state.sale;
+        else if(k === 'new') state.onlyNew = !state.onlyNew;
+        else if(k === 'inStock') state.inStock = !state.inStock;
+        state.page = 1; pushUrl(); render();
+      });
     });
     /* Reset */
     root.querySelector('#fReset')?.addEventListener('click', () => {
       Object.assign(state, {
         cat:null, sub:null, quality:[], season:[], audience:[], country:[],
-        unit:'', inStock:false, sale:false,
+        unit:'', inStock:false, sale:false, onlyNew:false,
         priceMin:null, priceMax:null, weightMin:null, weightMax:null,
         q:'', sort:'', page:1
       });
@@ -489,7 +496,8 @@
     state.country.forEach(v => chips.push({label:`Країна: ${v}`, k:'country', v}));
     if(state.unit) chips.push({label:`За ${state.unit}`, k:'unit'});
     if(state.inStock) chips.push({label:'В наявності', k:'inStock'});
-    if(state.sale) chips.push({label:'Акції', k:'sale'});
+    if(state.sale) chips.push({label:'🔥 Акції', k:'sale'});
+    if(state.onlyNew) chips.push({label:'🆕 Новинки', k:'onlyNew'});
     if(state.priceMin != null) chips.push({label:`від €${state.priceMin}`, k:'priceMin'});
     if(state.priceMax != null) chips.push({label:`до €${state.priceMax}`, k:'priceMax'});
     if(state.weightMin != null) chips.push({label:`вага від ${state.weightMin}кг`, k:'weightMin'});
@@ -506,6 +514,7 @@
         else if(c.k === 'unit') state.unit = '';
         else if(c.k === 'inStock') state.inStock = false;
         else if(c.k === 'sale') state.sale = false;
+        else if(c.k === 'onlyNew') state.onlyNew = false;
         else if(c.k === 'priceMin') state.priceMin = null;
         else if(c.k === 'priceMax') state.priceMax = null;
         else if(c.k === 'weightMin') state.weightMin = null;
@@ -516,7 +525,7 @@
     });
     af.querySelector('#clearAll').addEventListener('click', () => {
       Object.assign(state, {
-        quality:[], season:[], audience:[], country:[], unit:'', inStock:false, sale:false,
+        quality:[], season:[], audience:[], country:[], unit:'', inStock:false, sale:false, onlyNew:false,
         priceMin:null, priceMax:null, weightMin:null, weightMax:null, q:'', page:1
       });
       pushUrl(); render();
@@ -525,7 +534,7 @@
 
   function activeCount(){
     return state.quality.length + state.season.length + state.audience.length + state.country.length
-      + (state.unit?1:0) + (state.inStock?1:0) + (state.sale?1:0)
+      + (state.unit?1:0) + (state.inStock?1:0) + (state.sale?1:0) + (state.onlyNew?1:0)
       + (state.priceMin!=null?1:0) + (state.priceMax!=null?1:0)
       + (state.weightMin!=null?1:0) + (state.weightMax!=null?1:0) + (state.q?1:0);
   }
@@ -753,7 +762,7 @@
     document.getElementById('resetFiltersMobile').addEventListener('click', () => {
       Object.assign(state, {
         cat:null, sub:null, quality:[], season:[], audience:[], country:[],
-        unit:'', inStock:false, sale:false,
+        unit:'', inStock:false, sale:false, onlyNew:false,
         priceMin:null, priceMax:null, weightMin:null, weightMax:null,
         q:'', sort:'', page:1
       });
