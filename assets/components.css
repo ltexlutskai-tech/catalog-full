@@ -72,24 +72,49 @@
   .site-header__burger{display:none}
 }
 
-/* === MOBILE MENU === */
-.mobile-menu{
-  position:fixed;inset:0;z-index:100;
-  background:rgba(0,0,0,.5);
-  opacity:0;visibility:hidden;
-  transition:all var(--transition);
-}
-.mobile-menu.open{opacity:1;visibility:visible}
-.mobile-menu__panel{
-  position:absolute;top:0;left:0;bottom:0;
-  width:85%;max-width:20rem;
+/* === MOBILE MENU ===
+   Implemented as a native <dialog> opened via showModal(). The browser
+   puts it in the top layer (above the entire document), so no ancestor
+   property — backdrop-filter, transform, contain, overflow:hidden — can
+   clip it. Position properties below assume the top-layer placement. */
+dialog.mobile-menu{
+  position:fixed;
+  top:0;left:0;
+  margin:0;
+  padding:0;
+  border:none;
+  width:85vw;
+  max-width:20rem;
+  height:100vh;     /* fallback */
+  height:100dvh;
+  max-height:100vh;
+  max-height:100dvh;
   background:#fff;
-  display:flex;flex-direction:column;
-  transform:translateX(-100%);
-  transition:transform var(--transition);
+  color:var(--fg);
+  display:none;
+  flex-direction:column;
   overflow-y:auto;
+  overscroll-behavior:contain;
+  z-index:100;
+  -webkit-overflow-scrolling:touch;
 }
-.mobile-menu.open .mobile-menu__panel{transform:translateX(0)}
+dialog.mobile-menu[open]{
+  display:flex;
+  animation:ltexMenuSlideIn 180ms cubic-bezier(.4,0,.2,1);
+}
+dialog.mobile-menu::backdrop{
+  background:rgba(0,0,0,.5);
+}
+@keyframes ltexMenuSlideIn{
+  from{ transform:translateX(-100%); }
+  to{ transform:translateX(0); }
+}
+/* Pre-dialog fallback: if the browser doesn't recognise <dialog>, treat
+   the [open] attribute as the visibility trigger. */
+@supports not (selector(dialog[open])){
+  dialog.mobile-menu{display:none}
+  dialog.mobile-menu[open]{display:flex}
+}
 .mobile-menu__head{
   display:flex;align-items:center;justify-content:space-between;
   padding:1rem;border-bottom:1px solid var(--border);

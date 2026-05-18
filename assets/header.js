@@ -69,62 +69,61 @@ window.LTEX = window.LTEX || {};
       </div>
     `;
 
-    /* Mobile drawer markup — appended to <body>, NOT to the header.
-       The header uses backdrop-filter, which creates a containing block
-       for position:fixed descendants — putting the drawer inside it would
-       clip it to the header's height. */
+    /* Mobile drawer — a real <dialog> opened via showModal() so it lives
+       in the browser's top layer. Top-layer rendering bypasses every
+       containing-block / stacking-context / overflow trap that a regular
+       position:fixed div is vulnerable to (transformed ancestors, header
+       backdrop-filter, iframe quirks, etc.). */
     const drawerHtml = `
-      <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Меню" aria-hidden="true">
-        <div class="mobile-menu__panel">
-          <div class="mobile-menu__head">
-            <span class="site-header__logo">L-TEX</span>
-            <button class="icon-btn" id="mobileMenuClose" aria-label="Закрити" type="button">
-              <span class="icon">${ICONS.x()}</span>
-            </button>
-          </div>
+      <dialog class="mobile-menu" id="mobileMenu" aria-label="Меню">
+        <div class="mobile-menu__head">
+          <span class="site-header__logo">L-TEX</span>
+          <button class="icon-btn" id="mobileMenuClose" aria-label="Закрити" type="button">
+            <span class="icon">${ICONS.x()}</span>
+          </button>
+        </div>
 
-          <div class="mobile-menu__search">
-            <input type="search" id="mobMenuSearchInput" placeholder="Пошук товарів…" autocomplete="off" aria-label="Пошук">
-            <span class="icon icon-sm" aria-hidden="true">${ICONS.search()}</span>
-          </div>
+        <div class="mobile-menu__search">
+          <input type="search" id="mobMenuSearchInput" placeholder="Пошук товарів…" autocomplete="off" aria-label="Пошук">
+          <span class="icon icon-sm" aria-hidden="true">${ICONS.search()}</span>
+        </div>
 
-          <nav class="mobile-menu__nav" aria-label="Мобільне меню">
-            ${NAV.map(n => {
-              const icn = n.key === 'lots' ? ICONS.package() :
-                          n.key === 'new' ? ICONS.zap() :
-                          n.key === 'sale' ? ICONS.star() :
-                          n.key === 'catalog' ? ICONS.layoutGrid() :
-                          n.key === 'about' ? ICONS.info() :
-                          n.key === 'contacts' ? ICONS.phone() : '';
-              return `<a href="${n.href}" class="${active === n.key ? 'active' : ''}">
-                ${icn ? `<span class="icon icon-sm">${icn}</span>` : ''}<span>${n.label}</span>
-              </a>`;
-            }).join('')}
+        <nav class="mobile-menu__nav" aria-label="Мобільне меню">
+          ${NAV.map(n => {
+            const icn = n.key === 'lots' ? ICONS.package() :
+                        n.key === 'new' ? ICONS.zap() :
+                        n.key === 'sale' ? ICONS.star() :
+                        n.key === 'catalog' ? ICONS.layoutGrid() :
+                        n.key === 'about' ? ICONS.info() :
+                        n.key === 'contacts' ? ICONS.phone() : '';
+            return `<a href="${n.href}" class="${active === n.key ? 'active' : ''}">
+              ${icn ? `<span class="icon icon-sm">${icn}</span>` : ''}<span>${n.label}</span>
+            </a>`;
+          }).join('')}
+        </nav>
+
+        <div class="mobile-menu__section">
+          <div class="mobile-menu__section-title">Категорії</div>
+          <div class="mobile-menu__cats" id="mobMenuCats">${mobileMenuCategoriesHTML()}</div>
+        </div>
+
+        <div class="mobile-menu__section">
+          <div class="mobile-menu__section-title">Швидкі дії</div>
+          <nav class="mobile-menu__nav">
+            <a href="wishlist.html"><span class="icon icon-sm">${ICONS.heart()}</span><span>Список бажань</span><span class="mobile-menu__badge" id="mobMenuWishCount" style="display:none">0</span></a>
+            <a href="cart.html"><span class="icon icon-sm">${ICONS.cart()}</span><span>Кошик</span><span class="mobile-menu__badge cart" id="mobMenuCartCount" style="display:none">0</span></a>
           </nav>
+        </div>
 
-          <div class="mobile-menu__section">
-            <div class="mobile-menu__section-title">Категорії</div>
-            <div class="mobile-menu__cats" id="mobMenuCats">${mobileMenuCategoriesHTML()}</div>
-          </div>
-
-          <div class="mobile-menu__section">
-            <div class="mobile-menu__section-title">Швидкі дії</div>
-            <nav class="mobile-menu__nav">
-              <a href="wishlist.html"><span class="icon icon-sm">${ICONS.heart()}</span><span>Список бажань</span><span class="mobile-menu__badge" id="mobMenuWishCount" style="display:none">0</span></a>
-              <a href="cart.html"><span class="icon icon-sm">${ICONS.cart()}</span><span>Кошик</span><span class="mobile-menu__badge cart" id="mobMenuCartCount" style="display:none">0</span></a>
-            </nav>
-          </div>
-
-          <div class="mobile-menu__foot">
-            <div style="display:flex;flex-direction:column;gap:.5rem">
-              ${L.CONFIG.PHONES.map(p => `<a href="tel:${p.tel}" style="font-weight:600;display:inline-flex;align-items:center;gap:.5rem"><span class="icon icon-sm">${ICONS.phone()}</span>${p.display}</a>`).join('')}
-              <a href="${L.CONFIG.TELEGRAM}" target="_blank" rel="noopener" class="btn btn-primary">
-                <span class="icon icon-sm">${ICONS.send()}</span> Telegram
-              </a>
-            </div>
+        <div class="mobile-menu__foot">
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            ${L.CONFIG.PHONES.map(p => `<a href="tel:${p.tel}" style="font-weight:600;display:inline-flex;align-items:center;gap:.5rem"><span class="icon icon-sm">${ICONS.phone()}</span>${p.display}</a>`).join('')}
+            <a href="${L.CONFIG.TELEGRAM}" target="_blank" rel="noopener" class="btn btn-primary">
+              <span class="icon icon-sm">${ICONS.send()}</span> Telegram
+            </a>
           </div>
         </div>
-      </div>
+      </dialog>
     `;
 
     host.innerHTML = headerHtml;
@@ -136,13 +135,16 @@ window.LTEX = window.LTEX || {};
   }
 
   function bindHeader(){
-    /* Mobile menu */
+    /* Mobile menu — <dialog> opened via showModal() lands in the top layer */
     const menu = document.getElementById('mobileMenu');
     const burger = document.getElementById('hdrBurger');
     const closeBtn = document.getElementById('mobileMenuClose');
     const open = () => {
-      menu.classList.add('open');
-      menu.setAttribute('aria-hidden','false');
+      if(!menu) return;
+      try {
+        if(typeof menu.showModal === 'function' && !menu.open) menu.showModal();
+        else menu.setAttribute('open', '');
+      } catch(e){ menu.setAttribute('open', ''); }
       document.body.style.overflow = 'hidden';
       /* (Re)populate categories — data may have loaded after first render. */
       const catsHost = document.getElementById('mobMenuCats');
@@ -151,11 +153,28 @@ window.LTEX = window.LTEX || {};
         if(html){ catsHost.innerHTML = html; catsHost.dataset.filled = '1'; }
       }
     };
-    const close = () => { menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; };
+    const close = () => {
+      if(!menu) return;
+      try { if(typeof menu.close === 'function' && menu.open) menu.close(); }
+      catch(e){}
+      menu.removeAttribute('open');
+      document.body.style.overflow = '';
+    };
     burger?.addEventListener('click', open);
     closeBtn?.addEventListener('click', close);
-    menu?.addEventListener('click', e => { if(e.target === menu) close(); });
-    /* Close drawer when an in-drawer link is followed (smoother SPA-like feel). */
+    /* Click on the ::backdrop (anything outside the dialog box) → close */
+    menu?.addEventListener('click', e => {
+      if(e.target === menu){
+        const r = menu.getBoundingClientRect();
+        const inside = e.clientX >= r.left && e.clientX <= r.right
+                    && e.clientY >= r.top  && e.clientY <= r.bottom;
+        if(!inside) close();
+      }
+    });
+    /* Browser's built-in cancel (Esc / backdrop on some UAs) */
+    menu?.addEventListener('cancel', e => { e.preventDefault(); close(); });
+    menu?.addEventListener('close', () => { document.body.style.overflow = ''; });
+    /* Close drawer when an in-drawer link is followed. */
     menu?.querySelectorAll('a[href]').forEach(a => {
       a.addEventListener('click', () => { setTimeout(close, 50); });
     });
