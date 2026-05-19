@@ -209,11 +209,33 @@
     if(state.weightMax != null) lots = lots.filter(l => (l.weight || 0) <= state.weightMax);
 
     if(state.q){
+      /* Smart product-level search (synonyms, typos, transliteration) */
       const r = L.search(state.q, { products: lots.map(l => ({
         ...parentOf(l), id: l.prodId, name: parentOf(l).name || l.prodName, brand: parentOf(l).brand
-      })), minScore: 0.4 });
-      const allowed = new Set(r.map(x => String(x.p.id)));
-      lots = lots.filter(l => allowed.has(String(l.prodId)));
+      })), minScore: 0.3 });
+      const matchedProds = new Set(r.map(x => String(x.p.id)));
+
+      /* Direct substring fallback so the placeholder's promise of "штрихкод"
+         actually works, and so lot-specific desc text (brand mixes, materials)
+         is searchable. Barcode lookup only fires when the query looks like a
+         code (>= 4 chars, mostly digits) to avoid short ID-like queries
+         matching hundreds of barcodes by accident. */
+      const raw = state.q.trim().toLowerCase();
+      const digits = raw.replace(/\D/g, '').length;
+      /* >= 5 so 4-digit product IDs (1234, 0001) don't accidentally match
+         hundreds of barcodes by substring. Real barcodes here are 7+ digits. */
+      const looksLikeBarcode = raw.length >= 5 && digits / raw.length >= 0.7;
+      lots = lots.filter(l => {
+        if(matchedProds.has(String(l.prodId))) return true;
+        if(looksLikeBarcode){
+          const bc = String(l.barcode || '').toLowerCase();
+          if(bc.includes(raw)) return true;
+        }
+        if(raw.length >= 3 && l.desc){
+          if(String(l.desc).toLowerCase().includes(raw)) return true;
+        }
+        return false;
+      });
     }
 
     if(state.sort === 'price_asc') lots = [...lots].sort((a,b) => (a.price_uah||1e12) - (b.price_uah||1e12));
