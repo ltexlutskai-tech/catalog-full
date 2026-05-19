@@ -300,8 +300,30 @@ window.LTEX = window.LTEX || {};
      ignores ?v= cache-busters). After a local rotation we hold the
      freshly-encoded Blob in `_localPreviews` and return its blob: URL
      instead, so the admin shows the new orientation immediately
-     regardless of CDN state. */
-  A._localPreviews = new Map();  /* filename → blobURL */
+     regardless of CDN state.
+
+     `_recentRotations` survives page reload via localStorage so we can
+     rehydrate blob previews from the repo on next boot — otherwise CDN
+     would still serve the stale pre-rotation copy and the user would
+     see their work "revert" after a refresh. */
+  A._localPreviews = new Map();  /* filename → blobURL (in-memory) */
+
+  const ROT_STORE_KEY = 'ltex-admin-recent-rotations';
+  function loadRecentRotations(){
+    try { return JSON.parse(localStorage.getItem(ROT_STORE_KEY) || '{}') || {}; }
+    catch(e){ return {}; }
+  }
+  function saveRecentRotation(filename){
+    try {
+      const m = loadRecentRotations();
+      m[filename] = Date.now();
+      /* Cap to most recent 200 entries to stay well within localStorage quota */
+      const entries = Object.entries(m).sort((a,b) => b[1] - a[1]).slice(0, 200);
+      const trimmed = Object.fromEntries(entries);
+      localStorage.setItem(ROT_STORE_KEY, JSON.stringify(trimmed));
+    } catch(e){ /* quota / private mode — ignore */ }
+  }
+
   A.imageRawUrl = (filename) => {
     const local = A._localPreviews.get(filename);
     if(local) return local;
@@ -313,6 +335,35 @@ window.LTEX = window.LTEX || {};
     if(prev) { try { URL.revokeObjectURL(prev); } catch(e){} }
     A._localPreviews.set(filename, URL.createObjectURL(blob));
   }
+
+  /* Rehydrate `_localPreviews` after a page reload by re-fetching the
+     bytes of recently-rotated files straight from the repo (Contents/
+     Blob API — no CDN). Background: caller can dispatch an event when
+     each preview is ready so the UI can refresh affected <img>s. */
+  A.rehydrateRecentRotations = async (opts = {}) => {
+    const maxAgeMs = opts.maxAgeMs ?? 24 * 60 * 60 * 1000;  /* 24h */
+    const m = loadRecentRotations();
+    const now = Date.now();
+    const due = Object.entries(m).filter(([_, ts]) => (now - ts) < maxAgeMs);
+    if(!due.length) return { rehydrated: 0 };
+    if(!A.getToken()) return { rehydrated: 0 };
+    let count = 0;
+    /* Sequential to avoid hammering the API; admin gallery only renders
+       what the user is currently looking at, so this stays in the
+       background of the UI thread. */
+    for(const [filename] of due){
+      try {
+        const { blob } = await fetchImageBlob(`${IMAGES_DIR}/${filename}`, null);
+        setLocalPreview(filename, blob);
+        count++;
+        window.dispatchEvent(new CustomEvent('ltex:admin-preview-ready', { detail: { filename }}));
+      } catch(e){
+        console.warn('[rehydrate]', filename, e.message);
+      }
+    }
+    console.log('[rehydrateRecentRotations] refreshed', count, 'previews');
+    return { rehydrated: count };
+  };
   /* Ask jsdelivr to drop its CDN copy so the live site picks up the new
      bytes in ~1 min instead of waiting 12h for the cache to expire. */
   async function purgeJsdelivr(filename){
@@ -529,6 +580,11 @@ window.LTEX = window.LTEX || {};
        We already have the encoded Blob in memory from the rotation, so
        just hand it to imageRawUrl via a blob: URL. */
     setLocalPreview(filename, rotatedBlob);
+    /* Remember this file as recently-rotated so that, after a page
+       reload, rehydrateRecentRotations() can re-fetch its bytes from
+       the repo (bypassing the CDN) and the admin doesn't appear to
+       "revert" the rotation. */
+    saveRecentRotation(filename);
 
     /* Fire-and-forget: nudge jsdelivr to invalidate its cached copy so
        the catalog (which is loaded by end users, not the admin) catches
