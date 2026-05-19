@@ -439,10 +439,30 @@ window.LTEX = window.LTEX || {};
   };
 
   /* ---------- Fetch existing image bytes from the repo ----------
+     If we have a locally-rotated blob for this file (from an earlier
+     click), USE THAT as the source for the next rotation. Otherwise the
+     Contents API can return a still-cached pre-rotation version even
+     after our previous PUT succeeded, which makes consecutive 90° clicks
+     appear to do nothing (each click rotated the same original, not the
+     previously-rotated bytes — 5 × 90° looks like one 90° to the eye).
+
      Contents API inlines files <= 1 MB as base64; larger files come back
      with empty `content` plus a sha — fetch those via the Git Blob API
      which has no size cap (and stays authenticated). */
-  async function fetchImageBlob(path){
+  async function fetchImageBlob(path, filename){
+    if(filename){
+      const localUrl = A._localPreviews.get(filename);
+      if(localUrl){
+        try {
+          const resp = await fetch(localUrl);
+          if(resp.ok){
+            const blob = await resp.blob();
+            console.log('[fetchImageBlob] using local preview for', filename);
+            return { blob, sha: null };
+          }
+        } catch(e){ /* fall through to network */ }
+      }
+    }
     const meta = await gh(`/contents/${encodePath(path)}?ref=${encodeURIComponent(BRANCH)}&_=${Date.now()}`);
     const mime = mimeFromName(path);
     const b64ToBytes = (b64) => {
@@ -483,7 +503,7 @@ window.LTEX = window.LTEX || {};
 
     onProgress && onProgress({ stage: 'fetching', target: filename });
     const path = `${IMAGES_DIR}/${filename}`;
-    const { blob: origBlob } = await fetchImageBlob(path);
+    const { blob: origBlob } = await fetchImageBlob(path, filename);
 
     onProgress && onProgress({ stage: 'rotating', target: filename });
     const mime = mimeFromName(filename);
