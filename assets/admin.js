@@ -137,6 +137,44 @@ window.LTEX = window.LTEX || {};
     }
   }
 
+  /* ---------- Canvas rotation (keeps original mime where possible) ---------- */
+  function mimeFromName(name){
+    const ext = (String(name).split('.').pop() || '').toLowerCase();
+    if(ext === 'png')  return 'image/png';
+    if(ext === 'webp') return 'image/webp';
+    if(ext === 'gif')  return 'image/jpeg';   /* canvas can't encode GIF — fall back */
+    return 'image/jpeg';
+  }
+  async function rotateImageBlob(blob, degrees, mime){
+    const url = URL.createObjectURL(blob);
+    try {
+      const img = await new Promise((res, rej) => {
+        const i = new Image();
+        i.onload  = () => res(i);
+        i.onerror = () => rej(new Error('Не вдалося прочитати фото для повороту'));
+        i.src = url;
+      });
+      const deg = ((degrees % 360) + 360) % 360;
+      const radians = (deg * Math.PI) / 180;
+      const swap = (deg === 90 || deg === 270);
+      const cv = document.createElement('canvas');
+      cv.width  = swap ? img.naturalHeight : img.naturalWidth;
+      cv.height = swap ? img.naturalWidth  : img.naturalHeight;
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.translate(cv.width / 2, cv.height / 2);
+      ctx.rotate(radians);
+      ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+      const quality = mime === 'image/png' ? undefined : 0.92;
+      return await new Promise((res, rej) => {
+        cv.toBlob(b => b ? res(b) : rej(new Error('Canvas encode failed')), mime, quality);
+      });
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
   /* ---------- Filename helpers ---------- */
   function sanitiseName(s){
     return String(s).replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, ' ').trim();
@@ -257,10 +295,16 @@ window.LTEX = window.LTEX || {};
     throw lastErr;
   }
 
-  /* ---------- Preview URL (jsdelivr — no CSP sandbox, cross-origin OK) ---------- */
+  /* ---------- Preview URL (jsdelivr — no CSP sandbox, cross-origin OK) ----------
+     Recently-rotated files get a per-session cache-buster appended so the
+     admin preview reflects the new orientation immediately instead of
+     showing the still-cached pre-rotation image. */
+  A._recentRotated = new Map();
   A.imageRawUrl = (filename) => {
     const safe = encodePath(filename);
-    return `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@${BRANCH}/${IMAGES_DIR}/${safe}`;
+    const base = `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@${BRANCH}/${IMAGES_DIR}/${safe}`;
+    const ts   = A._recentRotated.get(filename);
+    return ts ? `${base}?v=${ts}` : base;
   };
 
   /* ---------- Public: list current filenames for a product ---------- */
@@ -373,6 +417,80 @@ window.LTEX = window.LTEX || {};
 
     onProgress && onProgress({ stage: 'done', filename: fname, hadThumb });
     return { filename: fname, hadThumb };
+  };
+
+  /* ---------- Fetch existing image bytes from the repo ----------
+     Contents API inlines files <= 1 MB as base64; larger files come back
+     with empty `content` plus a sha — fetch those via the Git Blob API
+     which has no size cap (and stays authenticated). */
+  async function fetchImageBlob(path){
+    const meta = await gh(`/contents/${encodePath(path)}?ref=${encodeURIComponent(BRANCH)}&_=${Date.now()}`);
+    const mime = mimeFromName(path);
+    const b64ToBytes = (b64) => {
+      const bin = atob(String(b64).replace(/\s/g, ''));
+      const bytes = new Uint8Array(bin.length);
+      for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return bytes;
+    };
+    if(meta.content && meta.content.length > 0){
+      return { blob: new Blob([b64ToBytes(meta.content)], { type: mime }), sha: meta.sha };
+    }
+    if(meta.sha){
+      const blobMeta = await gh(`/git/blobs/${meta.sha}`);
+      if(blobMeta && blobMeta.content){
+        return { blob: new Blob([b64ToBytes(blobMeta.content)], { type: mime }), sha: meta.sha };
+      }
+    }
+    throw new Error('Не вдалося завантажити фото для повороту');
+  }
+
+  /* ---------- Public: rotate ONE photo ----------
+     Steps:
+       1) GET current bytes from repo
+       2) decode → canvas-rotate by N° → re-encode in original mime
+       3) PUT rotated bytes back to the same path (same filename ⇒ images.js
+          stays untouched, no DB patch needed)
+       4) regenerate the 800px thumbnail and PUT it (best-effort)
+     `degrees` is normalised, 90/180/270 supported (90 = clockwise).
+  ----------------------------------------------- */
+  A.rotatePhoto = async (product, filename, degrees, onProgress) => {
+    if(!A.getToken())           throw new Error('Не вказано GitHub-токен');
+    if(!product || !product.id) throw new Error('Не вибрано товар');
+    if(!filename)               throw new Error('Не вказано файл');
+    const deg = ((parseInt(degrees, 10) % 360) + 360) % 360;
+    if(deg === 0) return { filename, rotated: 0 };
+
+    console.log('[rotatePhoto]', product.id, '↻', filename, deg + '°');
+
+    onProgress && onProgress({ stage: 'fetching', target: filename });
+    const path = `${IMAGES_DIR}/${filename}`;
+    const { blob: origBlob } = await fetchImageBlob(path);
+
+    onProgress && onProgress({ stage: 'rotating', target: filename });
+    const mime = mimeFromName(filename);
+    const rotatedBlob = await rotateImageBlob(origBlob, deg, mime);
+    const rotatedB64  = await blobToB64(rotatedBlob);
+
+    onProgress && onProgress({ stage: 'uploading-original', target: filename });
+    await putWithRetry(path, rotatedB64, `Rotate photo ${deg}°: ${filename}`);
+
+    /* Regenerate thumbnail from the rotated bytes (best-effort) */
+    let hadThumb = false;
+    try {
+      const thumbBlob = await makeThumbBlob(rotatedBlob);
+      const thumbB64  = await blobToB64(thumbBlob);
+      onProgress && onProgress({ stage: 'uploading-thumb', target: filename });
+      await putWithRetry(`${IMAGES_DIR}/thumbs/${thumbName(filename)}`, thumbB64, `Regenerate thumb: ${thumbName(filename)}`);
+      hadThumb = true;
+    } catch(e){
+      console.warn('[rotatePhoto] thumb regenerate failed:', e.message);
+    }
+
+    /* Mark the file as freshly rotated so previews bypass the CDN cache */
+    A._recentRotated.set(filename, Date.now());
+
+    onProgress && onProgress({ stage: 'done', filename, rotated: deg, hadThumb });
+    return { filename, rotated: deg, hadThumb };
   };
 
   /* ---------- Public: delete ONE photo ----------
