@@ -102,6 +102,7 @@
 <script src="assets/icons.js"></script>
 <script src="assets/utils.js?v=20260518e"></script>
 <script src="assets/wishlist.js"></script>
+<script src="assets/lib/fuse.min.js"></script>
 <script src="assets/search.js"></script>
 <script src="assets/order-modal.js?v=20260518e"></script>
 <script src="assets/video-modal.js?v=20260518f"></script>
@@ -166,6 +167,32 @@
     }, true);
   }
 
+  /* Lazy lot-search index — built once on first query, reused thereafter.
+     Each lot becomes a doc whose `_text` includes parent-product name/brand/
+     category/sort/season/audience/country plus the lot's own barcode and
+     description. */
+  let _lotIndex = null;
+  function ensureLotIndex(){
+    if(_lotIndex) return _lotIndex;
+    const all = L.getAllLots();
+    _lotIndex = L.createSearchIndex(all, {
+      getExtra: (l) => {
+        const grp = l._grp || l.parentProd || {};
+        return {
+          name: grp.name || l.prodName,
+          brand: grp.brand,
+          subcategory: grp.subcategory,
+          category: grp.category || grp.topCat,
+          sort: grp.sort, season: grp.season,
+          audience: grp.audience, country: grp.country,
+          barcode: l.barcode,
+          description: l.desc,
+        };
+      },
+    });
+    return _lotIndex;
+  }
+
   /* === Filter pipeline (uses real LOTS_DATA from data/lots.js) === */
   function applyFilters(){
     let lots = L.getAllLots();
@@ -209,11 +236,13 @@
     if(state.weightMax != null) lots = lots.filter(l => (l.weight || 0) <= state.weightMax);
 
     if(state.q){
-      const r = L.search(state.q, { products: lots.map(l => ({
-        ...parentOf(l), id: l.prodId, name: parentOf(l).name || l.prodName, brand: parentOf(l).brand
-      })), minScore: 0.4 });
-      const allowed = new Set(r.map(x => String(x.p.id)));
-      lots = lots.filter(l => allowed.has(String(l.prodId)));
+      /* Lot index is built once (lazily) and reused across keystrokes / filter
+         changes. The index covers parent-product fields plus per-lot barcode
+         and description, so the placeholder's "штрихкод" promise is honoured
+         and lot-specific text (brand mixes, materials) is searchable. */
+      const hits = ensureLotIndex().search(state.q, { minScore: 0.3 });
+      const matched = new Set(hits.map(h => h.p));
+      lots = lots.filter(l => matched.has(l));
     }
 
     if(state.sort === 'price_asc') lots = [...lots].sort((a,b) => (a.price_uah||1e12) - (b.price_uah||1e12));

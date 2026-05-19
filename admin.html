@@ -134,8 +134,8 @@
   font-size:.625rem;font-weight:700;
   padding:.0625rem .25rem;border-radius:.25rem;
 }
-.gallery-item__delete{
-  position:absolute;top:.25rem;right:.25rem;
+.gallery-item__delete,.gallery-item__rotate{
+  position:absolute;top:.25rem;
   width:1.5rem;height:1.5rem;
   border-radius:50%;
   background:rgba(0,0,0,.55);color:#fff;
@@ -146,12 +146,19 @@
   transition:background var(--transition),transform var(--transition);
   z-index:2;
 }
+.gallery-item__delete{right:.25rem}
+.gallery-item__rotate{right:1.875rem}        /* sits left of ✕ */
+.gallery-item__rotate--ccw{right:3.5rem}     /* one more slot left */
 .gallery-item__delete:hover,.gallery-item__delete:focus-visible{
   background:var(--red-600);
   transform:scale(1.08);
 }
-.gallery-item.deleting{opacity:.5;pointer-events:none}
-.gallery-item.deleting::before{
+.gallery-item__rotate:hover,.gallery-item__rotate:focus-visible{
+  background:var(--primary,#16a34a);
+  transform:scale(1.08);
+}
+.gallery-item.deleting,.gallery-item.rotating{opacity:.5;pointer-events:none}
+.gallery-item.deleting::before,.gallery-item.rotating::before{
   content:'⏳';
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
@@ -159,6 +166,8 @@
   font-size:1.5rem;
   z-index:3;
 }
+.gallery-item.rotating::before{content:'↻';animation:rotSpin .9s linear infinite}
+@keyframes rotSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
 .dropzone{
   /* The label was inline by default — when its content wrapped, the border
@@ -332,6 +341,7 @@
 <script src="assets/icons.js"></script>
 <script src="assets/utils.js?v=20260518e"></script>
 <script src="assets/wishlist.js"></script>
+<script src="assets/lib/fuse.min.js"></script>
 <script src="assets/search.js"></script>
 <script src="assets/admin.js"></script>
 <script>
@@ -598,12 +608,14 @@
         </div>
 
         ${photos.length ? `
-          <h4 class="text-sm font-semibold" style="margin-bottom:.5rem">Існуючі фото · клацни ✕ щоб видалити</h4>
+          <h4 class="text-sm font-semibold" style="margin-bottom:.5rem">Існуючі фото · ↺ ↻ повернути · ✕ видалити</h4>
           <div class="gallery-grid">
             ${photos.map(fn => {
               const isNew = newOnes.includes(fn);
               return `<div class="gallery-item ${isNew?'new':''}" data-fname="${L.escapeHtml(fn)}">
                 <img src="${A.imageRawUrl(fn)}" alt="" loading="lazy">
+                <button class="gallery-item__rotate gallery-item__rotate--ccw" type="button" data-rotate="${L.escapeHtml(fn)}" data-deg="-90" aria-label="Повернути на 90° ліворуч" title="Повернути на 90° ліворуч">↺</button>
+                <button class="gallery-item__rotate" type="button" data-rotate="${L.escapeHtml(fn)}" data-deg="90" aria-label="Повернути на 90° праворуч" title="Повернути на 90° праворуч">↻</button>
                 <button class="gallery-item__delete" type="button" data-delete="${L.escapeHtml(fn)}" aria-label="Видалити" title="Видалити фото">✕</button>
                 <span class="gallery-item__name">${L.escapeHtml(fn)}</span>
               </div>`;
@@ -667,6 +679,28 @@
         } catch(err){
           item && item.classList.remove('deleting');
           L.toast(`Помилка видалення: ${err.message}`, 'error');
+        }
+      });
+    });
+
+    /* Rotate-photo buttons (↺ -90°, ↻ +90°) */
+    ed.querySelectorAll('[data-rotate]').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const fname = btn.dataset.rotate;
+        const deg   = parseInt(btn.dataset.deg, 10) || 90;
+        const item  = btn.closest('.gallery-item');
+        item && item.classList.add('rotating');
+        try {
+          await A.rotatePhoto(editorState.product, fname, deg);
+          L.toast('Фото повернено. CDN може кешувати — оновлення видно за хвилину.', 'success');
+          renderEditor();    // re-render uses cache-busted imageRawUrl
+          renderProducts();
+        } catch(err){
+          L.toast(`Помилка повороту: ${err.message}`, 'error');
+        } finally {
+          item && item.classList.remove('rotating');
         }
       });
     });

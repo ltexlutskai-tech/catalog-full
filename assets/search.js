@@ -59,105 +59,135 @@ window.LTEX = window.LTEX || {};
      Stem comparison handles word forms (футболк-а, футболк-ою).
   */
   const SYN_GROUPS = [
-    /* tops */
-    ['футболк','майк','тенісн','тенисн','tshirt','tshirts','tee','tshrt','тішотк','тішк','тиш','футбол','футбіл','піво','топік'],
-    ['кофт','світшот','худі','худі','hoodie','толстовк','свитшот','світщот','кенгур','реглан'],
-    ['светр','свитер','sweater','пуловер','джемпер','кардиган','пайт'],
-    ['блуз','рубашк','сорочк','shirt','блузк','рубаха','рубаха'],
-    ['жилет','vest','безрукавк','куртк-без'],
-    ['куртк','jacket','паркa','парк','анорак','бомбер','вітровк','штормовк','windbreaker','пуховик','піджак','пальто','шуб'],
-    ['пальт','coat','тренч','шубa','півпальт'],
-    ['піжам','нічниц','pajama','піжамн'],
-    ['халат','кімон','robe','банн'],
-    ['жилетк','безрукавк'],
+    /* === TOPS === */
+    ['футболк','майк','тенісн','тенисн','tshirt','tee','тішотк','тішк','топік','tshirts'],
+    ['кофт','світшот','худі','hoodie','толстовк','свитшот','світщот','кенгур','реглан','sweatshirt'],
+    ['светр','свитер','sweater','пуловер','джемпер','кардиган','пайт','knit','в\'язан','вязан'],
+    ['блуз','рубашк','сорочк','shirt','блузк','рубаха','тунік'],
+    ['жилет','vest','безрукавк','жилетк'],
+    ['куртк','jacket','парк','анорак','бомбер','вітровк','штормовк','windbreaker','пуховик','піджак','blazer'],
+    ['пальт','coat','тренч','шуб','півпальт','півпальто','пуховик-довг'],
+    ['піжам','нічниц','pajama','pyjama','піжамн','nightgown','нічн-сорочк'],
+    ['халат','кімон','robe','банн','купальн-халат'],
 
-    /* bottoms */
-    ['джинс','denim','jean','jeans','штан-денім'],
-    ['штан','брюк','pants','trouser','брючин','штанин','брюки','штаны'],
-    ['шорт','short','берміуд','бермуд'],
-    ['легінс','лосин','leggings','лосіна','легинс'],
-    ['колготк','панчох','tights','чулок','чулки','панчох'],
-    ['спідниц','юбк','skirt','міді','міні-спідниц'],
-    ['сукн','плат','dress','сарафан','платтячк'],
-    ['комбінезон','overall','jumpsuit','полукомбі'],
+    /* === BOTTOMS === */
+    ['джинс','denim','jean','jeans'],
+    ['штан','брюк','pants','trouser','брючин','штанин','штаны','чінос','chinos'],
+    ['шорт','short','берміуд','бермуд','shorts'],
+    ['легінс','лосин','leggings','легинс','лосіна'],
+    ['колготк','панчох','tights','чулок','чулки'],
+    ['спідниц','юбк','skirt'],
+    ['сукн','плат','dress','сарафан','платтячк','платтячко','платье'],
+    ['комбінезон','overall','jumpsuit','полукомбі','полукомбінезон','напівкомбінезон','ромпер'],
 
-    /* underwear */
-    ['труси','трусик','panties','боксер','стринг','трусы','білизн','білизн-нижн'],
-    ['ліфчик','бюстгальтер','лифчик','bra','бра','топ-бра'],
+    /* === UNDERWEAR === */
+    ['труси','трусик','panties','боксер','стринг','трусы','білизн','underwear','бельё','спідн-бел'],
+    ['ліфчик','бюстгальтер','лифчик','bra','бра','топ-бра','бюстье','bralette'],
     ['боді','body','bodysuit'],
-    ['термобілизн','thermal'],
+    ['термобілизн','thermal','термо','термобельё','thermals'],
 
-    /* socks */
-    ['шкарпетк','носк','socks','гольф','гольфики','подследн','подсл'],
+    /* === SOCKS === */
+    ['шкарпетк','носк','socks','гольф','гольфики','подследн','подсл','следк','следки','носочк'],
 
-    /* outerwear specific */
-    ['флісов','флис','fleece','флісовк','флиска'],
+    /* === FLEECE === */
+    ['флісов','флис','fleece','флісовк','флиска','флеска','флешка-фліс'],
 
-    /* shoes */
-    ['кросівк','кросовк','снікерс','sneakers','кеди','sneaker','кросс','кроссовк','кросовка','кросс-чер'],
-    ['туфл','shoe','туфельк','лоделл','лодочк'],
-    ['черевик','ботинк','boot','чобіт','чоботи','берц','берц'],
-    ['сандал','босоніжк','sandal','босоножк','босонiжк'],
-    ['тапочк','тапк','шльопанц','шлепанц','slipper','flip'],
-    ['взутт','обув','footwear','shoes','взутн'],
+    /* === SHOES === */
+    ['кросівк','кросовк','снікерс','sneakers','кеди','sneaker','кросс','кроссовк','кросовка','спортивн-взутт'],
+    ['туфл','shoe','туфельк','лодочк','туфельки','pumps'],
+    ['черевик','ботинк','boot','чобіт','чоботи','берц','boots','челсі','chelsea','угі','ugg'],
+    ['сандал','босоніжк','sandal','босоножк','босонiжк','sandals'],
+    ['тапочк','тапк','шльопанц','шлепанц','slipper','flip','тапочки','flipflop','flip-flop','капці','капец'],
+    ['взутт','обув','footwear','shoes','взутн','обувь'],
 
-    /* accessories */
-    ['сумк','bag','сумочк','клатч','шопер','tot','рюкзак','backpack','ранец','ранц'],
-    ['ремен','belt','пасок','паск','ременя'],
-    ['шапк','шарф','scarf','капелюх','берет','панам','beanie','beanies','cap','hat'],
-    ['рукавиц','перчатк','glove','рукавичк','рукавиц'],
-    ['окуляр','sunglas','glasses'],
-    ['біжутер','прикрас','jewel'],
+    /* === ACCESSORIES === */
+    ['сумк','bag','сумочк','клатч','шопер','tot','tote','рюкзак','backpack','ранец','ранц','саквояж','barsetk','барсетк','torba','борсетк'],
+    ['ремен','belt','пасок','паск','ременя','пояс'],
+    ['шапк','шарф','scarf','капелюх','берет','панам','beanie','beanies','cap','hat','кепк','бейсболк','baseball-cap','snapback','хустк','платок','бандан','бандана'],
+    ['рукавиц','перчатк','glove','рукавичк','gloves','митенк','варежк'],
+    ['окуляр','sunglas','glasses','sunglasses','очки'],
+    ['біжутер','прикрас','jewel','jewelry','jewellery','браслет','ланцюжок','цепочк','сережк','серьг','каблучк','перстен','кільце','кольцо'],
 
-    /* swimwear */
-    ['купальник','swimsuit','плавк','swim','шорти-плав'],
+    /* === SWIMWEAR === */
+    ['купальник','swimsuit','плавк','swim','swimwear','бікіні','bikini','купальн','купаль'],
 
-    /* home */
-    ['постільн','подушк','ковдр','простир','наволочк','покривал','пододіял','pillow','blanket'],
-    ['рушник','полотенц','towel'],
-    ['килим','rug','carpet','доріжк'],
+    /* === HOME / TEXTILE === */
+    ['постільн','подушк','ковдр','простир','наволочк','покривал','пододіял','pillow','blanket','linen','постель','одеял','наволоч','простын','пододеяль'],
+    ['рушник','полотенц','towel','towels','полотенце'],
+    ['килим','rug','carpet','доріжк','коврик','ковёр','ковер'],
+    ['скатерт','tablecloth','скатерть','серветк','салфетк','napkin'],
+    ['штор','curtain','завіс','занавеск','tюль','tulle','тюль'],
 
-    /* toys */
-    ['іграшк','игрушк','toy','м\'як-іграшк','плюш'],
+    /* === TOYS === */
+    ['іграшк','игрушк','toy','toys','плюш','plush','мягк-игрушк','м\'як-іграшк','м\'якаіграшк','soft-toy'],
 
-    /* cosmetics */
-    ['косметик','декор-косметик','cosmetic','помад','туш','рум\'ян','тіні','тушь','тени'],
+    /* === COSMETICS === */
+    ['косметик','cosmetic','cosmetics','помад','туш','рум\'ян','тіні','тушь','тени','румяна','лак-для-ніг','nail','помада','lipstick'],
 
-    /* qualities */
-    ['екстр','extra','лук','топ-сорт','топсорт'],
-    ['крем','cream','beigecreme'],
-    ['1й','перш','first','sort1','first-sort'],
-    ['2й','друг','second','sort2','second-sort'],
-    ['сток','stock','стік'],
-    ['мікс','mix','асорті'],
+    /* === MATERIALS / FABRIC === */
+    ['бавовн','cotton','хлопок','хлопков','коттон','100cotton','100%cotton'],
+    ['шкір','leather','кожа','кожан','leatherette','еко-шкір','екошкір','искож','genuine-leather'],
+    ['замш','suede','велюр','velour'],
+    ['вовн','шерсть','wool','woolen','шерстян'],
+    ['льон','linen-fabric','лен','льняной','flax'],
+    ['шовк','silk','шёлк','шелк','шелков'],
+    ['кашемір','cashmere','кашемир'],
+    ['синтетик','полієстер','polyester','poliester','нейлон','nylon','viscose','віскоз','вискоз','лайкр','спандекс','spandex','elastane','еластан'],
 
-    /* seasons */
-    ['зим','winter','зимов'],
-    ['літ','лет','summer','літн','лет'],
-    ['демісез','demi','весн','осінь','осен','spring','autumn','fall','перехідн','міжсезон'],
-    ['всесезон','all-season','allseason','всесезон'],
+    /* === QUALITIES / GRADES (важливо для секонд-хенду) === */
+    ['екстр','extra','лук','топ-сорт','топсорт','top-grade','top-quality','преміум','premium','premiumg','топ','клас-а','grade-a','a-grade','a-class','vip','він','wiн'],
+    ['крем','cream','beigecreme','creamgrade'],
+    ['1й','перш','first','sort1','first-sort','перший-сорт','перший','1сорт','onesort','firstgrade'],
+    ['2й','друг','second','sort2','second-sort','другий-сорт','другий','2сорт','secondgrade'],
+    ['сток','stock','стік','deadstock','dead-stock','new-stock','новостік','новий-сток'],
+    ['мікс','mix','асорті','assorti','assorted','микс','коктейль'],
+    ['оригінал','original','оригинал','originals','genuine','автентичн','authentic'],
+    ['маловжит','маловжива','маловжитий','маловжите','малоношен','малоношене','малоношений','мало-ношен','хорош-стан','лайт-юс','light-used','gently-used'],
+    ['секонд','second-hand','secondhand','секондхенд','секонд-хенд','sh','секон','б/у','бу','used'],
 
-    /* gender */
-    ['жіноч','женск','women','жіноч','для-жінок'],
-    ['чоловіч','мужск','men','чолов','для-чоловіків'],
-    ['дитяч','детск','kids','child','дитин','дитя','baby','підлітк','тіней-1'],
-    ['дорослі','adult','для-дорослих'],
-    ['унісекс','unisex','мікс-стат'],
+    /* === LOT / WHOLESALE / B2B SLANG === */
+    ['опт','гурт','wholesale','оптом','гуртом','опт-партія','опт-партия','оптовик'],
+    ['парті','batch','batches','lot','лот','лоти','лоты'],
+    ['мішок','мешок','bag-bulk','sack','sacks','тюк','bale','bales','бель','куль'],
+    ['кг','kg','килогр','kilogram','kilo','kilos'],
 
-    /* countries */
-    ['англ','english','uk','британ','british','лондон'],
-    ['нім','germany','german','deutschland','німеччин'],
-    ['канад','canada','canadian'],
-    ['польщ','poland','polska','polish'],
-    ['шотланд','scotland','scottish'],
-    ['італ','italy','italian','italia'],
-    ['сша','usa','american','штат'],
-    ['франц','france','french'],
+    /* === SEASONS === */
+    ['зим','winter','зимов','winter-collection'],
+    ['літ','лет','summer','літн','летн','літніх','летнего'],
+    ['демісез','demi','весн','осінь','осен','spring','autumn','fall','перехідн','міжсезон','демисезон','демик'],
+    ['всесезон','all-season','allseason','круглорічн','круглогодичн'],
 
-    /* misc */
-    ['робоч','робоч-одяг','workwear','spec','спецодяг','workw'],
-    ['велик','plus-size','xxl','oversize','оверсайз','оверсайс','xxxl'],
-    ['брен','brand','фірмов','firmen','marka'],
+    /* === GENDER / AUDIENCE === */
+    ['жіноч','женск','women','womens','для-жінок','жіночий','жіночого','женский','женского','female','ladies','lady'],
+    ['чоловіч','мужск','men','mens','чолов','для-чоловіків','чоловічий','мужской','male','gentleman','gents'],
+    ['дитяч','детск','kids','child','дитин','дитя','baby','підлітк','подростк','toddler','infant','newborn','новонароджен','малюк','малыш','teen','teens','children'],
+    ['доросл','adult','для-дорослих','для-взрослых','adults'],
+    ['унісекс','unisex','мікс-стат','оба-стат'],
+
+    /* === COUNTRIES (народні написання) === */
+    ['англ','english','uk','британ','british','лондон','london','england','england-uk','велик-британ','great-britain'],
+    ['нім','germany','german','deutschland','німеччин','германия','герман','germ'],
+    ['канад','canada','canadian','canad'],
+    ['польщ','poland','polska','polish','польша','польс'],
+    ['шотланд','scotland','scottish','шотландск'],
+    ['італ','italy','italian','italia','італьянс'],
+    ['сша','usa','american','штат','штатів','штатов','америк','america','us'],
+    ['франц','france','french','французск'],
+    ['голланд','holland','netherlands','dutch','нідерланд'],
+    ['швец','sweden','swedish','швед'],
+    ['данія','denmark','danish','дан'],
+    ['бельг','belgium','belgian'],
+
+    /* === BRAND-LIKE / STYLE === */
+    ['робоч','workwear','spec','спецодяг','спецовка','рабочая','роба','форма-робоч'],
+    ['велик','plus-size','xxl','oversize','оверсайз','оверсайс','xxxl','plus','big-size','batal','батал'],
+    ['брен','brand','фірмов','firmen','marka','брендов','firmenn'],
+    ['спорт','sport','sports','sportswear','спортивн','sportwear'],
+    ['вінтаж','vintage','ретро','retro','винтаж','old-school'],
+
+    /* === STATES === */
+    ['нов','new','новий','novyj','новые','свіж','свежи','свеж','fresh'],
+    ['акці','sale','знижк','скидк','discount','распродаж','розпродаж'],
   ];
 
   /* Build stem → group lookup */
@@ -204,115 +234,171 @@ window.LTEX = window.LTEX || {};
     return dp[m][n];
   };
 
-  /* === Build searchable index for a product === */
-  const buildHaystack = (p) => {
-    const parts = [
-      p.name, p.category, p.subcategory, p.brand, p.sort, p.season, p.audience, p.country,
-      p.id, String(p.id).replace(/^0+/, ''),
-    ].filter(Boolean).join(' ');
-    return norm(parts);
-  };
-
-  const indexProduct = (p) => {
-    if(p._searchIndex) return p._searchIndex;
-    const hay = buildHaystack(p);
-    const tokens = tokenize(hay);
-    const stems = new Set();
-    const groups = new Set();
-    for(const t of tokens){
+  /* ===== Synonym expansion helper =====
+     Given a normalized text, return a set of all synonym words from groups
+     hit by any of its tokens (so a product literally named "кросівки" will
+     also surface "кеди", "snickers", "sneakers" in its searchable blob). */
+  const expandSynonyms = (text) => {
+    const out = new Set();
+    const seenGroups = new Set();
+    for(const t of tokenize(text)){
       const s = tokenStem(t);
-      if(s){ stems.add(s.stem); groups.add(s.group); }
+      if(!s || seenGroups.has(s.group)) continue;
+      seenGroups.add(s.group);
+      for(const w of SYN_GROUPS[s.group]) out.add(norm(w));
     }
-    p._searchIndex = { hay, tokens, stems, groups, hayLat: transliterate(hay, 'lat') };
-    return p._searchIndex;
+    return out;
   };
 
-  /* === Match query against single product, returns 0..1 score (or 0 if no match) === */
-  const scoreProduct = (p, queryTokens, queryGroups, rawQuery) => {
-    const idx = indexProduct(p);
-    if(queryTokens.length === 0) return 0;
+  /* ===== Build the doc that Fuse will index =====
+     One big `_text` field is simpler and gives more consistent scoring
+     than multi-key weighted fields — at this catalogue size (≤2k items)
+     it's also fast enough. The text holds: raw fields + synonym expansion
+     + transliteration, so a single Fuse query against `_text` covers
+     cross-language, slang and typos. */
+  const buildDoc = (p, getExtra) => {
+    const name        = norm(p.name || '');
+    const brand       = norm(p.brand || '');
+    const subcategory = norm(p.subcategory || p.subcat || '');
+    const category    = norm(p.category || p.topCat || '');
+    const idTrim      = String(p.id || '').replace(/^0+/, '');
+    const baseParts   = [
+      name, brand, subcategory, category,
+      norm(p.sort||''), norm(p.season||''), norm(p.audience||''), norm(p.country||''),
+    ];
+    const extraObj = (typeof getExtra === 'function') ? (getExtra(p) || {}) : {};
+    const extraText = Object.values(extraObj).filter(Boolean).map(norm).join(' ');
 
-    /* 1) Exact substring of full query in product name -> +0.6 */
-    let score = 0;
-    const nameLower = norm(p.name);
-    if(rawQuery && nameLower.includes(rawQuery)){
-      score += 0.6;
-      /* Bonus if name starts with query */
-      if(nameLower.startsWith(rawQuery)) score += 0.2;
+    const haystack = baseParts.concat(extraText).filter(Boolean).join(' ');
+    const synonyms = [...expandSynonyms(haystack)].join(' ');
+    const text     = [haystack, synonyms, transliterate(haystack + ' ' + synonyms, 'lat'), idTrim]
+                       .filter(Boolean).join(' ');
+
+    return { _p: p, _name: name, _text: text };
+  };
+
+  const FUSE_DEFAULTS = {
+    includeScore: true,
+    threshold: 0.4,
+    ignoreLocation: true,
+    minMatchCharLength: 2,
+    distance: 100,
+    keys: ['_text'],
+  };
+
+  /* Internal: build a Fuse-backed index over `items`.
+     `opts.getExtra(item)` returns extra string fields merged into the doc
+     (e.g. {description, barcode} for lots). */
+  const makeIndex = (items, opts = {}) => {
+    if(typeof window.Fuse !== 'function'){
+      throw new Error('Fuse.js not loaded — include assets/lib/fuse.min.js before search.js');
     }
+    const docs = items.map(p => buildDoc(p, opts.getExtra));
+    const fuse = new window.Fuse(docs, FUSE_DEFAULTS);
 
-    /* 2) Per-token coverage */
-    let matched = 0;
-    for(const qt of queryTokens){
-      let hit = false;
-      /* Direct substring in haystack */
-      if(idx.hay.includes(qt) || idx.hayLat.includes(qt)){ hit = true; }
-      else {
-        /* Stem match via synonym groups */
-        const qs = tokenStem(qt);
-        if(qs && idx.groups.has(qs.group)){ hit = true; }
-        /* Fuzzy as last resort */
-        else if(qt.length >= 5){
-          for(const t of idx.tokens){
-            if(Math.abs(t.length - qt.length) <= 2 && lev(t, qt, 2) <= 2){ hit = true; break; }
-          }
-        }
+    /* Hybrid token-based search:
+       1. Tokenise the query.
+       2. For each token (and its transliteration) ask Fuse for matches.
+       3. Aggregate per-item: token coverage (how many query tokens were
+          found) is the dominant factor; per-token fuzzy quality is a
+          tie-breaker. This way "зима жіночий светр" works in any order
+          and "крсівки" with a typo still ranks high. */
+    const search = (query, sOpts = {}) => {
+      const limit = sOpts.limit || items.length;
+      const minScore = sOpts.minScore ?? 0.3;
+      const raw = norm(query);
+      if(!raw) return items.slice(0, limit).map(p => ({ p, score: 0 }));
+
+      const tokens = tokenize(raw);
+      if(!tokens.length){
+        /* Pure punctuation / digits — fall back to whole-string search */
+        const hits = fuse.search(raw, { limit });
+        return hits
+          .map(h => ({ p: h.item._p, score: 1 - (h.score ?? 1) }))
+          .filter(s => s.score >= minScore)
+          .slice(0, limit);
       }
-      if(hit) matched++;
-    }
-    const coverage = matched / queryTokens.length;
-    score += coverage * 0.6;
 
-    /* 3) Synonym group overlap bonus */
-    if(queryGroups.size && idx.groups.size){
-      let overlap = 0;
-      for(const g of queryGroups) if(idx.groups.has(g)) overlap++;
-      score += (overlap / queryGroups.size) * 0.2;
-    }
+      /* per-item: hits = Map<tokenIdx, bestScore>.
+         `_text` already contains both cyrillic and latin forms, so one Fuse
+         pass per token is enough — no need to repeat with transliteration. */
+      const perItem = new Map();
+      tokens.forEach((tok, ti) => {
+        const results = fuse.search(tok, { limit: items.length });
+        for(const r of results){
+          const score = 1 - (r.score ?? 1);
+          if(score <= 0) continue;
+          let entry = perItem.get(r.item._p);
+          if(!entry){ entry = { hits: new Map() }; perItem.set(r.item._p, entry); }
+          const prev = entry.hits.get(ti) || 0;
+          if(score > prev) entry.hits.set(ti, score);
+        }
+      });
 
-    /* 4) ID exact match */
-    if(rawQuery && (String(p.id) === rawQuery || String(p.id).replace(/^0+/, '') === rawQuery)){
-      score += 1.0;
-    }
+      const out = [];
+      for(const [p, e] of perItem){
+        const matched = e.hits.size;
+        const coverage = matched / tokens.length;
+        /* Average quality of the tokens that did match */
+        let qsum = 0; for(const s of e.hits.values()) qsum += s;
+        const quality = matched ? qsum / matched : 0;
+        /* Coverage dominates (0.7) so a 3/3 weak match beats a 1/3 strong one */
+        let score = coverage * 0.7 + quality * 0.3;
+        /* Bonus: whole query appears as a substring of the name */
+        const nameLower = norm(p.name || '');
+        if(nameLower && nameLower.includes(raw)){
+          score += 0.2;
+          if(nameLower.startsWith(raw)) score += 0.1;
+        }
+        if(score >= minScore) out.push({ p, score: Math.min(score, 1.0) });
+      }
 
-    return score;
+      /* ID exact match wins everything */
+      const idHit = items.find(p =>
+        String(p.id) === raw || String(p.id).replace(/^0+/, '') === raw
+      );
+      if(idHit){
+        const i = out.findIndex(x => x.p === idHit);
+        if(i >= 0) out.splice(i, 1);
+        out.unshift({ p: idHit, score: 1.0 });
+      }
+
+      out.sort((a, b) => b.score - a.score);
+      return out.slice(0, limit);
+    };
+
+    return { search, _fuse: fuse, _docs: docs };
   };
 
-  /* === Public API === */
+  /* === Public: create a reusable index over any list ===
+     Useful for the lots page so we don't rebuild on every filter change. */
+  L.createSearchIndex = makeIndex;
+
+  /* === Public: default product search ===
+     Caches the index per products-array reference so repeated calls (typing
+     in the search box, sort/filter changes) don't re-build Fuse each time. */
+  const _indexCache = new WeakMap();
+  const getDefaultIndex = (products) => {
+    let idx = _indexCache.get(products);
+    if(!idx){ idx = makeIndex(products); _indexCache.set(products, idx); }
+    return idx;
+  };
+
   L.search = (query, opts = {}) => {
-    const products = (opts.products) || (L.getProducts ? L.getProducts() : (window.PRODUCTS || []));
-    const limit = opts.limit || products.length;
-    const minScore = opts.minScore ?? 0.4;
-
-    const raw = norm(query);
-    if(!raw) return products.slice(0, limit).map(p => ({ p, score: 0 }));
-
-    const tokens = tokenize(raw);
-    const groups = new Set();
-    for(const t of tokens){
-      const s = tokenStem(t);
-      if(s) groups.add(s.group);
-    }
-    /* Latin form of tokens for cross-script matching */
-    const tokensLat = tokens.map(t => transliterate(t, 'lat'));
-    const allTokens = [...new Set([...tokens, ...tokensLat])];
-
-    const scored = [];
-    for(const p of products){
-      const s = scoreProduct(p, allTokens, groups, raw);
-      if(s >= minScore) scored.push({ p, score: s });
-    }
-    scored.sort((a, b) => b.score - a.score);
-    return scored.slice(0, limit);
+    const products = opts.products || (L.getProducts ? L.getProducts() : (window.PRODUCTS || []));
+    const idx = getDefaultIndex(products);
+    return idx.search(query, opts);
   };
 
   /* simple boolean predicate */
   L.matches = (p, query) => {
     if(!query) return true;
-    const r = L.search(query, { products: [p], minScore: 0.4 });
-    return r.length > 0;
+    /* For single-product checks build a tiny ad-hoc index — Fuse is fast
+       enough that this stays sub-ms. */
+    const tmp = makeIndex([p]);
+    return tmp.search(query, { minScore: 0.3 }).length > 0;
   };
 
-  /* expose helpers for debugging */
-  L._search = { norm, tokenize, tokenStem, lev, transliterate, SYN_GROUPS, STEM_TO_GROUP };
+  /* expose helpers for debugging / advanced callers */
+  L._search = { norm, tokenize, tokenStem, transliterate, expandSynonyms, SYN_GROUPS, STEM_TO_GROUP, buildDoc };
 })();
