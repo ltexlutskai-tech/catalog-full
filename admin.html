@@ -134,6 +134,42 @@
   font-size:.625rem;font-weight:700;
   padding:.0625rem .25rem;border-radius:.25rem;
 }
+/* Primary (cover) photo highlight + per-tile "Make primary" button */
+.gallery-item.primary{
+  outline:3px solid var(--amber-500,#f59e0b);
+  outline-offset:-3px;
+}
+.gallery-item__primary-badge{
+  position:absolute;left:.25rem;
+  top:.25rem;            /* shifted down when 'new' badge is present (see .new ~) */
+  background:var(--amber-500,#f59e0b);color:#fff;
+  font-size:.625rem;font-weight:700;
+  padding:.0625rem .375rem;border-radius:.25rem;
+  z-index:2;pointer-events:none;
+  display:inline-flex;align-items:center;gap:.125rem;
+}
+.gallery-item.new .gallery-item__primary-badge{ top:1.5rem }
+.gallery-item__set-primary{
+  position:absolute;left:.25rem;top:.25rem;
+  width:1.5rem;height:1.5rem;
+  border-radius:50%;
+  background:rgba(0,0,0,.55);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:.875rem;font-weight:700;line-height:1;
+  border:none;
+  transition:background var(--transition),transform var(--transition);
+  z-index:2;
+}
+.gallery-item.new .gallery-item__set-primary{ top:1.5rem }
+.gallery-item__set-primary:hover,.gallery-item__set-primary:focus-visible{
+  background:var(--amber-500,#f59e0b);
+  transform:scale(1.08);
+}
+/* drag-and-drop affordance */
+.gallery-item[draggable=true]{ cursor:grab }
+.gallery-item.dragging{ opacity:.4 }
+.gallery-item.drop-target{ outline:3px dashed var(--primary,#16a34a); outline-offset:-3px }
 .gallery-item__delete,.gallery-item__rotate{
   position:absolute;top:.25rem;
   width:1.5rem;height:1.5rem;
@@ -343,7 +379,7 @@
 <script src="assets/wishlist.js"></script>
 <script src="assets/lib/fuse.min.js?v=20260519a"></script>
 <script src="assets/search.js?v=20260519a"></script>
-<script src="assets/admin.js?v=20260519d"></script>
+<script src="assets/admin.js?v=20260519e"></script>
 <script>
 (() => {
   const L = window.LTEX;
@@ -613,12 +649,16 @@
         </div>
 
         ${photos.length ? `
-          <h4 class="text-sm font-semibold" style="margin-bottom:.5rem">Існуючі фото · ↺ ↻ повернути · ✕ видалити</h4>
-          <div class="gallery-grid">
-            ${photos.map(fn => {
+          <h4 class="text-sm font-semibold" style="margin-bottom:.5rem">Існуючі фото · ★ зробити головним · перетягуй щоб переставити · ↺ ↻ повернути · ✕ видалити</h4>
+          <div class="gallery-grid" id="galleryGrid">
+            ${photos.map((fn, idx) => {
               const isNew = newOnes.includes(fn);
-              return `<div class="gallery-item ${isNew?'new':''}" data-fname="${L.escapeHtml(fn)}">
+              const isPrimary = idx === 0;
+              return `<div class="gallery-item ${isNew?'new':''} ${isPrimary?'primary':''}" draggable="true" data-fname="${L.escapeHtml(fn)}" data-idx="${idx}">
                 <img src="${A.imageRawUrl(fn)}" alt="" loading="lazy">
+                ${isPrimary
+                  ? `<span class="gallery-item__primary-badge" title="Головне фото товару">★ Головне</span>`
+                  : `<button class="gallery-item__set-primary" type="button" data-make-primary="${L.escapeHtml(fn)}" aria-label="Зробити головним" title="Зробити головним">★</button>`}
                 <button class="gallery-item__rotate gallery-item__rotate--ccw" type="button" data-rotate="${L.escapeHtml(fn)}" data-deg="-90" aria-label="Повернути на 90° ліворуч" title="Повернути на 90° ліворуч">↺</button>
                 <button class="gallery-item__rotate" type="button" data-rotate="${L.escapeHtml(fn)}" data-deg="90" aria-label="Повернути на 90° праворуч" title="Повернути на 90° праворуч">↻</button>
                 <button class="gallery-item__delete" type="button" data-delete="${L.escapeHtml(fn)}" aria-label="Видалити" title="Видалити фото">✕</button>
@@ -687,6 +727,81 @@
         }
       });
     });
+
+    /* "Make primary" — bump clicked photo to position 0 */
+    ed.querySelectorAll('[data-make-primary]').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const fname = btn.dataset.makePrimary;
+        const item = btn.closest('.gallery-item');
+        item && item.classList.add('rotating');  /* reuse busy overlay */
+        try {
+          await A.setPrimaryPhoto(editorState.product, fname);
+          L.toast('Головне фото оновлено', 'success');
+          renderEditor();
+          renderProducts();
+        } catch(err){
+          L.toast(`Помилка: ${err.message}`, 'error');
+        } finally {
+          item && item.classList.remove('rotating');
+        }
+      });
+    });
+
+    /* Drag-and-drop reordering of tiles within the gallery */
+    (function bindDnd(){
+      const grid = ed.querySelector('#galleryGrid');
+      if(!grid) return;
+      let dragged = null;
+      grid.querySelectorAll('.gallery-item').forEach(item => {
+        item.addEventListener('dragstart', e => {
+          dragged = item;
+          item.classList.add('dragging');
+          try { e.dataTransfer.setData('text/plain', item.dataset.fname); } catch(_){}
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragend', () => {
+          item.classList.remove('dragging');
+          grid.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+          dragged = null;
+        });
+        item.addEventListener('dragover', e => {
+          if(!dragged || dragged === item) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          item.classList.add('drop-target');
+        });
+        item.addEventListener('dragleave', () => item.classList.remove('drop-target'));
+        item.addEventListener('drop', async e => {
+          e.preventDefault();
+          item.classList.remove('drop-target');
+          if(!dragged || dragged === item) return;
+          /* Compute new order from current DOM after the move */
+          const allTiles = [...grid.querySelectorAll('.gallery-item')];
+          const fromIdx = allTiles.indexOf(dragged);
+          const toIdx   = allTiles.indexOf(item);
+          if(fromIdx === -1 || toIdx === -1) return;
+          const names = allTiles.map(el => el.dataset.fname);
+          const [moved] = names.splice(fromIdx, 1);
+          names.splice(toIdx, 0, moved);
+          /* Optimistic UI: move the tile right away so the user sees it land */
+          if(fromIdx < toIdx) item.after(dragged); else item.before(dragged);
+          grid.classList.add('busy');
+          try {
+            await A.reorderPhotos(editorState.product, names);
+            L.toast('Порядок фото оновлено', 'success');
+            renderEditor();
+            renderProducts();
+          } catch(err){
+            L.toast(`Помилка: ${err.message}`, 'error');
+            renderEditor();   /* revert by re-rendering from canonical state */
+          } finally {
+            grid.classList.remove('busy');
+          }
+        });
+      });
+    })();
 
     /* Rotate-photo buttons (↺ -90°, ↻ +90°) */
     ed.querySelectorAll('[data-rotate]').forEach(btn => {

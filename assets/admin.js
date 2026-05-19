@@ -596,6 +596,64 @@ window.LTEX = window.LTEX || {};
     return { filename, rotated: deg, hadThumb };
   };
 
+  /* ---------- Public: reorder photos ----------
+     `newOrder` must be a permutation of the product's current photo
+     filenames — same set, different order. The first item becomes the
+     product's primary (cover) photo, since the catalog/product pages
+     pick `thumbs[0] || images[0]` as the card thumbnail.
+
+     We only patch data/images.js (no file moves) — the filenames are
+     unchanged, just the array order, so site behaviour updates after
+     the next page load.
+  ----------------------------------------------- */
+  A.reorderPhotos = async (product, newOrder) => {
+    if(!A.getToken())           throw new Error('Не вказано GitHub-токен');
+    if(!product || !product.id) throw new Error('Не вибрано товар');
+    if(!Array.isArray(newOrder)) throw new Error('newOrder має бути масивом');
+
+    /* Always validate against the freshest committed list — the local
+       cache could be stale. */
+    try { await A.reloadImagesIndex(); } catch(e){ /* offline — use local */ }
+
+    const current = A.listPhotos(product);
+    const a = [...current].sort();
+    const b = [...newOrder].sort();
+    if(a.length !== b.length || a.some((v, i) => v !== b[i])){
+      throw new Error('Список фото не співпадає з поточним');
+    }
+    /* No-op if order is already what was asked for */
+    if(current.every((v, i) => v === newOrder[i])) return { changed: false };
+
+    console.log('[reorderPhotos]', product.id, newOrder);
+
+    await patchImagesJs(data => {
+      const padded  = String(product.id).padStart(4, '0');
+      const trimmed = String(product.id).replace(/^0+/, '') || padded;
+      for(const k of [padded, trimmed]){
+        if(Array.isArray(data[k])) data[k] = [...newOrder];
+      }
+    }, `Reorder photos for product ${String(product.id).padStart(4,'0')}`);
+
+    /* Mirror in-page state */
+    const map = window.IMAGES_BY_ID || (window.IMAGES_BY_ID = {});
+    const padded  = String(product.id).padStart(4, '0');
+    const trimmed = String(product.id).replace(/^0+/, '') || padded;
+    for(const k of [padded, trimmed]){
+      if(Array.isArray(map[k])) map[k] = [...newOrder];
+    }
+
+    return { changed: true, order: newOrder };
+  };
+
+  /* Convenience: bump one filename to position 0 (sets it as primary). */
+  A.setPrimaryPhoto = async (product, filename) => {
+    const current = A.listPhotos(product);
+    if(!current.includes(filename)) throw new Error('Файл не належить товару');
+    if(current[0] === filename) return { changed: false };
+    const newOrder = [filename, ...current.filter(f => f !== filename)];
+    return A.reorderPhotos(product, newOrder);
+  };
+
   /* ---------- Public: delete ONE photo ----------
      Steps:
        1) DELETE <IMAGES_DIR>/<fname>     (404 → treat as success)
