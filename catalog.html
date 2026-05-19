@@ -207,10 +207,11 @@
     if(state.weightMin != null) list = list.filter(p => parseFloat(String(p.weight).replace(',', '.')) >= state.weightMin);
     if(state.weightMax != null) list = list.filter(p => parseFloat(String(p.weight).replace(',', '.')) <= state.weightMax);
     if(state.q){
-      const r = L.search(state.q, { products: list, minScore: 0.4 });
-      return r.map(x => x.p);
+      const r = L.search(state.q, { products: list, minScore: 0.3 });
+      list = r.map(x => x.p);
     }
-    /* Sort */
+    /* Sort — applied AFTER search so user's choice always wins.
+       If sort is empty and there is a query, results stay ranked by relevance. */
     const sortBy = state.sort;
     if(sortBy === 'price_asc') list = [...list].sort((a,b) => (a.priceEur||1e9) - (b.priceEur||1e9));
     else if(sortBy === 'price_desc') list = [...list].sort((a,b) => (b.priceEur||0) - (a.priceEur||0));
