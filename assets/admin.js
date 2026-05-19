@@ -295,17 +295,36 @@ window.LTEX = window.LTEX || {};
     throw lastErr;
   }
 
-  /* ---------- Preview URL (jsdelivr — no CSP sandbox, cross-origin OK) ----------
-     Recently-rotated files get a per-session cache-buster appended so the
-     admin preview reflects the new orientation immediately instead of
-     showing the still-cached pre-rotation image. */
-  A._recentRotated = new Map();
+  /* ---------- Preview URL ----------
+     Default: jsdelivr CDN (fast, free, but caches @main files ~12h and
+     ignores ?v= cache-busters). After a local rotation we hold the
+     freshly-encoded Blob in `_localPreviews` and return its blob: URL
+     instead, so the admin shows the new orientation immediately
+     regardless of CDN state. */
+  A._localPreviews = new Map();  /* filename → blobURL */
   A.imageRawUrl = (filename) => {
+    const local = A._localPreviews.get(filename);
+    if(local) return local;
     const safe = encodePath(filename);
-    const base = `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@${BRANCH}/${IMAGES_DIR}/${safe}`;
-    const ts   = A._recentRotated.get(filename);
-    return ts ? `${base}?v=${ts}` : base;
+    return `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@${BRANCH}/${IMAGES_DIR}/${safe}`;
   };
+  function setLocalPreview(filename, blob){
+    const prev = A._localPreviews.get(filename);
+    if(prev) { try { URL.revokeObjectURL(prev); } catch(e){} }
+    A._localPreviews.set(filename, URL.createObjectURL(blob));
+  }
+  /* Ask jsdelivr to drop its CDN copy so the live site picks up the new
+     bytes in ~1 min instead of waiting 12h for the cache to expire. */
+  async function purgeJsdelivr(filename){
+    try {
+      const safe = encodePath(filename);
+      const url = `https://purge.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@${BRANCH}/${IMAGES_DIR}/${safe}`;
+      const resp = await fetch(url, { method: 'GET' });
+      console.log('[purgeJsdelivr]', filename, resp.status);
+    } catch(e){
+      console.warn('[purgeJsdelivr] failed:', e.message);
+    }
+  }
 
   /* ---------- Public: list current filenames for a product ---------- */
   A.listPhotos = (product) => {
@@ -486,8 +505,16 @@ window.LTEX = window.LTEX || {};
       console.warn('[rotatePhoto] thumb regenerate failed:', e.message);
     }
 
-    /* Mark the file as freshly rotated so previews bypass the CDN cache */
-    A._recentRotated.set(filename, Date.now());
+    /* Show the freshly-rotated bytes locally without waiting on any CDN.
+       We already have the encoded Blob in memory from the rotation, so
+       just hand it to imageRawUrl via a blob: URL. */
+    setLocalPreview(filename, rotatedBlob);
+
+    /* Fire-and-forget: nudge jsdelivr to invalidate its cached copy so
+       the catalog (which is loaded by end users, not the admin) catches
+       the new orientation within ~1 min instead of waiting 12h. */
+    purgeJsdelivr(filename);
+    if(hadThumb) purgeJsdelivr(`thumbs/${thumbName(filename)}`);
 
     onProgress && onProgress({ stage: 'done', filename, rotated: deg, hadThumb });
     return { filename, rotated: deg, hadThumb };
