@@ -234,116 +234,171 @@ window.LTEX = window.LTEX || {};
     return dp[m][n];
   };
 
-  /* === Build searchable index for a product === */
-  const buildHaystack = (p) => {
-    const parts = [
-      p.name, p.category, p.subcategory, p.topCat, p.subcat,
-      p.brand, p.sort, p.season, p.audience, p.country,
-      p.id, String(p.id).replace(/^0+/, ''),
-    ].filter(Boolean).join(' ');
-    return norm(parts);
-  };
-
-  const indexProduct = (p) => {
-    if(p._searchIndex) return p._searchIndex;
-    const hay = buildHaystack(p);
-    const tokens = tokenize(hay);
-    const stems = new Set();
-    const groups = new Set();
-    for(const t of tokens){
+  /* ===== Synonym expansion helper =====
+     Given a normalized text, return a set of all synonym words from groups
+     hit by any of its tokens (so a product literally named "кросівки" will
+     also surface "кеди", "snickers", "sneakers" in its searchable blob). */
+  const expandSynonyms = (text) => {
+    const out = new Set();
+    const seenGroups = new Set();
+    for(const t of tokenize(text)){
       const s = tokenStem(t);
-      if(s){ stems.add(s.stem); groups.add(s.group); }
+      if(!s || seenGroups.has(s.group)) continue;
+      seenGroups.add(s.group);
+      for(const w of SYN_GROUPS[s.group]) out.add(norm(w));
     }
-    p._searchIndex = { hay, tokens, stems, groups, hayLat: transliterate(hay, 'lat') };
-    return p._searchIndex;
+    return out;
   };
 
-  /* === Match query against single product, returns 0..1 score (or 0 if no match) === */
-  const scoreProduct = (p, queryTokens, queryGroups, rawQuery) => {
-    const idx = indexProduct(p);
-    if(queryTokens.length === 0) return 0;
+  /* ===== Build the doc that Fuse will index =====
+     One big `_text` field is simpler and gives more consistent scoring
+     than multi-key weighted fields — at this catalogue size (≤2k items)
+     it's also fast enough. The text holds: raw fields + synonym expansion
+     + transliteration, so a single Fuse query against `_text` covers
+     cross-language, slang and typos. */
+  const buildDoc = (p, getExtra) => {
+    const name        = norm(p.name || '');
+    const brand       = norm(p.brand || '');
+    const subcategory = norm(p.subcategory || p.subcat || '');
+    const category    = norm(p.category || p.topCat || '');
+    const idTrim      = String(p.id || '').replace(/^0+/, '');
+    const baseParts   = [
+      name, brand, subcategory, category,
+      norm(p.sort||''), norm(p.season||''), norm(p.audience||''), norm(p.country||''),
+    ];
+    const extraObj = (typeof getExtra === 'function') ? (getExtra(p) || {}) : {};
+    const extraText = Object.values(extraObj).filter(Boolean).map(norm).join(' ');
 
-    /* 1) Exact substring of full query in product name -> +0.6 */
-    let score = 0;
-    const nameLower = norm(p.name);
-    if(rawQuery && nameLower.includes(rawQuery)){
-      score += 0.6;
-      /* Bonus if name starts with query */
-      if(nameLower.startsWith(rawQuery)) score += 0.2;
+    const haystack = baseParts.concat(extraText).filter(Boolean).join(' ');
+    const synonyms = [...expandSynonyms(haystack)].join(' ');
+    const text     = [haystack, synonyms, transliterate(haystack + ' ' + synonyms, 'lat'), idTrim]
+                       .filter(Boolean).join(' ');
+
+    return { _p: p, _name: name, _text: text };
+  };
+
+  const FUSE_DEFAULTS = {
+    includeScore: true,
+    threshold: 0.4,
+    ignoreLocation: true,
+    minMatchCharLength: 2,
+    distance: 100,
+    keys: ['_text'],
+  };
+
+  /* Internal: build a Fuse-backed index over `items`.
+     `opts.getExtra(item)` returns extra string fields merged into the doc
+     (e.g. {description, barcode} for lots). */
+  const makeIndex = (items, opts = {}) => {
+    if(typeof window.Fuse !== 'function'){
+      throw new Error('Fuse.js not loaded — include assets/lib/fuse.min.js before search.js');
     }
+    const docs = items.map(p => buildDoc(p, opts.getExtra));
+    const fuse = new window.Fuse(docs, FUSE_DEFAULTS);
 
-    /* 2) Per-token coverage */
-    let matched = 0;
-    for(const qt of queryTokens){
-      let hit = false;
-      /* Direct substring in haystack */
-      if(idx.hay.includes(qt) || idx.hayLat.includes(qt)){ hit = true; }
-      else {
-        /* Stem match via synonym groups */
-        const qs = tokenStem(qt);
-        if(qs && idx.groups.has(qs.group)){ hit = true; }
-        /* Fuzzy as last resort */
-        else if(qt.length >= 5){
-          for(const t of idx.tokens){
-            if(Math.abs(t.length - qt.length) <= 2 && lev(t, qt, 2) <= 2){ hit = true; break; }
-          }
-        }
+    /* Hybrid token-based search:
+       1. Tokenise the query.
+       2. For each token (and its transliteration) ask Fuse for matches.
+       3. Aggregate per-item: token coverage (how many query tokens were
+          found) is the dominant factor; per-token fuzzy quality is a
+          tie-breaker. This way "зима жіночий светр" works in any order
+          and "крсівки" with a typo still ranks high. */
+    const search = (query, sOpts = {}) => {
+      const limit = sOpts.limit || items.length;
+      const minScore = sOpts.minScore ?? 0.3;
+      const raw = norm(query);
+      if(!raw) return items.slice(0, limit).map(p => ({ p, score: 0 }));
+
+      const tokens = tokenize(raw);
+      if(!tokens.length){
+        /* Pure punctuation / digits — fall back to whole-string search */
+        const hits = fuse.search(raw, { limit });
+        return hits
+          .map(h => ({ p: h.item._p, score: 1 - (h.score ?? 1) }))
+          .filter(s => s.score >= minScore)
+          .slice(0, limit);
       }
-      if(hit) matched++;
-    }
-    const coverage = matched / queryTokens.length;
-    score += coverage * 0.6;
 
-    /* 3) Synonym group overlap bonus */
-    if(queryGroups.size && idx.groups.size){
-      let overlap = 0;
-      for(const g of queryGroups) if(idx.groups.has(g)) overlap++;
-      score += (overlap / queryGroups.size) * 0.2;
-    }
+      /* per-item: hits = Map<tokenIdx, bestScore>.
+         `_text` already contains both cyrillic and latin forms, so one Fuse
+         pass per token is enough — no need to repeat with transliteration. */
+      const perItem = new Map();
+      tokens.forEach((tok, ti) => {
+        const results = fuse.search(tok, { limit: items.length });
+        for(const r of results){
+          const score = 1 - (r.score ?? 1);
+          if(score <= 0) continue;
+          let entry = perItem.get(r.item._p);
+          if(!entry){ entry = { hits: new Map() }; perItem.set(r.item._p, entry); }
+          const prev = entry.hits.get(ti) || 0;
+          if(score > prev) entry.hits.set(ti, score);
+        }
+      });
 
-    /* 4) ID exact match */
-    if(rawQuery && (String(p.id) === rawQuery || String(p.id).replace(/^0+/, '') === rawQuery)){
-      score += 1.0;
-    }
+      const out = [];
+      for(const [p, e] of perItem){
+        const matched = e.hits.size;
+        const coverage = matched / tokens.length;
+        /* Average quality of the tokens that did match */
+        let qsum = 0; for(const s of e.hits.values()) qsum += s;
+        const quality = matched ? qsum / matched : 0;
+        /* Coverage dominates (0.7) so a 3/3 weak match beats a 1/3 strong one */
+        let score = coverage * 0.7 + quality * 0.3;
+        /* Bonus: whole query appears as a substring of the name */
+        const nameLower = norm(p.name || '');
+        if(nameLower && nameLower.includes(raw)){
+          score += 0.2;
+          if(nameLower.startsWith(raw)) score += 0.1;
+        }
+        if(score >= minScore) out.push({ p, score: Math.min(score, 1.0) });
+      }
 
-    return score;
+      /* ID exact match wins everything */
+      const idHit = items.find(p =>
+        String(p.id) === raw || String(p.id).replace(/^0+/, '') === raw
+      );
+      if(idHit){
+        const i = out.findIndex(x => x.p === idHit);
+        if(i >= 0) out.splice(i, 1);
+        out.unshift({ p: idHit, score: 1.0 });
+      }
+
+      out.sort((a, b) => b.score - a.score);
+      return out.slice(0, limit);
+    };
+
+    return { search, _fuse: fuse, _docs: docs };
   };
 
-  /* === Public API === */
+  /* === Public: create a reusable index over any list ===
+     Useful for the lots page so we don't rebuild on every filter change. */
+  L.createSearchIndex = makeIndex;
+
+  /* === Public: default product search ===
+     Caches the index per products-array reference so repeated calls (typing
+     in the search box, sort/filter changes) don't re-build Fuse each time. */
+  const _indexCache = new WeakMap();
+  const getDefaultIndex = (products) => {
+    let idx = _indexCache.get(products);
+    if(!idx){ idx = makeIndex(products); _indexCache.set(products, idx); }
+    return idx;
+  };
+
   L.search = (query, opts = {}) => {
-    const products = (opts.products) || (L.getProducts ? L.getProducts() : (window.PRODUCTS || []));
-    const limit = opts.limit || products.length;
-    const minScore = opts.minScore ?? 0.3;
-
-    const raw = norm(query);
-    if(!raw) return products.slice(0, limit).map(p => ({ p, score: 0 }));
-
-    const tokens = tokenize(raw);
-    const groups = new Set();
-    for(const t of tokens){
-      const s = tokenStem(t);
-      if(s) groups.add(s.group);
-    }
-    /* Latin form of tokens for cross-script matching */
-    const tokensLat = tokens.map(t => transliterate(t, 'lat'));
-    const allTokens = [...new Set([...tokens, ...tokensLat])];
-
-    const scored = [];
-    for(const p of products){
-      const s = scoreProduct(p, allTokens, groups, raw);
-      if(s >= minScore) scored.push({ p, score: s });
-    }
-    scored.sort((a, b) => b.score - a.score);
-    return scored.slice(0, limit);
+    const products = opts.products || (L.getProducts ? L.getProducts() : (window.PRODUCTS || []));
+    const idx = getDefaultIndex(products);
+    return idx.search(query, opts);
   };
 
   /* simple boolean predicate */
   L.matches = (p, query) => {
     if(!query) return true;
-    const r = L.search(query, { products: [p], minScore: 0.4 });
-    return r.length > 0;
+    /* For single-product checks build a tiny ad-hoc index — Fuse is fast
+       enough that this stays sub-ms. */
+    const tmp = makeIndex([p]);
+    return tmp.search(query, { minScore: 0.3 }).length > 0;
   };
 
-  /* expose helpers for debugging */
-  L._search = { norm, tokenize, tokenStem, lev, transliterate, SYN_GROUPS, STEM_TO_GROUP };
+  /* expose helpers for debugging / advanced callers */
+  L._search = { norm, tokenize, tokenStem, transliterate, expandSynonyms, SYN_GROUPS, STEM_TO_GROUP, buildDoc };
 })();
