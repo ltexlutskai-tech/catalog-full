@@ -343,7 +343,7 @@
 <script src="assets/wishlist.js"></script>
 <script src="assets/lib/fuse.min.js?v=20260519a"></script>
 <script src="assets/search.js?v=20260519a"></script>
-<script src="assets/admin.js?v=20260519c"></script>
+<script src="assets/admin.js?v=20260519d"></script>
 <script>
 (() => {
   const L = window.LTEX;
@@ -371,6 +371,11 @@
        cache, which made just-uploaded photos appear to "disappear" on reload. */
     try { await A.reloadImagesIndex(); } catch(e){ console.warn(e); }
     renderProducts();
+    /* Background: re-pull bytes of recently-rotated files straight from the
+       repo (Contents API, no CDN) so previews reflect actual orientation
+       even after a hard reload while jsdelivr is still serving the
+       pre-rotation copy from its 12h cache. */
+    A.rehydrateRecentRotations().catch(e => console.warn('rehydrate failed', e));
   }
   function showAuth(){
     authCard.style.display = 'block';
@@ -809,6 +814,22 @@
     renderEditor();
     renderProducts();
   }
+
+  /* Live-swap <img src> for any photo whose fresh bytes just landed in
+     A._localPreviews via rehydrateRecentRotations(). Saves a full
+     re-render and avoids the "stale-then-correct" flicker. */
+  window.addEventListener('ltex:admin-preview-ready', (e) => {
+    const fname = e.detail && e.detail.filename;
+    if(!fname) return;
+    const fresh = A.imageRawUrl(fname);
+    document.querySelectorAll('img').forEach(img => {
+      const src = img.getAttribute('src') || '';
+      /* Match by encoded filename inside the jsdelivr URL */
+      if(src.includes(encodeURIComponent(fname)) || src.endsWith('/' + encodeURIComponent(fname))){
+        if(img.src !== fresh) img.src = fresh;
+      }
+    });
+  });
 
   /* === Boot === */
   if(A.getToken()){
