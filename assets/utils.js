@@ -123,11 +123,13 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
   };
 
   /* === Price === */
-  /* Parse a weight string like "25", "20-25", "20-25 кг", "0,4-0,5 кг" → average kg.
-     Returns 0 if the string can't be interpreted. */
+  /* Parse a weight/quantity string like "25", "20-25", "20-25 кг", "0,4-0,5 кг"
+     → average value. Returns 0 if the string can't be interpreted.
+     Parenthetical notes ("(в середньому)") are dropped so they can't be picked
+     up as stray numbers. */
   L.parseAvgWeight = (raw) => {
     if(raw == null) return 0;
-    const s = String(raw).replace(',', '.');
+    const s = String(raw).replace(/\([^)]*\)/g, ' ').replace(/,/g, '.');
     const matches = s.match(/\d+(?:\.\d+)?/g);
     if(!matches || !matches.length) return 0;
     const nums = matches.map(parseFloat).filter(n => !isNaN(n));
@@ -135,6 +137,55 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     if(nums.length === 1) return nums[0];
     /* Use first two numbers as a [min, max] range */
     return (nums[0] + nums[1]) / 2;
+  };
+
+  /* Normalise a messy "Вага лота" source string into a clean "X кг" / "X-Y кг"
+     label. The price-list "Опис" column has typos and stray units
+     ("15-25 ru", "50-100кг", "10 кг (в середньому)"), so we keep only the
+     numeric range and re-attach the kg unit. Returns '' when there is no
+     usable number ("-", "—", blank, junk). */
+  L.formatLotWeight = (raw) => {
+    if(raw == null) return '';
+    const nums = String(raw).replace(/\([^)]*\)/g, ' ').match(/\d+(?:[.,]\d+)?/g);
+    if(!nums || !nums.length) return '';
+    const range = nums.length >= 2 ? `${nums[0]}-${nums[1]}` : nums[0];
+    return `${range} кг`;
+  };
+
+  /* Same idea for a per-lot piece count ("Кількість одиниць") → "X шт" /
+     "X-Y шт". A "шт/кг" value is a density (pieces per kg), not a per-lot
+     count, so it is rejected. Returns '' when there is no usable number. */
+  L.formatLotCount = (raw) => {
+    if(raw == null) return '';
+    if(/\/\s*кг/i.test(String(raw))) return '';
+    const nums = String(raw).replace(/\([^)]*\)/g, ' ').match(/\d+(?:[.,]\d+)?/g);
+    if(!nums || !nums.length) return '';
+    const range = nums.length >= 2 ? `${nums[0]}-${nums[1]}` : nums[0];
+    return `${range} шт`;
+  };
+
+  /* Ukrainian plural for "лот". */
+  L.lotWord = (n) => {
+    const t = Math.abs(n) % 100;
+    if(t >= 11 && t <= 14) return 'лотів';
+    const o = Math.abs(n) % 10;
+    if(o === 1) return 'лот';
+    if(o >= 2 && o <= 4) return 'лоти';
+    return 'лотів';
+  };
+
+  /* We sell by lots (mishky). Quantity inputs across the site count LOTS, and
+     each lot holds ~`p.lotSize` of the product's base unit (kg or pieces).
+     Price for `qty` lots = priceUnit × lotSize × qty. When the per-lot size is
+     unknown the multiplier is 1 (qty falls back to counting the base unit). */
+  L.lotMultiplier = (p) => (p && p.lotSize > 0) ? p.lotSize : 1;
+
+  /* Estimated total kg for `qty` lots of product p. */
+  L.lotKg = (p, qty) => {
+    if(!p) return 0;
+    const q = Number(qty) || 0;
+    if(p.lotUnit === 'шт') return (p.lotSize || 0) * (p.unitWeight || 0) * q; // pieces × kg/piece
+    return (p.lotSize > 0 ? p.lotSize : 1) * q;                              // kg/lot × lots
   };
 
   /* Detect the prevailing EUR→UAH rate from lot data (mode = most frequent
@@ -239,18 +290,31 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     p.thumbs = L.thumbsFor(p.id);
     p.image = p.images[0] || null;       // original (high-res) — for lightbox / hero
     p.thumb = p.thumbs[0] || p.image;    // small (~800px) — for cards
-    /* Average lot weight in kg.
-       Source priority: parsed details ("✔ Вага лота: 20-25 кг") → price-list
-       weight column → 0. Details usually has the explicit range, while the
-       price-list column is sometimes blank or just the upper bound. */
+    p.detailRaw = L.detailFor(p.id);
     p.detailsParsed = L.parseDetails(p.detailRaw);
-    const detailWeight = p.detailsParsed && (p.detailsParsed['вага_лота'] || p.detailsParsed['вага_лоту']);
-    const detailAvg = L.parseAvgWeight(detailWeight);
-    const fallbackAvg = L.parseAvgWeight(p.weight);
-    p.avgWeight = detailAvg > 0 ? detailAvg : fallbackAvg;
-    /* Also expose the human range string for UI labels */
-    p.avgWeightLabel = (detailWeight && String(detailWeight).trim()) ||
-                       (p.weight && String(p.weight).trim()) || '';
+    /* Average lot WEIGHT in kg — taken ONLY from the price-list "Опис" column
+       ("✔ Вага лота: 20-25 кг"). The products.js `weight` column holds the
+       TOTAL stock weight (e.g. 9784.2 кг), never the per-lot weight, so it must
+       not be used here. avgWeight stays 0 / avgWeightLabel '' when the price
+       list has no "Вага лота" value — callers then show nothing. */
+    const detailWeight = p.detailsParsed['вага_лота'] || p.detailsParsed['вага_лоту'] || '';
+    p.avgWeight = L.parseAvgWeight(detailWeight);
+    p.avgWeightLabel = L.formatLotWeight(detailWeight);
+    p.unitWeight = L.parseAvgWeight(p.detailsParsed['вага_одиниці']); // kg per piece, 0 if unknown
+    /* Per-lot SIZE for the "sold by lots" quantity calculator.
+         кг → average weight per lot (from "Вага лота")
+         шт → average pieces per lot (from "Кількість одиниць", else qty_per_bag) */
+    if(p.unit === 'шт'){
+      const cntRaw = p.detailsParsed['кількість_одиниць'] || '';
+      const cntAvg = L.parseAvgWeight(/\/\s*кг/i.test(cntRaw) ? '' : cntRaw); // ignore "шт/кг" density
+      p.lotSize = cntAvg > 0 ? cntAvg : (Number(p.qty_per_bag) || 0);
+      p.lotSizeLabel = L.formatLotCount(cntRaw) || (p.qty_per_bag ? `${p.qty_per_bag} шт` : '');
+      p.lotUnit = 'шт';
+    } else {
+      p.lotSize = p.avgWeight;
+      p.lotSizeLabel = p.avgWeightLabel;
+      p.lotUnit = 'кг';
+    }
     p.priceEur = L.priceEurFor(p);
     p.priceUah = p.priceEur != null ? L.eurToUah(p.priceEur) : null;
     p.oldPriceEur = L.hasDiscount(p) ? p.price : null;
@@ -258,7 +322,6 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     p.discount = L.discountPct(p);
     p.inStock = L.inStock(p);
     p.slug = L.slug(p.name) + '-' + p.id;
-    p.detailRaw = L.detailFor(p.id);
     p._enriched = true;
     return p;
   };

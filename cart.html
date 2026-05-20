@@ -201,8 +201,8 @@
 })();
 </script>
 <script src="assets/icons.js"></script>
-<script src="assets/utils.js?v=20260518e"></script>
-<script src="assets/wishlist.js"></script>
+<script src="assets/utils.js?v=20260520a"></script>
+<script src="assets/wishlist.js?v=20260520a"></script>
 <script src="assets/lib/fuse.min.js?v=20260519a"></script>
 <script src="assets/search.js?v=20260519a"></script>
 <script src="assets/order-modal.js?v=20260518e"></script>
@@ -266,18 +266,13 @@
     const p = L.findProduct(it.id);
     if(!p) return '';
     const qty = Number(it.qty || 1);
-    const isPerKg = p.unit === 'кг';
-    const w = (p.avgWeight != null) ? p.avgWeight : (parseFloat(String(p.weight).replace(',', '.')) || 0);
-    const multiplier = isPerKg ? (w || 1) : 1;
-    const lineKg = isPerKg ? qty * w : qty * w; // visual line weight
-    const lineUah = (p.priceUah || 0) * multiplier * qty;
-    const lineEur = (p.priceEur || 0) * multiplier * qty;
-    const qtyLabel = isPerKg ? (qty === 1 ? 'лот' : (qty < 5 ? 'лоти' : 'лотів')) : 'шт';
-    /* Prefer the human range from details (e.g. '20-25 кг'); fallback to numeric average. */
-    const weightLabel = (p.avgWeightLabel || '').replace(/\s*кг\s*$/i,'').trim();
-    const weightHint = w > 0
-      ? (isPerKg ? `${weightLabel || w.toFixed(0)} кг лот` : `~${w.toFixed(2).replace(/\.00$/,'').replace(/0$/,'')} кг шт`)
-      : '';
+    const hasLotSize = p.lotSize > 0;
+    const lineKg = L.lotKg(p, qty);                       // estimated weight, kg
+    const lineUah = (p.priceUah || 0) * L.lotMultiplier(p) * qty;
+    const lineEur = (p.priceEur || 0) * L.lotMultiplier(p) * qty;
+    const qtyLabel = hasLotSize ? L.lotWord(qty) : (p.unit || 'кг');
+    /* Per-lot size hint, e.g. "15-25 кг / лот" or "20-25 шт / лот". */
+    const weightHint = hasLotSize && p.lotSizeLabel ? `${p.lotSizeLabel} / лот` : '';
     return `<div class="cart-row" data-key="prod:${L.escapeHtml(p.id)}">
       <a class="cart-row__media" href="${L.productHref(p.id)}">
         ${p.image ? `<img ${L.imgAttrs(p.thumb, p.image, p.name)}>` : ''}
@@ -330,15 +325,12 @@
       } else {
         const p = L.findProduct(it.id);
         if(!p) return;
-        const isPerKg = p.unit === 'кг';
-        const w = (p.avgWeight != null) ? p.avgWeight : 0;
-        const wLabel = (p.avgWeightLabel || '').replace(/\s*кг\s*$/i,'').trim() || (w > 0 ? w.toFixed(0) : '');
-        const multiplier = isPerKg ? (w || 1) : 1;
-        const lineUah = (p.priceUah || 0) * multiplier * it.qty;
+        const lineUah = (p.priceUah || 0) * L.lotMultiplier(p) * it.qty;
         lines.push(`${i+1}. ${p.name}`);
         lines.push(`   Артикул: ${String(p.id).padStart(4,'0')}`);
-        if(isPerKg && w > 0){
-          lines.push(`   ${it.qty} лот${it.qty===1?'':'и'} × ${wLabel} кг × ${L.formatUah(p.priceUah||0)}/кг = ${L.formatUah(lineUah)}`);
+        if(p.lotSize > 0){
+          const sizeText = p.lotSizeLabel || `${p.lotSize} ${p.unit||'кг'}`;
+          lines.push(`   ${it.qty} ${L.lotWord(it.qty)} × ${sizeText} × ${L.formatUah(p.priceUah||0)}/${p.unit||'кг'} = ${L.formatUah(lineUah)}`);
         } else {
           lines.push(`   ${it.qty} ${p.unit||'кг'} × ${L.formatUah(p.priceUah||0)} = ${L.formatUah(lineUah)}`);
         }
@@ -414,10 +406,17 @@
     document.getElementById('sumUah').textContent = L.formatUah(totalUah);
     document.getElementById('rateBox').textContent = L.getRate();
 
-    /* Min order warning */
+    /* Min order warning — the kg minimum only applies to weight-based goods.
+       Skip it when the cart holds piece-based lots (шт) or concrete lots, whose
+       weight we don't fully track and which already are valid wholesale units. */
     const warn = document.getElementById('summaryWarning');
     const min = L.CONFIG.MIN_ORDER_KG;
-    if(totalKg < min){
+    const hasPieceOrLot = items.some(it => {
+      if(it.kind === 'lot' || (it.barcode && !it.id)) return true;
+      const p = L.findProduct(it.id);
+      return p && p.lotUnit === 'шт';
+    });
+    if(totalKg < min && !hasPieceOrLot){
       const need = (min - totalKg).toFixed(1).replace(/\.0$/,'');
       warn.innerHTML = `<div class="summary__warning">⚠️ Мінімальне замовлення — ${min} кг. Доберіть ще ${need} кг або напишіть менеджеру для уточнення.</div>`;
     } else {

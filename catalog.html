@@ -104,8 +104,8 @@
 })();
 </script>
 <script src="assets/icons.js"></script>
-<script src="assets/utils.js?v=20260518e"></script>
-<script src="assets/wishlist.js"></script>
+<script src="assets/utils.js?v=20260520a"></script>
+<script src="assets/wishlist.js?v=20260520a"></script>
 <script src="assets/lib/fuse.min.js?v=20260519a"></script>
 <script src="assets/search.js?v=20260519a"></script>
 <script src="assets/order-modal.js?v=20260518e"></script>
@@ -205,8 +205,11 @@
     if(state.onlyNew) list = list.filter(p => p.isNew);
     if(state.priceMin != null) list = list.filter(p => (p.priceEur || 0) >= state.priceMin);
     if(state.priceMax != null) list = list.filter(p => (p.priceEur || 0) <= state.priceMax);
-    if(state.weightMin != null) list = list.filter(p => parseFloat(String(p.weight).replace(',', '.')) >= state.weightMin);
-    if(state.weightMax != null) list = list.filter(p => parseFloat(String(p.weight).replace(',', '.')) <= state.weightMax);
+    /* "Вага лоту" filters by the per-lot weight (p.avgWeight), not the total
+       stock weight. Products without a known per-lot weight are excluded once a
+       weight bound is set. */
+    if(state.weightMin != null) list = list.filter(p => p.avgWeight > 0 && p.avgWeight >= state.weightMin);
+    if(state.weightMax != null) list = list.filter(p => p.avgWeight > 0 && p.avgWeight <= state.weightMax);
     if(state.q){
       const r = L.search(state.q, { products: list, minScore: 0.3 });
       list = r.map(x => x.p);
@@ -670,7 +673,7 @@
           if(!p) return;
           const lines = [`Товар: ${p.name}`, `Артикул: ${String(p.id).padStart(4,'0')}`];
           if(p.priceUah) lines.push(`Ціна: ${L.formatUah(p.priceUah)}/${p.unit||'кг'}`);
-          if(p.weight) lines.push(`Вага: ${p.weight} ${p.unit||'кг'}`);
+          if(p.avgWeightLabel) lines.push(`Вага лоту: ${p.avgWeightLabel}`);
           L.openOrderModal({
             title: '📩 Запит по товару',
             subject: `Запит: ${p.name}`,

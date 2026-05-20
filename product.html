@@ -58,8 +58,8 @@
 })();
 </script>
 <script src="assets/icons.js"></script>
-<script src="assets/utils.js?v=20260518e"></script>
-<script src="assets/wishlist.js"></script>
+<script src="assets/utils.js?v=20260520a"></script>
+<script src="assets/wishlist.js?v=20260520a"></script>
 <script src="assets/lib/fuse.min.js?v=20260519a"></script>
 <script src="assets/search.js?v=20260519a"></script>
 <script src="assets/order-modal.js?v=20260518e"></script>
@@ -115,7 +115,11 @@
   const details = L.parseDetails(p.detailRaw);
 
   const facts = [];
-  const pushFact = (label, value) => { if(value && String(value).trim() && String(value).trim() !== '—') facts.push({label, value: String(value).trim()}); };
+  /* Skip empty values and placeholder dashes ("-", "—", "-.") from the price list. */
+  const pushFact = (label, value) => {
+    const v = String(value ?? '').trim();
+    if(v && !/^[-–—.\s]*$/.test(v)) facts.push({label, value: v});
+  };
   pushFact('Сезон', p.season || details['сезон']);
   pushFact('Сорт', p.sort || details['сорт']);
   pushFact('Стать', p.audience || details['стать']);
@@ -124,7 +128,9 @@
   pushFact('Бренд', p.brand || details['бренд']);
   pushFact('К-сть одиниць', details['кількість_одиниць']);
   pushFact('Вага одиниці', details['вага_одиниці']);
-  pushFact('Вага лоту', `${p.weight || details['вага_лота'] || ''} ${p.unit || 'кг'}`.trim());
+  /* Lot weight comes ONLY from the price-list "Вага лота"; nothing is shown
+     when it is missing (the products.js `weight` is total stock weight). */
+  pushFact('Вага лоту', p.avgWeightLabel);
   pushFact('Категорія', p.subcat || p.category);
 
   const isAkciya = L.hasDiscount(p);
@@ -239,11 +245,11 @@
               <button class="btn btn-outline btn-sm" id="qMinus" type="button" aria-label="Зменшити">−</button>
               <input type="number" id="qInput" value="1" min="1" max="99" step="1" style="width:4rem;text-align:center;padding:.5rem;border:1px solid var(--border);border-radius:var(--radius-md);font-weight:600">
               <button class="btn btn-outline btn-sm" id="qPlus" type="button" aria-label="Збільшити">+</button>
-              <span class="text-sm text-muted" id="qLabel">${p.unit === 'кг' ? 'лот' : 'шт'}${p.avgWeight > 0 && p.unit === 'кг' ? ` (${(p.avgWeightLabel||'').replace(/\s*кг\s*$/i,'').trim() || p.avgWeight.toFixed(0)} кг)` : ''}</span>
+              <span class="text-sm text-muted" id="qLabel">${p.lotSize > 0 ? `лот${p.lotSizeLabel ? ` (${L.escapeHtml(p.lotSizeLabel)})` : ''}` : (p.unit || 'кг')}</span>
             </div>
             <div class="flex-1" style="min-width:140px">
               <p class="text-sm text-muted">Сума: <span id="qHint" class="text-xs"></span></p>
-              <p class="font-bold text-lg" style="color:var(--red-600)" id="qTotal">${L.formatUah((p.priceUah || 0) * (p.unit === 'кг' && p.avgWeight ? p.avgWeight : 1))}</p>
+              <p class="font-bold text-lg" style="color:var(--red-600)" id="qTotal">${L.formatUah((p.priceUah || 0) * L.lotMultiplier(p))}</p>
             </div>
           </div>
           <div class="flex gap-2" style="margin-top:1rem">
@@ -409,21 +415,22 @@
     if(e.key === 'ArrowRight') document.getElementById('lbNext').click();
   });
 
-  /* Quantity + CTA — for unit='кг' qty means LOTS (× avgWeight), for 'шт' it's pieces. */
+  /* Quantity + CTA — we sell by LOTS, so qty is a number of lots. Each lot holds
+     ~lotSize of the base unit (kg for "кг" products, pieces for "шт"); the total
+     is priceUnit × lotSize × lots. When lotSize is unknown qty counts the base
+     unit directly (multiplier 1). */
   const qIn = document.getElementById('qInput');
   const qTot = document.getElementById('qTotal');
   const qHint = document.getElementById('qHint');
-  const isPerKg = p.unit === 'кг';
-  const avgW = (p.avgWeight != null && p.avgWeight > 0) ? p.avgWeight : 0;
-  const avgWLabel = (p.avgWeightLabel || '').replace(/\s*кг\s*$/i,'').trim();
+  const lotSize = (p.lotSize > 0) ? p.lotSize : 0;
+  const lotSizeLabel = p.lotSizeLabel || '';
   function updateTotal(){
     const v = Math.max(1, parseInt(qIn.value) || 1);
-    const multiplier = isPerKg ? (avgW || 1) : 1;
-    qTot.textContent = L.formatUah((p.priceUah || 0) * multiplier * v);
+    qTot.textContent = L.formatUah((p.priceUah || 0) * L.lotMultiplier(p) * v);
     if(qHint){
-      if(isPerKg && avgW > 0){
-        const wText = avgWLabel || avgW.toFixed(0);
-        qHint.textContent = `(${v} × ${wText} кг × ${L.formatUah(p.priceUah || 0)}/кг)`;
+      if(lotSize > 0){
+        const sizeText = lotSizeLabel || `${lotSize.toFixed(0)} ${p.lotUnit || p.unit || 'кг'}`;
+        qHint.textContent = `(${v} × ${sizeText} × ${L.formatUah(p.priceUah || 0)}/${p.unit || 'кг'})`;
       } else {
         qHint.textContent = '';
       }
@@ -433,6 +440,12 @@
   document.getElementById('qMinus').addEventListener('click', () => { qIn.value = Math.max(1, parseInt(qIn.value)-1); updateTotal(); });
   qIn.addEventListener('input', updateTotal);
   updateTotal();
+
+  /* Human-readable order quantity, e.g. "2 лоти × 15-25 кг" (or "5 кг" when
+     the product has no per-lot size). Used in the order presets below. */
+  const qtyText = (v) => lotSize > 0
+    ? `${v} ${L.lotWord(v)}${lotSizeLabel ? ` × ${lotSizeLabel}` : ''}`
+    : `${v} ${p.unit || 'кг'}`;
 
   document.getElementById('addCart').addEventListener('click', () => {
     if(L.cart.has(p.id)){ location.href = 'cart.html'; return; }
@@ -457,7 +470,7 @@
       <div class="key-facts" style="margin-bottom:1rem">
         <ul>
           <li><span class="key-facts__check">✔</span><span class="key-facts__label">Товар:</span><span class="key-facts__value">${L.escapeHtml(p.name)}</span></li>
-          <li><span class="key-facts__check">✔</span><span class="key-facts__label">Кількість:</span><span class="key-facts__value">${qIn.value} ${p.unit || 'кг'}</span></li>
+          <li><span class="key-facts__check">✔</span><span class="key-facts__label">Кількість:</span><span class="key-facts__value">${qtyText(qIn.value)}</span></li>
           <li><span class="key-facts__check">✔</span><span class="key-facts__label">Сума:</span><span class="key-facts__value">${qTot.textContent}</span></li>
         </ul>
       </div>
@@ -484,7 +497,7 @@
       const name = document.getElementById('qfName').value.trim();
       const note = document.getElementById('qfNote').value.trim();
       const hp = document.getElementById('qfHp')?.value || '';
-      const preset = `Товар: ${p.name}\nАртикул: ${String(p.id).padStart(4,'0')}\nКількість: ${qIn.value} ${p.unit || 'кг'}\nСума: ${qTot.textContent}`;
+      const preset = `Товар: ${p.name}\nАртикул: ${String(p.id).padStart(4,'0')}\nКількість: ${qtyText(qIn.value)}\nСума: ${qTot.textContent}`;
       const statusEl = document.getElementById('qfStatus');
       const submitBtn = document.getElementById('qfSubmit');
       const setStatus = (kind, msg) => {
@@ -548,7 +561,7 @@
     lines.push(`Товар: ${p.name}`);
     lines.push(`Артикул: ${String(p.id).padStart(4,'0')}`);
     if(p.priceUah) lines.push(`Ціна: ${L.formatUah(p.priceUah)}/${p.unit||'кг'}`);
-    if(p.weight) lines.push(`Вага лоту: ${p.weight} ${p.unit||'кг'}`);
+    if(p.avgWeightLabel) lines.push(`Вага лоту: ${p.avgWeightLabel}`);
     if(p.season) lines.push(`Сезон: ${p.season}`);
     if(p.sort) lines.push(`Сорт: ${p.sort}`);
     return lines.join('\n');
