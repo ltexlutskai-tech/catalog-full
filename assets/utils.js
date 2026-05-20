@@ -410,11 +410,18 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
   L.hasLots = (prodId) => L.lotsForProduct(prodId).length > 0;
   L.getAllLots = () => {
     const map = window.LOTS_DATA || {};
+    /* JS об'єкти з числовими-подібними ключами ('1001', '1913') повертають
+       їх натурально по числу, ігноруючи порядок вставки. Тому генератор
+       додатково записує window.LOTS_ORDER — масив id у потрібному порядку
+       (за наявністю на складі). Якщо його немає — fallback на Object.keys. */
+    const order = (Array.isArray(window.LOTS_ORDER) && window.LOTS_ORDER.length)
+      ? window.LOTS_ORDER
+      : Object.keys(map);
     const out = [];
-    for(const pid of Object.keys(map)){
+    for(const pid of order){
       const grp = map[pid];
+      if(!grp) continue;
       for(const lot of (grp.lots || [])){
-        /* enrich with parent context */
         out.push({
           ...lot,
           _grp: grp,

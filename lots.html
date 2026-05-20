@@ -39,6 +39,7 @@
         <span class="badge" id="filterBadge" style="display:none">0</span>
       </button>
       <select class="filter-select" id="sortSelect" style="width:auto;min-width:11rem" aria-label="Сортування">
+        <option value="stock">Спочатку в наявності</option>
         <option value="newest">Новіші лоти</option>
         <option value="price_asc">Ціна: дешевше</option>
         <option value="price_desc">Ціна: дорожче</option>
@@ -127,7 +128,7 @@
     status: [],         // ['free','sale','reserved']
     priceMin:null, priceMax:null,
     weightMin:null, weightMax:null,
-    q:'', sort:'newest', layout:'grid', page:1,
+    q:'', sort:'stock', layout:'grid', page:1,
   };
 
   function readUrl(){
@@ -249,7 +250,16 @@
     else if(state.sort === 'price_desc') lots = [...lots].sort((a,b) => (b.price_uah||0) - (a.price_uah||0));
     else if(state.sort === 'weight_desc') lots = [...lots].sort((a,b) => (b.weight||0) - (a.weight||0));
     else if(state.sort === 'weight_asc') lots = [...lots].sort((a,b) => (a.weight||1e12) - (b.weight||1e12));
-    else /* newest = by prodId desc */ lots = [...lots].sort((a,b) => parseInt(b.prodId) - parseInt(a.prodId));
+    else if(state.sort === 'newest') lots = [...lots].sort((a,b) => parseInt(b.prodId) - parseInt(a.prodId));
+    else {
+      /* stock = parent product's qty_stock DESC, then by prodId DESC */
+      lots = [...lots].sort((a,b) => {
+        const qa = (a._grp && a._grp.qty_stock) || (a.parentProd && a.parentProd.qty_stock) || 0;
+        const qb = (b._grp && b._grp.qty_stock) || (b.parentProd && b.parentProd.qty_stock) || 0;
+        if(qb !== qa) return qb - qa;
+        return parseInt(b.prodId) - parseInt(a.prodId);
+      });
+    }
 
     return lots;
   }
