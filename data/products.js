@@ -5,9 +5,9 @@ window.PRODUCTS=[
     category:'Bric-a-Brac',subcategory:'Bric-a-Brac',
     brand:'',sort:'Мікс',season:'Всесезонне',
     audience:'Мікс',country:'Англія',
-    unit:'кг',weight:'9784.2',
+    unit:'кг',weight:'8816.7',
     price:3.6,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGuQK7GRfEPIht8qosbsR9Z',qty_stock:182,qty_per_bag:54
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGuQK7GRfEPIht8qosbsR9Z',qty_stock:222,qty_per_bag:54
   },
   {
     id:'1295',name:'Шкарпетки - тапочки мікс демісезон сток MUK LUKS',
@@ -32,18 +32,18 @@ window.PRODUCTS=[
     category:'Bric-a-Brac',subcategory:'Bric-a-Brac',
     brand:'',sort:'Мікс',season:'Всесезонне',
     audience:'Мікс',country:'',
-    unit:'кг',weight:'1881.1',
+    unit:'кг',weight:'1696.8',
     price:3.8,akciya:3.5,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE6VbeGHBjKPBQHxs8u08oY',qty_stock:83,qty_per_bag:34
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE6VbeGHBjKPBQHxs8u08oY',qty_stock:72,qty_per_bag:34
   },
   {
     id:'1803',name:'Спорт одяг мікс чоловіче, жіноче, підліткове Adidas,Reebok,Hummel Сток',
     category:'Одяг',subcategory:'Спортивний одяг',
     brand:'Adidas',sort:'Сток',season:'Демісезон',
     audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'1549.3',
+    unit:'кг',weight:'1526',
     price:25.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGyQ5y06tPcTyomEoxpHQHA',qty_stock:68,qty_per_bag:56
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGyQ5y06tPcTyomEoxpHQHA',qty_stock:67,qty_per_bag:56
   },
   {
     id:'0223',name:'Флісові кофти мікс зима  Екстра',
@@ -104,9 +104,9 @@ window.PRODUCTS=[
     category:'Одяг',subcategory:'Шкарпетки',
     brand:'Livergy',sort:'Сток',season:'Літо',
     audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'343.1',
+    unit:'кг',weight:'334.9',
     price:13.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEMlgx9DLFJAhnjY6zY-pp0',qty_stock:45,qty_per_bag:166
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEMlgx9DLFJAhnjY6zY-pp0',qty_stock:44,qty_per_bag:166
   },
   {
     id:'1570',name:'Світшоти, худі, кофти з капюшоном сток INDEPENDENT',
@@ -118,15 +118,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGtl6Xc4DwP1NT9y55b21dm',qty_stock:41,qty_per_bag:26
   },
   {
-    id:'1429',name:'Футболки чоловічі MILANO  сток',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'Сток',season:'Літо',
-    audience:'Чоловіче',country:'Італія',
-    unit:'кг',weight:'423',
-    price:25.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGIux1_JxLYxZ1wspWwvLM3',qty_stock:40,qty_per_bag:null
-  },
-  {
     id:'1420',name:'Купальники CUPSHE сток, літо',
     category:'Одяг',subcategory:'Купальники',
     brand:'',sort:'Сток',season:'Літо',
@@ -136,6 +127,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGPubdSdzlcVL803mXy4RO9',qty_stock:39,qty_per_bag:20
   },
   {
+    id:'1429',name:'Футболки чоловічі MILANO  сток',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'Сток',season:'Літо',
+    audience:'Чоловіче',country:'Італія',
+    unit:'кг',weight:'412.3',
+    price:25.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGIux1_JxLYxZ1wspWwvLM3',qty_stock:39,qty_per_bag:null
+  },
+  {
     id:'1801',name:'Куртки мікс, фліс 1й сорт Зима, Англія ТТ',
     category:'Одяг',subcategory:'Куртки та пальта',
     brand:'',sort:'1й сорт',season:'Зима',
@@ -143,15 +143,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'611.6',
     price:4.1,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFJ8QBn3sXKtsdcIIk6uGhA',qty_stock:38,qty_per_bag:16
-  },
-  {
-    id:'1191',name:'Bric a Brac Товари для дому,офісу,іграшки,порцеляна, посуд',
-    category:'Bric-a-Brac',subcategory:'Bric-a-Brac',
-    brand:'',sort:'Мікс',season:'Всесезонне',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'762.2',
-    price:3.4,akciya:2.2,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEF3_SEP4EVV-2V0k-k8iwX',qty_stock:37,qty_per_bag:3
   },
   {
     id:'1645',name:'Кросівки чоловічі POLO Ralph Lauren сток',
@@ -172,6 +163,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE1IogoKOKKKZ6kwaE9PMIH',qty_stock:34,qty_per_bag:3
   },
   {
+    id:'1191',name:'Bric a Brac Товари для дому,офісу,іграшки,порцеляна, посуд',
+    category:'Bric-a-Brac',subcategory:'Bric-a-Brac',
+    brand:'',sort:'Мікс',season:'Всесезонне',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'707.4',
+    price:3.4,akciya:2.2,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEF3_SEP4EVV-2V0k-k8iwX',qty_stock:34,qty_per_bag:3
+  },
+  {
     id:'0214',name:'Футболки мікс літо 1й сорт',
     category:'Одяг',subcategory:'Футболки',
     brand:'',sort:'1й сорт',season:'Літо',
@@ -185,9 +185,9 @@ window.PRODUCTS=[
     category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'1й сорт',season:'Літо',
     audience:'Мікс',country:'',
-    unit:'кг',weight:'361.6',
+    unit:'кг',weight:'350.6',
     price:5.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE4t0f4sOrW1ZDelzSG7uMA',qty_stock:33,qty_per_bag:4
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE4t0f4sOrW1ZDelzSG7uMA',qty_stock:32,qty_per_bag:4
   },
   {
     id:'0170',name:'AGD Товари для декору',
@@ -226,24 +226,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHO2pA4GIaFOEVQeQg3Sldd',qty_stock:31,qty_per_bag:28
   },
   {
-    id:'1901',name:'Взуття мікс літо 1й сорт',
-    category:'Взуття',subcategory:'Взуття мікс',
-    brand:'',sort:'1й сорт',season:'Літо',
-    audience:'Мікс',country:'Польща',
-    unit:'кг',weight:'455.2',
-    price:4.15,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEEs65CEAW-IBBfUxXtw-g4',qty_stock:31,qty_per_bag:29
-  },
-  {
-    id:'1649',name:'Взуття мікс літо доросле та дитяче  Livergy,Esmara, Crane,Alive Сток',
-    category:'Взуття',subcategory:'Взуття мікс',
-    brand:'Livergy',sort:'Сток',season:'Літо',
-    audience:'Дитяче',country:'Німеччина',
-    unit:'кг',weight:'428.9',
-    price:9.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFW1oCKIx8hDtMWc2Aq7l2q',qty_stock:30,qty_per_bag:44
-  },
-  {
     id:'0155',name:'Товари для тварин мікс',
     category:'Дім та побут',subcategory:'Товари для тварин',
     brand:'',sort:'Мікс',season:'Всесезонне',
@@ -262,6 +244,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pG4Zj24bHPZYYv5TFqV0-uW',qty_stock:29,qty_per_bag:1
   },
   {
+    id:'1649',name:'Взуття мікс літо доросле та дитяче  Livergy,Esmara, Crane,Alive Сток',
+    category:'Взуття',subcategory:'Взуття мікс',
+    brand:'Livergy',sort:'Сток',season:'Літо',
+    audience:'Дитяче',country:'Німеччина',
+    unit:'кг',weight:'412',
+    price:9.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFW1oCKIx8hDtMWc2Aq7l2q',qty_stock:29,qty_per_bag:44
+  },
+  {
     id:'1724',name:'Куртки мікс демісезон Екстра',
     category:'Одяг',subcategory:'Куртки та пальта',
     brand:'',sort:'Екстра',season:'Демісезон',
@@ -269,15 +260,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'556.2',
     price:8.9,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGPjzjyhssT5ND6QVFcDKw6',qty_stock:28,qty_per_bag:27
-  },
-  {
-    id:'1899',name:'Крокси,сабо, босоніжки Crocs літо сток',
-    category:'Взуття',subcategory:'Туфлі та босоніжки',
-    brand:'',sort:'Сток',season:'Літо',
-    audience:'Мікс',country:'',
-    unit:'шт',weight:'541',
-    price:12.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH0X2rO4D-XWuIPyT_pXEAj',qty_stock:28,qty_per_bag:20
   },
   {
     id:'0644',name:'Куртки мікс демісезон Esmara, Livergy Сток',
@@ -307,6 +289,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGnFDwVPmHEev0ePlaGhcoY',qty_stock:26,qty_per_bag:26
   },
   {
+    id:'1901',name:'Взуття мікс літо 1й сорт',
+    category:'Взуття',subcategory:'Взуття мікс',
+    brand:'',sort:'1й сорт',season:'Літо',
+    audience:'Мікс',country:'Польща',
+    unit:'кг',weight:'382.2',
+    price:4.15,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEEs65CEAW-IBBfUxXtw-g4',qty_stock:26,qty_per_bag:29
+  },
+  {
     id:'1906',name:'Бейсболки, кепки сток літо RICHARDSON #312-RDWH',
     category:'Аксесуари',subcategory:'Шапки та головні убори',
     brand:'',sort:'Сток',season:'Літо',
@@ -323,15 +314,6 @@ window.PRODUCTS=[
     unit:'шт',weight:'494',
     price:16.0,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFcDSKqjr6JGPhzYru5nMlA',qty_stock:25,qty_per_bag:10
-  },
-  {
-    id:'0348',name:'Одяг спортивний мікс демісезон Crivit Сток',
-    category:'Одяг',subcategory:'Спортивний одяг',
-    brand:'Crivit',sort:'Сток',season:'Демісезон',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'373.4',
-    price:15.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFzDHAiozQ0w77TjD_yNciD',qty_stock:23,qty_per_bag:5
   },
   {
     id:'0763',name:'Шорти мікс літо Esmara, Livergy Сток',
@@ -352,6 +334,24 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGXwa2MbCQUPy7YWEgYPI7H',qty_stock:23,qty_per_bag:2
   },
   {
+    id:'1352',name:'Сабо, босоніжки Joybees літо сток',
+    category:'Взуття',subcategory:'Туфлі та босоніжки',
+    brand:'',sort:'Сток',season:'Літо',
+    audience:'Мікс',country:'',
+    unit:'шт',weight:'559',
+    price:8.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHK6M1-z46zFTOscP37P5TN',qty_stock:23,qty_per_bag:25
+  },
+  {
+    id:'0348',name:'Одяг спортивний мікс демісезон Crivit Сток',
+    category:'Одяг',subcategory:'Спортивний одяг',
+    brand:'Crivit',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'Німеччина',
+    unit:'кг',weight:'358.2',
+    price:15.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFzDHAiozQ0w77TjD_yNciD',qty_stock:22,qty_per_bag:5
+  },
+  {
     id:'0677',name:'Кімнатні тапочки мікс демісезон Esmara,Crivit,Livergy,Lupilu Сток',
     category:'Взуття',subcategory:'Тапочки та шльопанці',
     brand:'Livergy',sort:'Сток',season:'Демісезон',
@@ -370,13 +370,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEibD78ilTscwea_1AyRlbC',qty_stock:22,qty_per_bag:null
   },
   {
-    id:'1352',name:'Сабо, босоніжки Joybees літо сток',
-    category:'Взуття',subcategory:'Туфлі та босоніжки',
-    brand:'',sort:'Сток',season:'Літо',
-    audience:'Мікс',country:'',
-    unit:'шт',weight:'510',
-    price:8.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHK6M1-z46zFTOscP37P5TN',qty_stock:21,qty_per_bag:25
+    id:'0318',name:'Одяг робочий мікс демісезон Parkside Сток',
+    category:'Одяг',subcategory:'Робочий одяг',
+    brand:'',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'Німеччина',
+    unit:'кг',weight:'397',
+    price:12.95,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFD4kKwR2yRB8oZ6brIzE2W',qty_stock:21,qty_per_bag:2
   },
   {
     id:'1441',name:'Світшоти,худі,кофти з капюшоном мікс демісезон Сток + Крем BLUE  84',
@@ -401,27 +401,9 @@ window.PRODUCTS=[
     category:'Одяг',subcategory:'Шорти',
     brand:'',sort:'Сток',season:'Демісезон',
     audience:'Мікс',country:'',
-    unit:'кг',weight:'292.1',
+    unit:'кг',weight:'277.8',
     price:12.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHsIQqiLW-kK8YMoJGKq9iI',qty_stock:20,qty_per_bag:37
-  },
-  {
-    id:'1767',name:'Спорт одяг мікс мультибренд ,Nike,Adidas,Puma,GymShark,Mistral сток',
-    category:'Одяг',subcategory:'Спортивний одяг',
-    brand:'Nike',sort:'Сток',season:'Демісезон',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'340.5',
-    price:28.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGN3McBpaPN3yVqX8MGIy3T',qty_stock:19,qty_per_bag:65
-  },
-  {
-    id:'0032',name:'Взуття мікс ( шльопанці, в\u2019єтнамки, крокси) літо 1й сорт',
-    category:'Взуття',subcategory:'Тапочки та шльопанці',
-    brand:'',sort:'1й сорт',season:'Літо',
-    audience:'Мікс',country:'Польща',
-    unit:'кг',weight:'448.6',
-    price:6.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFGQTEOfDbuk3hcd3_cACuK',qty_stock:18,qty_per_bag:3
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHsIQqiLW-kK8YMoJGKq9iI',qty_stock:19,qty_per_bag:37
   },
   {
     id:'0261',name:'Штани спортивні жіночі демісезон 1й сорт',
@@ -431,15 +413,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'504.4',
     price:3.9,akciya:2.8,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHwSdJRA9ICKG3ZH9iy313k',qty_stock:18,qty_per_bag:3
-  },
-  {
-    id:'0318',name:'Одяг робочий мікс демісезон Parkside Сток',
-    category:'Одяг',subcategory:'Робочий одяг',
-    brand:'',sort:'Сток',season:'Демісезон',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'339.2',
-    price:12.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFD4kKwR2yRB8oZ6brIzE2W',qty_stock:18,qty_per_bag:2
   },
   {
     id:'1355',name:'Взуття спортивне, кросівки мікс демісезон Crivit Сток',
@@ -469,6 +442,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEly0Liv1j1YwElCoytjYP0',qty_stock:18,qty_per_bag:30
   },
   {
+    id:'1767',name:'Спорт одяг мікс мультибренд ,Nike,Adidas,Puma,GymShark,Mistral сток',
+    category:'Одяг',subcategory:'Спортивний одяг',
+    brand:'Nike',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'321.6',
+    price:28.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGN3McBpaPN3yVqX8MGIy3T',qty_stock:18,qty_per_bag:65
+  },
+  {
     id:'1807',name:'Кофти з капюшоном, світшоти мікс 1й сорт',
     category:'Одяг',subcategory:'Худі та світшоти',
     brand:'',sort:'1й сорт',season:'Демісезон',
@@ -476,6 +458,24 @@ window.PRODUCTS=[
     unit:'кг',weight:'241.6',
     price:2.9,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGLzPRmzaKyRzZQZa4z-Fd2',qty_stock:18,qty_per_bag:108
+  },
+  {
+    id:'1899',name:'Крокси,сабо, босоніжки Crocs літо сток',
+    category:'Взуття',subcategory:'Туфлі та босоніжки',
+    brand:'',sort:'Сток',season:'Літо',
+    audience:'Мікс',country:'',
+    unit:'шт',weight:'345',
+    price:12.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH0X2rO4D-XWuIPyT_pXEAj',qty_stock:18,qty_per_bag:20
+  },
+  {
+    id:'0032',name:'Взуття мікс ( шльопанці, в\u2019єтнамки, крокси) літо 1й сорт',
+    category:'Взуття',subcategory:'Тапочки та шльопанці',
+    brand:'',sort:'1й сорт',season:'Літо',
+    audience:'Мікс',country:'Польща',
+    unit:'кг',weight:'423.8',
+    price:6.95,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFGQTEOfDbuk3hcd3_cACuK',qty_stock:17,qty_per_bag:3
   },
   {
     id:'0587',name:'Шкарпетки мікс зима Livergy,Crivit Сток',
@@ -496,22 +496,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGb4Kz_ZhRkMJDr8GF92Dvf',qty_stock:16,qty_per_bag:6
   },
   {
-    id:'0658',name:'Одяг жіночий мікс демісезон 1й сорт XXL',
-    category:'Одяг',subcategory:'Одяг мікс',
-    brand:'',sort:'1й сорт',season:'Демісезон',
-    audience:'Жіноче',country:'Німеччина',
-    unit:'кг',weight:'401.1',
-    price:5.7,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pErRMC8Ih0p0uS6nN0C5sqq',qty_stock:16,qty_per_bag:4
-  },
-  {
-    id:'1022',name:'Одяг спорт дорослий та дитячий мікс демісезон Adidas,Reebok Сток',
-    category:'Одяг',subcategory:'Спортивний одяг',
-    brand:'Adidas',sort:'Сток',season:'Демісезон',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'409',
-    price:34.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHVsNUNrwaPPfgFh01exzq6',qty_stock:16,qty_per_bag:4
+    id:'0508',name:'Шкарпетки дитячі мікс демісезон LidL сток',
+    category:'Одяг',subcategory:'Шкарпетки',
+    brand:'',sort:'Сток',season:'Демісезон',
+    audience:'Дитяче',country:'Німеччина',
+    unit:'кг',weight:'148.2',
+    price:14.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHEcfR3oYvcBTcj6S6dC3jU',qty_stock:16,qty_per_bag:40
   },
   {
     id:'1200',name:'Спортивний одяг мікс демісезон 1й сорт',
@@ -541,22 +532,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pG_ALM9ZRrvRauKG3SkM5ZG',qty_stock:15,qty_per_bag:3
   },
   {
-    id:'0403',name:'Одяг дорослий мікс літо H&M Сток',
+    id:'0658',name:'Одяг жіночий мікс демісезон 1й сорт XXL',
     category:'Одяг',subcategory:'Одяг мікс',
-    brand:'H&M',sort:'Сток',season:'Літо',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'249.1',
-    price:12.5,akciya:7.0,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEdp4OAqBFshjpxnV0mY1QF',qty_stock:15,qty_per_bag:84
-  },
-  {
-    id:'0508',name:'Шкарпетки дитячі мікс демісезон LidL сток',
-    category:'Одяг',subcategory:'Шкарпетки',
-    brand:'',sort:'Сток',season:'Демісезон',
-    audience:'Дитяче',country:'Німеччина',
-    unit:'кг',weight:'138.1',
-    price:14.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHEcfR3oYvcBTcj6S6dC3jU',qty_stock:15,qty_per_bag:40
+    brand:'',sort:'1й сорт',season:'Демісезон',
+    audience:'Жіноче',country:'Німеччина',
+    unit:'кг',weight:'376.1',
+    price:5.7,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pErRMC8Ih0p0uS6nN0C5sqq',qty_stock:15,qty_per_bag:4
   },
   {
     id:'0847',name:'Футболки мікс літо Esmara,Livergy Сток',
@@ -595,6 +577,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGIvkl4WUEpy2TQvBCzxjxg',qty_stock:14,qty_per_bag:1
   },
   {
+    id:'0403',name:'Одяг дорослий мікс літо H&M Сток',
+    category:'Одяг',subcategory:'Одяг мікс',
+    brand:'H&M',sort:'Сток',season:'Літо',
+    audience:'Мікс',country:'Німеччина',
+    unit:'кг',weight:'231.5',
+    price:12.5,akciya:7.0,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEdp4OAqBFshjpxnV0mY1QF',qty_stock:14,qty_per_bag:84
+  },
+  {
     id:'0809',name:'Жилетки мікс демісезон 1й сорт',
     category:'Одяг',subcategory:'Піджаки та жилети',
     brand:'',sort:'1й сорт',season:'Демісезон',
@@ -604,15 +595,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHIccSv2ffPtA_dplQCgBGK',qty_stock:14,qty_per_bag:2
   },
   {
-    id:'1113',name:'Шорти мікс х/б, байка,коттон мікс літо 1й сорт + Екстра Канада',
-    category:'Одяг',subcategory:'Шорти',
-    brand:'',sort:'Мікс',season:'Літо',
-    audience:'Мікс',country:'Канада',
-    unit:'кг',weight:'420',
-    price:6.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHMwUATswt19-QOdTI3tjP4',qty_stock:14,qty_per_bag:5
-  },
-  {
     id:'1580',name:'Светри новорічні унісекс REVOLT Happy Christmas  сток Зима',
     category:'Одяг',subcategory:'Светри та кардигани',
     brand:'',sort:'Сток',season:'Зима',
@@ -620,15 +602,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'416.8',
     price:4.9,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEkVAccrcw2Yi1DZTCP2X7m',qty_stock:14,qty_per_bag:17
-  },
-  {
-    id:'1617',name:'Ручки офісні мікс сток (нові)',
-    category:'Дім та побут',subcategory:'Побутові товари',
-    brand:'',sort:'Сток',season:'Всесезонне',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'157.5',
-    price:7.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEzYrCPR_-4HN052bLSXO-_',qty_stock:14,qty_per_bag:500
   },
   {
     id:'1642',name:'Кросівки мікс Adidas SW Orketro + Youth of Paris сток',
@@ -649,6 +622,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFYpkBEqlzH-MSJmtT5Sj4D',qty_stock:14,qty_per_bag:19
   },
   {
+    id:'0186',name:'Побутова техніка мікс',
+    category:'Дім та побут',subcategory:'Побутові товари',
+    brand:'',sort:'Мікс',season:'Всесезонне',
+    audience:'Мікс',country:'Польща',
+    unit:'кг',weight:'326.4',
+    price:4.2,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFmGs0JC7fxM2pLP-7NapJQ',qty_stock:13,qty_per_bag:null
+  },
+  {
     id:'0533',name:'Флісові кофти мікс зима 1й сорт',
     category:'Одяг',subcategory:'Кофти флісові',
     brand:'',sort:'Мікс',season:'Зима',
@@ -665,6 +647,24 @@ window.PRODUCTS=[
     unit:'кг',weight:'277.2',
     price:3.9,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGEcPVnqoF0StwmPK5zZwGU',qty_stock:13,qty_per_bag:5
+  },
+  {
+    id:'1022',name:'Одяг спорт дорослий та дитячий мікс демісезон Adidas,Reebok Сток',
+    category:'Одяг',subcategory:'Спортивний одяг',
+    brand:'Adidas',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'333.6',
+    price:34.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHVsNUNrwaPPfgFh01exzq6',qty_stock:13,qty_per_bag:4
+  },
+  {
+    id:'1163',name:'Футболки мікс літо 1й сорт',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'1й сорт',season:'Літо',
+    audience:'Мікс',country:'Німеччина',
+    unit:'кг',weight:'325.4',
+    price:4.95,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEm5jBXK4jkw4sjgr4XA_Mo',qty_stock:13,qty_per_bag:6
   },
   {
     id:'1290',name:'Флісові дитячі халати та піжами зима  1й сорт',
@@ -694,15 +694,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFe-P9uZFE6-pff1TVPud5B',qty_stock:13,qty_per_bag:28
   },
   {
-    id:'1384',name:'Футболки чоловічі літо 1й + Екстра Канада',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'Мікс',season:'Літо',
-    audience:'Чоловіче',country:'Канада',
-    unit:'кг',weight:'390.2',
-    price:7.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHu7hzH6vIDNrVs4AlRIe-9',qty_stock:13,qty_per_bag:112
-  },
-  {
     id:'1396',name:'Тапочки, шльопанці, вєтнамки дорослі сток Hummel',
     category:'Взуття',subcategory:'Тапочки та шльопанці',
     brand:'',sort:'Сток',season:'Демісезон',
@@ -712,13 +703,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH51_HmSJyOyX5QVFTV1WZl',qty_stock:13,qty_per_bag:30
   },
   {
-    id:'1606',name:'Спорт одяг мікс нейлон + хб Екстра + Крем',
-    category:'Одяг',subcategory:'Спортивний одяг',
-    brand:'',sort:'Мікс',season:'Демісезон',
+    id:'1617',name:'Ручки офісні мікс сток (нові)',
+    category:'Дім та побут',subcategory:'Побутові товари',
+    brand:'',sort:'Сток',season:'Всесезонне',
     audience:'Мікс',country:'',
-    unit:'кг',weight:'323.7',
-    price:9.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHJmXajGk0OVqvU2arYmk48',qty_stock:13,qty_per_bag:76
+    unit:'кг',weight:'146.4',
+    price:7.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEzYrCPR_-4HN052bLSXO-_',qty_stock:13,qty_per_bag:500
   },
   {
     id:'1837',name:'Термокуртки демісезон Mc Kinley',
@@ -730,15 +721,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH1kVLYWENfUYaNCapl995P',qty_stock:13,qty_per_bag:14
   },
   {
-    id:'1926',name:'Одяг дитячий мікс літо Lupilu, Pepperts Сток',
-    category:'Одяг',subcategory:'Одяг мікс',
-    brand:'Lupilu',sort:'Сток',season:'Літо',
-    audience:'Дитяче',country:'',
-    unit:'кг',weight:'144.5',
-    price:14.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEEUNFFZpgBUcblYLqsy2vt',qty_stock:13,qty_per_bag:100
-  },
-  {
     id:'0036',name:'Взуття (угги, сибірійки) мікс зима 1й сорт',
     category:'Взуття',subcategory:'Черевики та чоботи',
     brand:'',sort:'1й сорт',season:'Зима',
@@ -746,6 +728,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'213.5',
     price:5.7,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE9SYEO_t-MchYuT56HHFAf',qty_stock:12,qty_per_bag:1
+  },
+  {
+    id:'0637',name:'Лосіни, легінси  жіночі демісезон Esmara, Crivit Сток',
+    category:'Одяг',subcategory:'Колготки та легінси',
+    brand:'Esmara',sort:'Сток',season:'Демісезон',
+    audience:'Жіноче',country:'Німеччина',
+    unit:'кг',weight:'111.5',
+    price:12.95,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHyiZNZtmIdcPqpJfIq5xtm',qty_stock:12,qty_per_bag:5
   },
   {
     id:'0714',name:'Куртки жіночі зима 1й сорт',
@@ -757,13 +748,22 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFqVZTCy5Nsg0f5AdfNy8G4',qty_stock:12,qty_per_bag:1
   },
   {
-    id:'1163',name:'Футболки мікс літо 1й сорт',
+    id:'1113',name:'Шорти мікс х/б, байка,коттон мікс літо 1й сорт + Екстра Канада',
+    category:'Одяг',subcategory:'Шорти',
+    brand:'',sort:'Мікс',season:'Літо',
+    audience:'Мікс',country:'Канада',
+    unit:'кг',weight:'360',
+    price:6.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHMwUATswt19-QOdTI3tjP4',qty_stock:12,qty_per_bag:5
+  },
+  {
+    id:'1384',name:'Футболки чоловічі літо 1й + Екстра Канада',
     category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'1й сорт',season:'Літо',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'300.4',
-    price:4.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEm5jBXK4jkw4sjgr4XA_Mo',qty_stock:12,qty_per_bag:6
+    brand:'',sort:'Мікс',season:'Літо',
+    audience:'Чоловіче',country:'Канада',
+    unit:'кг',weight:'360.2',
+    price:7.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHu7hzH6vIDNrVs4AlRIe-9',qty_stock:12,qty_per_bag:112
   },
   {
     id:'1780',name:'Спорт мікс одяг 1й сорт, демісезон, Німеччина',
@@ -793,13 +793,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFCT-30yWRLkic3nTP7_tPW',qty_stock:12,qty_per_bag:11
   },
   {
-    id:'0637',name:'Лосіни, легінси  жіночі демісезон Esmara, Crivit Сток',
-    category:'Одяг',subcategory:'Колготки та легінси',
-    brand:'Esmara',sort:'Сток',season:'Демісезон',
-    audience:'Жіноче',country:'Німеччина',
-    unit:'кг',weight:'102.5',
-    price:12.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHyiZNZtmIdcPqpJfIq5xtm',qty_stock:11,qty_per_bag:5
+    id:'1926',name:'Одяг дитячий мікс літо Lupilu, Pepperts Сток',
+    category:'Одяг',subcategory:'Одяг мікс',
+    brand:'Lupilu',sort:'Сток',season:'Літо',
+    audience:'Дитяче',country:'',
+    unit:'кг',weight:'133.2',
+    price:14.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEEUNFFZpgBUcblYLqsy2vt',qty_stock:12,qty_per_bag:100
   },
   {
     id:'0660',name:'Флісові кофти мікс зима Екстра',
@@ -809,6 +809,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'145.5',
     price:7.5,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pF1_i0y3GkrvsDFtcZGMMvX',qty_stock:11,qty_per_bag:2
+  },
+  {
+    id:'1110',name:'Одяг спорт дорослий та дитячий  мікс демісезон Adidas Сток',
+    category:'Одяг',subcategory:'Спортивний одяг',
+    brand:'Adidas',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'264.5',
+    price:26.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEXW4JG_e9HpG6zt2H7aWFK',qty_stock:11,qty_per_bag:3
   },
   {
     id:'1168',name:'Жилетки мікс демісезон 1й сорт Німеччина D',
@@ -854,6 +863,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'274.8',
     price:4.5,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pG9IkavbQC3rmYpT9wTE-ES',qty_stock:11,qty_per_bag:97
+  },
+  {
+    id:'1606',name:'Спорт одяг мікс нейлон + хб Екстра + Крем',
+    category:'Одяг',subcategory:'Спортивний одяг',
+    brand:'',sort:'Мікс',season:'Демісезон',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'274.1',
+    price:9.2,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHJmXajGk0OVqvU2arYmk48',qty_stock:11,qty_per_bag:76
   },
   {
     id:'1686',name:'Мікс одягу XXL Old Navy сток',
@@ -919,33 +937,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFiQDf-xy7E1u9wWMp2uAKf',qty_stock:10,qty_per_bag:2
   },
   {
-    id:'1056',name:'Футболки жіночі літо Esmara, Crivit Сток',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'Esmara',sort:'Сток',season:'Літо',
-    audience:'Жіноче',country:'Німеччина',
-    unit:'кг',weight:'117.9',
-    price:14.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEOifRClFT7E-3ZyRSap7ki',qty_stock:10,qty_per_bag:7
-  },
-  {
-    id:'1383',name:'Футболки чоловічі літо 1й + Екстра Канада',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'Мікс',season:'Літо',
-    audience:'Чоловіче',country:'Канада',
-    unit:'кг',weight:'281.1',
-    price:7.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFjsHdUl8kgdUryuBVZvsIH',qty_stock:10,qty_per_bag:77
-  },
-  {
-    id:'1627',name:'Футболки мікс Екстра',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'Екстра',season:'Літо',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'246.3',
-    price:7.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFeNRd2V3cvt1PAa94538_M',qty_stock:10,qty_per_bag:177
-  },
-  {
     id:'1742',name:'Спорт мікс - штани, кофти, світшоти 1й сорт+Екстра Англія TT',
     category:'Одяг',subcategory:'Спортивний одяг',
     brand:'',sort:'Мікс',season:'Демісезон',
@@ -964,31 +955,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHBNtzpI-dpKTqFPhQlR9gT',qty_stock:10,qty_per_bag:111
   },
   {
-    id:'1903',name:'Домовий мікс, постіль, покривала, одіяла, коврики Сток ALDI',
-    category:'Дім та побут',subcategory:'Побутові товари',
-    brand:'',sort:'Сток',season:'Всесезонне',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'3038',
-    price:4.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFOY-rgWWR44XQ1HKonOAU-',qty_stock:10,qty_per_bag:161
-  },
-  {
-    id:'1924',name:'Спорт мікс одяг чоловічий + жіночий, Англія , Естра+Крем',
-    category:'Одяг',subcategory:'Спортивний одяг',
-    brand:'',sort:'Мікс',season:'Літо',
-    audience:'Мікс',country:'Англія',
-    unit:'кг',weight:'195.4',
-    price:7.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEqhhvGaPWv3c56C02aajAd',qty_stock:10,qty_per_bag:111
-  },
-  {
-    id:'0186',name:'Побутова техніка мікс',
-    category:'Дім та побут',subcategory:'Побутові товари',
-    brand:'',sort:'Мікс',season:'Всесезонне',
-    audience:'Мікс',country:'Польща',
-    unit:'кг',weight:'225.2',
-    price:4.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFmGs0JC7fxM2pLP-7NapJQ',qty_stock:9,qty_per_bag:null
+    id:'0420',name:'Кросівки мікс демісезон Adidas, Reebok II Сток',
+    category:'Взуття',subcategory:'Кросівки та кеди',
+    brand:'Adidas',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'Німеччина',
+    unit:'шт',weight:'177',
+    price:29.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE4ah881zVMUCpOwIu26Kym',qty_stock:9,qty_per_bag:20
   },
   {
     id:'0651',name:'Кофти з капюшоном утеплені мікс зима 1й сорт Канада',
@@ -998,6 +971,33 @@ window.PRODUCTS=[
     unit:'кг',weight:'180',
     price:6.5,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFfD2eOPvMncFbEmEKegsY-',qty_stock:9,qty_per_bag:1
+  },
+  {
+    id:'1012',name:'Штани з  кишенями, бойовки чоловічі демісезон 1й сорт',
+    category:'Одяг',subcategory:'Штани та брюки',
+    brand:'',sort:'1й сорт',season:'Демісезон',
+    audience:'Чоловіче',country:'Польща',
+    unit:'кг',weight:'261.4',
+    price:5.2,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHaTs933zfueGOj4qr2VH0X',qty_stock:9,qty_per_bag:2
+  },
+  {
+    id:'1347',name:'Кросівки мікс нові демісезон HOKA (б/у)',
+    category:'Взуття',subcategory:'Кросівки та кеди',
+    brand:'',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'',
+    unit:'шт',weight:'185',
+    price:23.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFkEgXU_ffwtJHUFSII_g0x',qty_stock:9,qty_per_bag:null
+  },
+  {
+    id:'1383',name:'Футболки чоловічі літо 1й + Екстра Канада',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'Мікс',season:'Літо',
+    audience:'Чоловіче',country:'Канада',
+    unit:'кг',weight:'253.7',
+    price:7.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFjsHdUl8kgdUryuBVZvsIH',qty_stock:9,qty_per_bag:77
   },
   {
     id:'1392',name:'Кофти з капюшоном, світшоти мікс демісезон Екстра',
@@ -1036,15 +1036,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGMRoW1WXWEQ3ZiRfDprFxp',qty_stock:9,qty_per_bag:33
   },
   {
-    id:'1651',name:'Тюль тонка та груба, органза 1й сорт+Екстра',
-    category:'Дім та побут',subcategory:'Побутові товари',
-    brand:'',sort:'Мікс',season:'Всесезонне',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'223.6',
-    price:4.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHKrOZga9FsQpK5QPl4QyrY',qty_stock:9,qty_per_bag:65
-  },
-  {
     id:'1892',name:'Щітки електричні для очистки швів бруківки Parkside PUB 150 Сток',
     category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Сток',season:'Всесезонне',
@@ -1072,13 +1063,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHGnFw9nn8MqIUPii1FcgLg',qty_stock:8,qty_per_bag:5
   },
   {
-    id:'0420',name:'Кросівки мікс демісезон Adidas, Reebok II Сток',
-    category:'Взуття',subcategory:'Кросівки та кеди',
-    brand:'Adidas',sort:'Сток',season:'Демісезон',
+    id:'0454',name:'Футболки мікс літо Екстра Німеччина D',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'Екстра',season:'Літо',
     audience:'Мікс',country:'Німеччина',
-    unit:'шт',weight:'157',
-    price:29.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE4ah881zVMUCpOwIu26Kym',qty_stock:8,qty_per_bag:20
+    unit:'кг',weight:'200.8',
+    price:8.9,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFxy7aYE8Qo-CA2ENFKZ2vB',qty_stock:8,qty_per_bag:6
   },
   {
     id:'0526',name:'Футболки жіночі літо 2й сорт',
@@ -1108,22 +1099,22 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE6t5YeLzuDoHxhJ4RgAPu5',qty_stock:8,qty_per_bag:2
   },
   {
-    id:'1012',name:'Штани з  кишенями, бойовки чоловічі демісезон 1й сорт',
-    category:'Одяг',subcategory:'Штани та брюки',
-    brand:'',sort:'1й сорт',season:'Демісезон',
-    audience:'Чоловіче',country:'Польща',
-    unit:'кг',weight:'232.2',
-    price:5.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHaTs933zfueGOj4qr2VH0X',qty_stock:8,qty_per_bag:2
+    id:'1627',name:'Футболки мікс Екстра',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'Екстра',season:'Літо',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'196.6',
+    price:7.2,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFeNRd2V3cvt1PAa94538_M',qty_stock:8,qty_per_bag:177
   },
   {
-    id:'1347',name:'Кросівки мікс нові демісезон HOKA (б/у)',
-    category:'Взуття',subcategory:'Кросівки та кеди',
-    brand:'',sort:'Сток',season:'Демісезон',
+    id:'1651',name:'Тюль тонка та груба, органза 1й сорт+Екстра',
+    category:'Дім та побут',subcategory:'Побутові товари',
+    brand:'',sort:'Мікс',season:'Всесезонне',
     audience:'Мікс',country:'',
-    unit:'шт',weight:'164',
-    price:23.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFkEgXU_ffwtJHUFSII_g0x',qty_stock:8,qty_per_bag:null
+    unit:'кг',weight:'198.6',
+    price:4.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHKrOZga9FsQpK5QPl4QyrY',qty_stock:8,qty_per_bag:65
   },
   {
     id:'1783',name:'Взуття дитяче зима Lupilu',
@@ -1133,6 +1124,24 @@ window.PRODUCTS=[
     unit:'кг',weight:'118.3',
     price:9.5,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEHjKfMHRiPfXEcfeeoueuR',qty_stock:8,qty_per_bag:26
+  },
+  {
+    id:'1903',name:'Домовий мікс, постіль, покривала, одіяла, коврики Сток ALDI',
+    category:'Дім та побут',subcategory:'Побутові товари',
+    brand:'',sort:'Сток',season:'Всесезонне',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'2726.5',
+    price:4.9,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFOY-rgWWR44XQ1HKonOAU-',qty_stock:8,qty_per_bag:161
+  },
+  {
+    id:'1924',name:'Спорт мікс одяг чоловічий + жіночий, Англія , Естра+Крем',
+    category:'Одяг',subcategory:'Спортивний одяг',
+    brand:'',sort:'Мікс',season:'Літо',
+    audience:'Мікс',country:'Англія',
+    unit:'кг',weight:'157.4',
+    price:7.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEqhhvGaPWv3c56C02aajAd',qty_stock:8,qty_per_bag:111
   },
   {
     id:'0122',name:'Куртки чоловічі зима 1й сорт',
@@ -1153,15 +1162,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHRcbsV1EAiPbqzZWNO9v3J',qty_stock:7,qty_per_bag:3
   },
   {
-    id:'0277',name:'Футболки мікс літо 1й сорт XXL',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'1й сорт',season:'Літо',
-    audience:'Мікс',country:'Польща',
-    unit:'кг',weight:'170.9',
-    price:6.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHYQK9tylTYZ805OmgwOcKq',qty_stock:7,qty_per_bag:5
-  },
-  {
     id:'0346',name:'Куртки мікс зима 1й сорт',
     category:'Одяг',subcategory:'Куртки та пальта',
     brand:'',sort:'1й сорт',season:'Зима',
@@ -1180,15 +1180,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHnCgRv_Vkqdt4yUw7gEUxo',qty_stock:7,qty_per_bag:2
   },
   {
-    id:'0454',name:'Футболки мікс літо Екстра Німеччина D',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'Екстра',season:'Літо',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'175.6',
-    price:8.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFxy7aYE8Qo-CA2ENFKZ2vB',qty_stock:7,qty_per_bag:6
-  },
-  {
     id:'0672',name:'Взуття мікс літо  Livergy,Esmara,Tom Rose Сток',
     category:'Взуття',subcategory:'Взуття мікс',
     brand:'Livergy',sort:'Сток',season:'Літо',
@@ -1196,6 +1187,24 @@ window.PRODUCTS=[
     unit:'кг',weight:'104.3',
     price:13.9,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFwVLIPXn-Ru9FUM-RdQp5p',qty_stock:7,qty_per_bag:3
+  },
+  {
+    id:'1056',name:'Футболки жіночі літо Esmara, Crivit Сток',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'Esmara',sort:'Сток',season:'Літо',
+    audience:'Жіноче',country:'Німеччина',
+    unit:'кг',weight:'83.3',
+    price:14.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEOifRClFT7E-3ZyRSap7ki',qty_stock:7,qty_per_bag:7
+  },
+  {
+    id:'1599',name:'Кросівки чоловічі та жіночі Nike сток (нове, примірка)',
+    category:'Взуття',subcategory:'Кросівки та кеди',
+    brand:'Nike',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'',
+    unit:'шт',weight:'88',
+    price:37.0,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFLJZtNq6-8y34MMLGbtQIm',qty_stock:7,qty_per_bag:25
   },
   {
     id:'1643',name:'Сабо, тапки ECCO Cozmo Slode сток',
@@ -1270,6 +1279,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pF8_9Pk6lOkIrNXcSpbk_5M',qty_stock:7,qty_per_bag:20
   },
   {
+    id:'0012',name:'AGD Товари для реабілітації',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'Мікс',season:'Всесезонне',
+    audience:'Мікс',country:'Польща',
+    unit:'кг',weight:'177.8',
+    price:3.75,akciya:3.3,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGDz0meKAcyWy1XIichiq_l',qty_stock:6,qty_per_bag:4
+  },
+  {
     id:'0015',name:'Ковдри мікс 1й сорт',
     category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'1й сорт',season:'Всесезонне',
@@ -1288,6 +1306,24 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHUgfPBOIbC58FaQyDTMB7C',qty_stock:6,qty_per_bag:5
   },
   {
+    id:'0275',name:'Футболки чоловічі 2й сорт',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'2й сорт',season:'Літо',
+    audience:'Чоловіче',country:'Польща',
+    unit:'кг',weight:'178.4',
+    price:4.3,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFqO-IpH0ouubb_iDC5Zjpc',qty_stock:6,qty_per_bag:5
+  },
+  {
+    id:'0277',name:'Футболки мікс літо 1й сорт XXL',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'1й сорт',season:'Літо',
+    audience:'Мікс',country:'Польща',
+    unit:'кг',weight:'150.9',
+    price:6.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHYQK9tylTYZ805OmgwOcKq',qty_stock:6,qty_per_bag:5
+  },
+  {
     id:'0540',name:'Світшоти мікс зима Екстра Німеччина D',
     category:'Одяг',subcategory:'Худі та світшоти',
     brand:'',sort:'Екстра',season:'Зима',
@@ -1297,15 +1333,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFTu56je1SB3Ps4cISSP1rg',qty_stock:6,qty_per_bag:2
   },
   {
-    id:'0761',name:'Футболки чоловічі літо Livergy, Crivit Сток',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'Livergy',sort:'Сток',season:'Літо',
-    audience:'Чоловіче',country:'Німеччина',
-    unit:'кг',weight:'63.5',
-    price:15.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHhUq1SGZgX1aiWfI48mDYM',qty_stock:6,qty_per_bag:5
-  },
-  {
     id:'0896',name:'Штани спортивні мікс демісезон 1й сорт',
     category:'Одяг',subcategory:'Штани та брюки',
     brand:'',sort:'1й сорт',season:'Демісезон',
@@ -1313,15 +1340,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'117.5',
     price:5.95,akciya:4.0,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGZKJSbNkJsAssknQ1qOZaz',qty_stock:6,qty_per_bag:3
-  },
-  {
-    id:'1110',name:'Одяг спорт дорослий та дитячий  мікс демісезон Adidas Сток',
-    category:'Одяг',subcategory:'Спортивний одяг',
-    brand:'Adidas',sort:'Сток',season:'Демісезон',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'145.9',
-    price:26.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEXW4JG_e9HpG6zt2H7aWFK',qty_stock:6,qty_per_bag:3
   },
   {
     id:'1250',name:'Чоловічий одяг мікс демісезон 1й сорт + Екстра',
@@ -1387,22 +1405,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFIMeu3SywzGH3Xo21QpzEi',qty_stock:6,qty_per_bag:40
   },
   {
-    id:'1863',name:'Шорти дитячі Lupilu, Pepperts Сток',
-    category:'Одяг',subcategory:'Шорти',
-    brand:'Lupilu',sort:'Сток',season:'Літо',
-    audience:'Дитяче',country:'Німеччина',
-    unit:'кг',weight:'60.6',
-    price:15.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGW9flLIiGxUhC6NW9I1rAI',qty_stock:6,qty_per_bag:62
-  },
-  {
-    id:'0012',name:'AGD Товари для реабілітації',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'Мікс',season:'Всесезонне',
-    audience:'Мікс',country:'Польща',
-    unit:'кг',weight:'149.6',
-    price:3.75,akciya:3.3,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGDz0meKAcyWy1XIichiq_l',qty_stock:5,qty_per_bag:4
+    id:'1927',name:'Курточки робочі мікc Parkside, сток',
+    category:'Одяг',subcategory:'Одяг мікс',
+    brand:'',sort:'Сток',season:'Всесезонне',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'73.9',
+    price:12.9,akciya:null,
+    youtube:'',qty_stock:6,qty_per_bag:null
   },
   {
     id:'0014',name:'Рюкзаки мікс 1й сорт',
@@ -1423,13 +1432,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEaksL95x2QDcm20dHtX7r9',qty_stock:5,qty_per_bag:3
   },
   {
-    id:'0275',name:'Футболки чоловічі 2й сорт',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'2й сорт',season:'Літо',
+    id:'0260',name:'Штани спортивні чоловічі демісезон 1й сорт',
+    category:'Одяг',subcategory:'Спортивний одяг',
+    brand:'',sort:'1й сорт',season:'Демісезон',
     audience:'Чоловіче',country:'Польща',
-    unit:'кг',weight:'148.8',
-    price:4.3,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFqO-IpH0ouubb_iDC5Zjpc',qty_stock:5,qty_per_bag:5
+    unit:'кг',weight:'102.7',
+    price:7.9,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGeBE6gX0dQGCLy7QKaTe4M',qty_stock:5,qty_per_bag:2
   },
   {
     id:'0276',name:'Кофти з капюшоном мікс демісезон 1й сорт',
@@ -1517,7 +1526,7 @@ window.PRODUCTS=[
     category:'Взуття',subcategory:'Взуття мікс',
     brand:'',sort:'Сток',season:'Демісезон',
     audience:'Дитяче',country:'Німеччина',
-    unit:'шт',weight:'89',
+    unit:'шт',weight:'87',
     price:9.5,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFzpQpONikvDZZkvGaX5PuV',qty_stock:5,qty_per_bag:2
   },
@@ -1603,6 +1612,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH5mdlJryVL-XRhC3huIrrf',qty_stock:5,qty_per_bag:50
   },
   {
+    id:'1863',name:'Шорти дитячі Lupilu, Pepperts Сток',
+    category:'Одяг',subcategory:'Шорти',
+    brand:'Lupilu',sort:'Сток',season:'Літо',
+    audience:'Дитяче',country:'Німеччина',
+    unit:'кг',weight:'50.4',
+    price:15.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGW9flLIiGxUhC6NW9I1rAI',qty_stock:5,qty_per_bag:62
+  },
+  {
     id:'1876',name:'Подушки садові на крісла, лавки, лежаки LIVARNO Home сток',
     category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'Сток',season:'Всесезонне',
@@ -1648,15 +1666,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHM81FeSdMeNvHxu0NHK0ZI',qty_stock:4,qty_per_bag:1
   },
   {
-    id:'0247',name:'Робочий одяг мікс демісезон 2й сорт',
-    category:'Одяг',subcategory:'Робочий одяг',
-    brand:'',sort:'2й сорт',season:'Демісезон',
-    audience:'Мікс',country:'Польща',
-    unit:'кг',weight:'106.5',
-    price:2.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFrpCC6YQ_sH_ebo_ILlFaN',qty_stock:4,qty_per_bag:2
-  },
-  {
     id:'0267',name:'Шорти чоловічі літо 1й сорт',
     category:'Одяг',subcategory:'Шорти',
     brand:'',sort:'1й сорт',season:'Літо',
@@ -1682,15 +1691,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'104.2',
     price:3.4,akciya:3.1,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEiCDs10Z3sZhOls--l_aKw',qty_stock:4,qty_per_bag:2
-  },
-  {
-    id:'0368',name:'Шорти мікс літо Екстра',
-    category:'Одяг',subcategory:'Шорти',
-    brand:'',sort:'Екстра',season:'Літо',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'100.2',
-    price:7.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFUkUgv6d-hLgb5WbGEuxD5',qty_stock:4,qty_per_bag:5
   },
   {
     id:'0418',name:'Домовий мікс (обіход) L.mix HHR Сток',
@@ -1837,15 +1837,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE8Zok0mmkGckg3N9O9xUTV',qty_stock:4,qty_per_bag:16
   },
   {
-    id:'1377',name:'Іграшка тверда Сток',
-    category:'Іграшки',subcategory:'Тверді іграшки',
-    brand:'',sort:'Сток',season:'Всесезонне',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'130.8',
-    price:8.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFW_4XmqFSmfxB7Q6X0QRld',qty_stock:4,qty_per_bag:71
-  },
-  {
     id:'1410',name:'Взуття мікс сток Gordon Bros. Digel літо',
     category:'Взуття',subcategory:'Взуття мікс',
     brand:'',sort:'Сток',season:'Літо',
@@ -1871,15 +1862,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'49.5',
     price:15.0,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEH9-xq1jt32eyvui8n2naP',qty_stock:4,qty_per_bag:16
-  },
-  {
-    id:'1599',name:'Кросівки чоловічі та жіночі Nike сток (нове, примірка)',
-    category:'Взуття',subcategory:'Кросівки та кеди',
-    brand:'Nike',sort:'Сток',season:'Демісезон',
-    audience:'Мікс',country:'',
-    unit:'шт',weight:'43',
-    price:37.0,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFLJZtNq6-8y34MMLGbtQIm',qty_stock:4,qty_per_bag:25
   },
   {
     id:'1644',name:'Мікс чоловічого та жіночого одягу Levi`s сток',
@@ -1954,6 +1936,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGRJ7XbVD7EXlxDLye7VKA-',qty_stock:4,qty_per_bag:25
   },
   {
+    id:'1919',name:'Домовий мікс, постіль, рушники, скатертини, штори Екстра +Крем, Англія',
+    category:'Дім та побут',subcategory:'Побутові товари',
+    brand:'',sort:'Мікс',season:'Всесезонне',
+    audience:'Мікс',country:'Англія',
+    unit:'кг',weight:'80.3',
+    price:4.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFynklkoynZcB99dn5SRs42',qty_stock:4,qty_per_bag:35
+  },
+  {
     id:'0025',name:'Взуття робоче мікс демісезон 1й сорт',
     category:'Взуття',subcategory:'Взуття робоче',
     brand:'',sort:'1й сорт',season:'Демісезон',
@@ -1979,15 +1970,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'75.2',
     price:3.1,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGWCd8jHXECXLYTV6H6UvzU',qty_stock:3,qty_per_bag:2
-  },
-  {
-    id:'0056',name:'Бейсболки, кепки мікс літо 1й сорт',
-    category:'Аксесуари',subcategory:'Шапки та головні убори',
-    brand:'',sort:'1й сорт',season:'Літо',
-    audience:'Мікс',country:'Польща',
-    unit:'кг',weight:'45.1',
-    price:4.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEiy_4KxMAlkC0F_LT38bV-',qty_stock:3,qty_per_bag:14
   },
   {
     id:'0093',name:'Пряжа мікс Екстра',
@@ -2044,13 +2026,22 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHfpqmpD-zwDMg1gJTycQuI',qty_stock:3,qty_per_bag:1
   },
   {
-    id:'0260',name:'Штани спортивні чоловічі демісезон 1й сорт',
+    id:'0270',name:'Спортивний одяг нейлон мікс демісезон 2й сорт',
     category:'Одяг',subcategory:'Спортивний одяг',
-    brand:'',sort:'1й сорт',season:'Демісезон',
-    audience:'Чоловіче',country:'Польща',
-    unit:'кг',weight:'63',
-    price:7.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGeBE6gX0dQGCLy7QKaTe4M',qty_stock:3,qty_per_bag:2
+    brand:'',sort:'2й сорт',season:'Демісезон',
+    audience:'Мікс',country:'Польща',
+    unit:'кг',weight:'75.4',
+    price:4.25,akciya:3.95,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFvOdQAifBmHUOc0YoTV_oa',qty_stock:3,qty_per_bag:2
+  },
+  {
+    id:'0368',name:'Шорти мікс літо Екстра',
+    category:'Одяг',subcategory:'Шорти',
+    brand:'',sort:'Екстра',season:'Літо',
+    audience:'Мікс',country:'Німеччина',
+    unit:'кг',weight:'76.3',
+    price:7.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFUkUgv6d-hLgb5WbGEuxD5',qty_stock:3,qty_per_bag:5
   },
   {
     id:'0476',name:'Спортивний одяг мікс демісезон 1й сорт',
@@ -2143,6 +2134,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGnORZnUWajF1oBANRpL52d',qty_stock:3,qty_per_bag:22
   },
   {
+    id:'1344',name:'Штани велюрові 1й сорт Канада',
+    category:'Одяг',subcategory:'Штани та брюки',
+    brand:'',sort:'1й сорт',season:'Демісезон',
+    audience:'Мікс',country:'Канада',
+    unit:'кг',weight:'75',
+    price:5.4,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEe92_WPZQqBz59z8xkLjLs',qty_stock:3,qty_per_bag:75
+  },
+  {
     id:'1345',name:'Кофти флісові XXL мікс демісезон 1й сорт Канада',
     category:'Одяг',subcategory:'Кофти флісові',
     brand:'',sort:'1й сорт',season:'Демісезон',
@@ -2168,6 +2168,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'52.1',
     price:7.2,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHH7uVlXsAdaIeqR7jSVjen',qty_stock:3,qty_per_bag:42
+  },
+  {
+    id:'1377',name:'Іграшка тверда Сток',
+    category:'Іграшки',subcategory:'Тверді іграшки',
+    brand:'',sort:'Сток',season:'Всесезонне',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'41.6',
+    price:8.2,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFW_4XmqFSmfxB7Q6X0QRld',qty_stock:3,qty_per_bag:71
   },
   {
     id:'1422',name:'Вітровки мікс демісезон 1й сорт Канада',
@@ -2305,24 +2314,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHZRVkipyXVndJanr08gUw1',qty_stock:3,qty_per_bag:14
   },
   {
-    id:'1884',name:'Сорочки, блузи жіночі Екстра Німеччина D',
-    category:'Одяг',subcategory:'Сорочки та блузи',
-    brand:'',sort:'Екстра',season:'Демісезон',
-    audience:'Жіноче',country:'Німеччина',
-    unit:'кг',weight:'75.7',
-    price:7.65,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHINqDfHoDiG2vRGTJSEVI4',qty_stock:3,qty_per_bag:93
-  },
-  {
-    id:'1919',name:'Домовий мікс, постіль, рушники, скатертини, штори Екстра +Крем, Англія',
-    category:'Дім та побут',subcategory:'Побутові товари',
-    brand:'',sort:'Мікс',season:'Всесезонне',
-    audience:'Мікс',country:'Англія',
-    unit:'кг',weight:'59.8',
-    price:4.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFynklkoynZcB99dn5SRs42',qty_stock:3,qty_per_bag:35
-  },
-  {
     id:'1920',name:'Сорочки чоловічі утеплені Parkside, Сток, Німеччина',
     category:'Одяг',subcategory:'Сорочки та блузи',
     brand:'',sort:'Сток',season:'Демісезон',
@@ -2330,6 +2321,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'35.8',
     price:13.9,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pF6qvzg1SSjp7b9JVqHMaZR',qty_stock:3,qty_per_bag:14
+  },
+  {
+    id:'0056',name:'Бейсболки, кепки мікс літо 1й сорт',
+    category:'Аксесуари',subcategory:'Шапки та головні убори',
+    brand:'',sort:'1й сорт',season:'Літо',
+    audience:'Мікс',country:'Польща',
+    unit:'кг',weight:'29.1',
+    price:4.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEiy_4KxMAlkC0F_LT38bV-',qty_stock:2,qty_per_bag:14
   },
   {
     id:'0057',name:'Бейсболки, кепки мікс літо Екстра',
@@ -2377,6 +2377,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEyVIhe3m_1xuVqcvt9fOVv',qty_stock:2,qty_per_bag:5
   },
   {
+    id:'0226',name:'Халати нейлон жіночі літо 1й сорт',
+    category:'Одяг',subcategory:'Халати та піжами',
+    brand:'',sort:'1й сорт',season:'Літо',
+    audience:'Жіноче',country:'Польща',
+    unit:'кг',weight:'62.6',
+    price:4.95,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGO7ghyqvfuAIN0JkVYARc9',qty_stock:2,qty_per_bag:6
+  },
+  {
     id:'0233',name:'Наматрасники мікс 1й сорт',
     category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'1й сорт',season:'Всесезонне',
@@ -2393,6 +2402,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'50.6',
     price:4.4,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pG6Qs4qswFM1LvXHLjUi_gV',qty_stock:2,qty_per_bag:1
+  },
+  {
+    id:'0247',name:'Робочий одяг мікс демісезон 2й сорт',
+    category:'Одяг',subcategory:'Робочий одяг',
+    brand:'',sort:'2й сорт',season:'Демісезон',
+    audience:'Мікс',country:'Польща',
+    unit:'кг',weight:'52.9',
+    price:2.95,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFrpCC6YQ_sH_ebo_ILlFaN',qty_stock:2,qty_per_bag:2
   },
   {
     id:'0280',name:'Кофти з капюшоном мікс демісезон 2й сорт',
@@ -2413,15 +2431,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFKty8oMiYDEvraFpFjCWwM',qty_stock:2,qty_per_bag:4
   },
   {
-    id:'0494',name:'Штани спортивні нейлон чоловічі демісезон 1й сорт Канада',
-    category:'Одяг',subcategory:'Штани та брюки',
-    brand:'',sort:'1й сорт',season:'Демісезон',
-    audience:'Чоловіче',country:'Канада',
-    unit:'кг',weight:'58',
-    price:6.4,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGuRvwFom6mh9qL4yxmO0vE',qty_stock:2,qty_per_bag:2
-  },
-  {
     id:'0524',name:'Гавайки жіночі літо 1й сорт',
     category:'Одяг',subcategory:'Штани та брюки',
     brand:'',sort:'1й сорт',season:'Літо',
@@ -2438,15 +2447,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'50.5',
     price:10.7,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pErjKSEbjkZTs21XSWatlYT',qty_stock:2,qty_per_bag:16
-  },
-  {
-    id:'0557',name:'Штани спортивні мікс демісезон 1й сорт Німеччина D',
-    category:'Одяг',subcategory:'Штани та брюки',
-    brand:'',sort:'1й сорт',season:'Демісезон',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'50.2',
-    price:5.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFIRrk36bkM0Og3fB_bWVx4',qty_stock:2,qty_per_bag:3
   },
   {
     id:'0633',name:'Кофти з капюшоном мікс демісезон 2й сорт',
@@ -2474,6 +2474,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'30.4',
     price:15.4,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEYkw6_6E5JhJx7EyK7uCBj',qty_stock:2,qty_per_bag:5
+  },
+  {
+    id:'0761',name:'Футболки чоловічі літо Livergy, Crivit Сток',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'Livergy',sort:'Сток',season:'Літо',
+    audience:'Чоловіче',country:'Німеччина',
+    unit:'кг',weight:'22.5',
+    price:15.9,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHhUq1SGZgX1aiWfI48mDYM',qty_stock:2,qty_per_bag:5
   },
   {
     id:'1008',name:'Куртки дитячі зима 1+2й сорт',
@@ -2591,15 +2600,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'50.6',
     price:3.9,akciya:3.0,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE967tYui_6xYZO8x0r5BJe',qty_stock:2,qty_per_bag:1
-  },
-  {
-    id:'1344',name:'Штани велюрові 1й сорт Канада',
-    category:'Одяг',subcategory:'Штани та брюки',
-    brand:'',sort:'1й сорт',season:'Демісезон',
-    audience:'Мікс',country:'Канада',
-    unit:'кг',weight:'50',
-    price:5.4,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEe92_WPZQqBz59z8xkLjLs',qty_stock:2,qty_per_bag:75
   },
   {
     id:'1415',name:'Вітровки жіночі демісезон 1й сорт',
@@ -2728,15 +2728,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pH-Hxw7xhCH2GGTxf46wNXe',qty_stock:2,qty_per_bag:10
   },
   {
-    id:'1657',name:'Шорти чоловічі та жіночі Екстра +Крем',
-    category:'Одяг',subcategory:'Шорти',
-    brand:'',sort:'Мікс',season:'Літо',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'38',
-    price:7.8,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEauzvD7ELTomiLEv7xa76a',qty_stock:2,qty_per_bag:87
-  },
-  {
     id:'1663',name:'Взуття доросле та дитяче мікс літо Екстра+ 1 сорт',
     category:'Взуття',subcategory:'Взуття мікс',
     brand:'',sort:'Мікс',season:'Літо',
@@ -2762,6 +2753,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'39.5',
     price:6.9,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEPXtPUgVev7GN8yXphccL5',qty_stock:2,qty_per_bag:214
+  },
+  {
+    id:'1693',name:'Шкарпетки мікс демісезон Parkside Сток',
+    category:'Одяг',subcategory:'Шкарпетки',
+    brand:'',sort:'Сток',season:'Демісезон',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'40.8',
+    price:14.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGWrxPca6bQ26S482mLHpNJ',qty_stock:2,qty_per_bag:83
   },
   {
     id:'1763',name:'Взуття мікс зима  Esmara, Livergy Сток',
@@ -2870,15 +2870,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'110',
     price:5.7,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pG1G9VPeaB-_AWI6nXWLigK',qty_stock:2,qty_per_bag:217
-  },
-  {
-    id:'1921',name:'Футболки чоловічі 1й сорт',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'1й сорт',season:'Літо',
-    audience:'Чоловіче',country:'',
-    unit:'кг',weight:'30',
-    price:4.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEHcY_Xl4UXVOteM9B2YPP7',qty_stock:2,qty_per_bag:47
   },
   {
     id:'0011',name:'Колготки мікс демісезон 1+2й сорт',
@@ -3097,15 +3088,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFutnKibNTKkdDu-mRTrMzS',qty_stock:1,qty_per_bag:3
   },
   {
-    id:'0270',name:'Спортивний одяг нейлон мікс демісезон 2й сорт',
-    category:'Одяг',subcategory:'Спортивний одяг',
-    brand:'',sort:'2й сорт',season:'Демісезон',
-    audience:'Мікс',country:'Польща',
-    unit:'кг',weight:'25.9',
-    price:4.25,akciya:3.95,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFvOdQAifBmHUOc0YoTV_oa',qty_stock:1,qty_per_bag:2
-  },
-  {
     id:'0311',name:'Штани чоловічі шерсть демісезон 2й сорт',
     category:'Одяг',subcategory:'Штани та брюки',
     brand:'',sort:'2й сорт',season:'Демісезон',
@@ -3178,13 +3160,13 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGOWKIwTZ3nCVN1vJ8vgmpp',qty_stock:1,qty_per_bag:2
   },
   {
-    id:'0466',name:'Футболки жіночі літо 1й+2й сорт',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'Мікс',season:'Літо',
-    audience:'Жіноче',country:'Польща',
-    unit:'кг',weight:'32.5',
-    price:3.4,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGC1IZCntO1A9NMNx2NSKrz',qty_stock:1,qty_per_bag:6
+    id:'0494',name:'Штани спортивні нейлон чоловічі демісезон 1й сорт Канада',
+    category:'Одяг',subcategory:'Штани та брюки',
+    brand:'',sort:'1й сорт',season:'Демісезон',
+    audience:'Чоловіче',country:'Канада',
+    unit:'кг',weight:'28',
+    price:6.4,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGuRvwFom6mh9qL4yxmO0vE',qty_stock:1,qty_per_bag:2
   },
   {
     id:'0500',name:'Футболки мікс літо 2й сорт',
@@ -3203,6 +3185,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'40.1',
     price:2.9,akciya:2.2,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHdH66RFD0wr8Lev-C3d05b',qty_stock:1,qty_per_bag:2
+  },
+  {
+    id:'0557',name:'Штани спортивні мікс демісезон 1й сорт Німеччина D',
+    category:'Одяг',subcategory:'Штани та брюки',
+    brand:'',sort:'1й сорт',season:'Демісезон',
+    audience:'Мікс',country:'Німеччина',
+    unit:'кг',weight:'25',
+    price:5.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFIRrk36bkM0Og3fB_bWVx4',qty_stock:1,qty_per_bag:3
   },
   {
     id:'0616',name:'Кофти грубі на довгий рукав чоловічі демісезон 1й сорт',
@@ -3601,6 +3592,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGeypC7zhTGM64ikCOpkpW9',qty_stock:1,qty_per_bag:166
   },
   {
+    id:'1514',name:'Футболки мікс літо 2й сорт XXL Німеччина G',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'2й сорт',season:'Літо',
+    audience:'Мікс',country:'Німеччина',
+    unit:'кг',weight:'25.7',
+    price:2.9,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFIyZxfKA8FHZ0nbn36d9g6',qty_stock:1,qty_per_bag:114
+  },
+  {
     id:'1528',name:'Штани спортивні мікс демісезон 1й сорт',
     category:'Одяг',subcategory:'Спортивний одяг',
     brand:'',sort:'1й сорт',season:'Демісезон',
@@ -3673,15 +3673,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEMeVBxY4tr-UgP-LW0fxlz',qty_stock:1,qty_per_bag:19
   },
   {
-    id:'1611',name:'Рушники мікс S1-Nh1-T 1й сорт + Екстра',
-    category:'Дім та побут',subcategory:'Рушники',
-    brand:'',sort:'Мікс',season:'Всесезонне',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'20',
-    price:6.8,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE8ja68aVVjyLIJ7XTPaiEA',qty_stock:1,qty_per_bag:49
-  },
-  {
     id:'1639',name:'Товари для дому, техніка, декор bric a brac сток A+B',
     category:'Bric-a-Brac',subcategory:'Bric-a-Brac',
     brand:'',sort:'Сток',season:'Всесезонне',
@@ -3689,6 +3680,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'108',
     price:7.5,akciya:5.5,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFwGKiYMtsrY5AdYW-FAyhw',qty_stock:1,qty_per_bag:213
+  },
+  {
+    id:'1657',name:'Шорти чоловічі та жіночі Екстра +Крем',
+    category:'Одяг',subcategory:'Шорти',
+    brand:'',sort:'Мікс',season:'Літо',
+    audience:'Мікс',country:'Німеччина',
+    unit:'кг',weight:'17.9',
+    price:7.8,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEauzvD7ELTomiLEv7xa76a',qty_stock:1,qty_per_bag:87
   },
   {
     id:'1659',name:'Футболки жіночі великих розмірів літо XXL 1й сорт',
@@ -3806,15 +3806,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'25',
     price:8.5,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE7FWbPWk262SYymCc4vtN7',qty_stock:1,qty_per_bag:336
-  },
-  {
-    id:'1762',name:'Футболки чоловічі 1й сорт',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'1й сорт',season:'Літо',
-    audience:'Чоловіче',country:'',
-    unit:'кг',weight:'25.5',
-    price:5.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE_9LgLiitno7k4NHSIIABy',qty_stock:1,qty_per_bag:167
   },
   {
     id:'1769',name:'Взуття літо, мокасини чоловічі та жіночі Hey Dude сток, категорія C (плями, мін. дефекти)',
@@ -3961,6 +3952,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pF3BjRd6dN3CD0d4VO4hxYm',qty_stock:1,qty_per_bag:33
   },
   {
+    id:'1884',name:'Сорочки, блузи жіночі Екстра Німеччина D',
+    category:'Одяг',subcategory:'Сорочки та блузи',
+    brand:'',sort:'Екстра',season:'Демісезон',
+    audience:'Жіноче',country:'Німеччина',
+    unit:'кг',weight:'25.2',
+    price:7.65,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHINqDfHoDiG2vRGTJSEVI4',qty_stock:1,qty_per_bag:93
+  },
+  {
     id:'1885',name:'Шорти чоловічі та жіночі Екстра + Крем Німеччина D',
     category:'Одяг',subcategory:'Шорти',
     brand:'',sort:'Мікс',season:'Літо',
@@ -4058,6 +4058,24 @@ window.PRODUCTS=[
     unit:'кг',weight:'15.2',
     price:6.2,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFHw6xNIvdKlqUr1XSptF4n',qty_stock:1,qty_per_bag:28
+  },
+  {
+    id:'1921',name:'Футболки чоловічі 1й сорт',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'1й сорт',season:'Літо',
+    audience:'Чоловіче',country:'',
+    unit:'кг',weight:'15',
+    price:4.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEHcY_Xl4UXVOteM9B2YPP7',qty_stock:1,qty_per_bag:47
+  },
+  {
+    id:'1923',name:'Чоловічі футболки з круглим вирізом Екстра, Канада',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'Екстра',season:'Літо',
+    audience:'Чоловіче',country:'Канада',
+    unit:'кг',weight:'30',
+    price:8.2,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHJsNOiL7UzFe439FIZDmFy',qty_stock:1,qty_per_bag:185
   },
   {
     id:'0048',name:'Чоботи гумові дитячі демісезон 1й сорт',
@@ -4294,15 +4312,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGKXg7242TbIYMMNpJKzIcZ',qty_stock:null,qty_per_bag:1
   },
   {
-    id:'0226',name:'Халати нейлон жіночі літо 1й сорт',
-    category:'Одяг',subcategory:'Халати та піжами',
-    brand:'',sort:'1й сорт',season:'Літо',
-    audience:'Жіноче',country:'Польща',
-    unit:'кг',weight:'20-25',
-    price:4.95,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGO7ghyqvfuAIN0JkVYARc9',qty_stock:null,qty_per_bag:6
-  },
-  {
     id:'0227',name:'Постіль фланелева мікс 1й сорт',
     category:'Дім та побут',subcategory:'Побутові товари',
     brand:'',sort:'1й сорт',season:'Всесезонне',
@@ -4454,6 +4463,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'20-25',
     price:3.9,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pG6Jev-7RYEyMZ3MG1Br0cP',qty_stock:null,qty_per_bag:5
+  },
+  {
+    id:'0466',name:'Футболки жіночі літо 1й+2й сорт',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'Мікс',season:'Літо',
+    audience:'Жіноче',country:'Польща',
+    unit:'кг',weight:'25-30',
+    price:3.4,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGC1IZCntO1A9NMNx2NSKrz',qty_stock:null,qty_per_bag:6
   },
   {
     id:'0473',name:'Аксесуари мікс зима (шапки,шарфи,рукавиці)  C&A Сток',
@@ -5509,6 +5527,15 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE-9kl36LnW8Wvm-Pj52qr8',qty_stock:null,qty_per_bag:25
   },
   {
+    id:'1611',name:'Рушники мікс S1-Nh1-T 1й сорт + Екстра',
+    category:'Дім та побут',subcategory:'Рушники',
+    brand:'',sort:'Мікс',season:'Всесезонне',
+    audience:'Мікс',country:'',
+    unit:'кг',weight:'20',
+    price:6.8,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE8ja68aVVjyLIJ7XTPaiEA',qty_stock:null,qty_per_bag:49
+  },
+  {
     id:'1618',name:'Спорт одяг мікс мультибренд Kappa,Nike,Adidas,Bruno Banani  сток',
     category:'Одяг',subcategory:'Спортивний одяг',
     brand:'Nike',sort:'Сток',season:'Демісезон',
@@ -5752,15 +5779,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHTma2BxOGTWj6_psAIqq8C',qty_stock:null,qty_per_bag:128
   },
   {
-    id:'1693',name:'Шкарпетки мікс демісезон Parkside Сток',
-    category:'Одяг',subcategory:'Шкарпетки',
-    brand:'',sort:'Сток',season:'Демісезон',
-    audience:'Мікс',country:'',
-    unit:'кг',weight:'5-10',
-    price:14.5,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pGWrxPca6bQ26S482mLHpNJ',qty_stock:null,qty_per_bag:83
-  },
-  {
     id:'1695',name:'Взуття мікс доросле зима сток ECCO',
     category:'Взуття',subcategory:'Взуття мікс',
     brand:'',sort:'Сток',season:'Зима',
@@ -5993,6 +6011,15 @@ window.PRODUCTS=[
     unit:'кг',weight:'25',
     price:4.95,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFfo4_IMFdd6AMZqap5coWl',qty_stock:null,qty_per_bag:100
+  },
+  {
+    id:'1762',name:'Футболки чоловічі 1й сорт',
+    category:'Одяг',subcategory:'Футболки',
+    brand:'',sort:'1й сорт',season:'Літо',
+    audience:'Чоловіче',country:'',
+    unit:'кг',weight:'25',
+    price:5.5,akciya:null,
+    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pE_9LgLiitno7k4NHSIIABy',qty_stock:null,qty_per_bag:167
   },
   {
     id:'1764',name:'Спорт одяг мікс доросле + дитяче сток літо Hummel',
@@ -6373,15 +6400,6 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pEm88x0YH0f9f3rt5w4o1_3',qty_stock:null,qty_per_bag:55
   },
   {
-    id:'1923',name:'Чоловічі футболки з круглим вирізом Екстра, Канада',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'Екстра',season:'Літо',
-    audience:'Чоловіче',country:'Канада',
-    unit:'кг',weight:'30',
-    price:8.2,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHJsNOiL7UzFe439FIZDmFy',qty_stock:null,qty_per_bag:185
-  },
-  {
     id:'1925',name:'Футболки чоловічі + жіночі Екстра, Англія',
     category:'Одяг',subcategory:'Футболки',
     brand:'',sort:'Екстра',season:'Літо',
@@ -6389,15 +6407,6 @@ window.PRODUCTS=[
     unit:'кг',weight:'20-25',
     price:7.5,akciya:null,
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFubE9VozaULXn8Qk196WpM',qty_stock:null,qty_per_bag:122
-  },
-  {
-    id:'1514',name:'Футболки мікс літо 2й сорт XXL Німеччина G',
-    category:'Одяг',subcategory:'Футболки',
-    brand:'',sort:'2й сорт',season:'Літо',
-    audience:'Мікс',country:'Німеччина',
-    unit:'кг',weight:'-25',
-    price:2.9,akciya:null,
-    youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pFIyZxfKA8FHZ0nbn36d9g6',qty_stock:-1,qty_per_bag:114
   },
   {
     id:'1567',name:'Іграшки тверді мікс Англія/Шотландія  1й сорт + Екстра',
@@ -6409,5 +6418,5 @@ window.PRODUCTS=[
     youtube:'https://www.youtube.com/playlist?list=PL6gwWuwZT8pHoxDA-8fBRbQpCR4xz0X4a',qty_stock:-2,qty_per_bag:94
   }
 ];
-window.LOTS_IDS=new Set(['1913','1348','1795','1803','0223','1125','0162','1907','1794','1672','1727','1570','1429','1420','1801','1191','1645','1001','0214','1030','0170','1595','1701','1722','1649','0155','1724','1899','0644','1397','1159','1906','1298','0348','0763','1131','0677','1859','1352','1441','1527','1816','1767','0032','0261','0318','1355','1625','1676','1807','0587','0462','0658','1022','1200','0009','0136','0403','0508','0847','1443','1473','0281','0809','1113','1580','1642','1916','0533','0565','1290','1319','1323','1384','1396','1606','1837','1926','0036','0714','1163','1780','1858','1918','0637','0660','1168','1369','1403','1535','1586','1686','1725','1733','1888','0098','0193','0573','1056','1383','1627','1742','1862','1924','0186','0651','1392','1434','1604','1651','1892','0013','0269','0420','0526','0836','0985','1012','1347','1783','0122','0219','0277','0346','0448','0454','1643','1694','1719','1798','1799','1819','1820','1849','0015','0245','0540','0761','0896','1110','1250','1311','1699','1743','1800','1852','1863','0012','0014','0168','0275','0276','0409','0635','0748','0851','0881','0960','1073','1081','1132','1167','1228','1236','1303','1322','1624','1738','1808','1842','1876','1917','0174','0216','0247','0267','0297','0315','0368','0645','0676','0678','0703','0754','0980','1049','1053','1103','1172','1194','1232','1234','1336','1362','1377','1410','1578','1588','1599','1644','1653','1824','1844','1847','1853','1866','1874','0025','0028','0038','0093','0123','0149','0215','0260','0476','0575','0669','0697','0894','1065','1093','1201','1326','1346','1373','1422','1426','1518','1613','1634','1636','1646','1655','1669','1707','1744','1805','1811','1865','1884','1919','0057','0094','0138','0147','0233','0280','0314','0494','0524','0542','0557','0633','0683','0694','1008','1024','1077','1078','1137','1146','1195','1199','1260','1281','1302','1308','1344','1415','1423','1455','1464','1478','1506','1602','1605','1609','1612','1628','1637','1638','1640','1657','1663','1668','1671','1773','1814','1845','1846','1873','1891','1908','1911','1912','0037','0049','0051','0105','0117','0153','0160','0164','0165','0166','0173','0184','0207','0209','0213','0235','0241','0263','0270','0311','0322','0325','0360','0419','0451','0458','0500','0525','0652','0655','0664','0758','0776','0888','0930','0981','1060','1083','1085','1094','1156','1175','1202','1206','1235','1241','1264','1291','1300','1312','1313','1358','1401','1412','1427','1430','1458','1461','1467','1489','1499','1501','1509','1528','1541','1548','1552','1554','1559','1566','1598','1611','1659','1670','1684','1696','1700','1708','1710','1717','1726','1734','1753','1762','1769','1778','1788','1792','1815','1822','1836','1843','1870','1871','1880','1882','1898','1900','1904','1914','1915']);
-window.LOTS_ORDER=['1913','1348','1795','1803','0223','1125','0162','1907','1794','1672','1727','1570','1429','1420','1801','1191','1645','1001','0214','1030','0170','1595','1701','1722','1649','0155','1724','1899','0644','1397','1159','1906','1298','0348','0763','1131','0677','1859','1352','1441','1527','1816','1767','0032','0261','0318','1355','1625','1676','1807','0587','0462','0658','1022','1200','0009','0136','0403','0508','0847','1443','1473','0281','0809','1113','1580','1642','1916','0533','0565','1290','1319','1323','1384','1396','1606','1837','1926','0036','0714','1163','1780','1858','1918','0637','0660','1168','1369','1403','1535','1586','1686','1725','1733','1888','0098','0193','0573','1056','1383','1627','1742','1862','1924','0186','0651','1392','1434','1604','1651','1892','0013','0269','0420','0526','0836','0985','1012','1347','1783','0122','0219','0277','0346','0448','0454','1643','1694','1719','1798','1799','1819','1820','1849','0015','0245','0540','0761','0896','1110','1250','1311','1699','1743','1800','1852','1863','0012','0014','0168','0275','0276','0409','0635','0748','0851','0881','0960','1073','1081','1132','1167','1228','1236','1303','1322','1624','1738','1808','1842','1876','1917','0174','0216','0247','0267','0297','0315','0368','0645','0676','0678','0703','0754','0980','1049','1053','1103','1172','1194','1232','1234','1336','1362','1377','1410','1578','1588','1599','1644','1653','1824','1844','1847','1853','1866','1874','0025','0028','0038','0093','0123','0149','0215','0260','0476','0575','0669','0697','0894','1065','1093','1201','1326','1346','1373','1422','1426','1518','1613','1634','1636','1646','1655','1669','1707','1744','1805','1811','1865','1884','1919','0057','0094','0138','0147','0233','0280','0314','0494','0524','0542','0557','0633','0683','0694','1008','1024','1077','1078','1137','1146','1195','1199','1260','1281','1302','1308','1344','1415','1423','1455','1464','1478','1506','1602','1605','1609','1612','1628','1637','1638','1640','1657','1663','1668','1671','1773','1814','1845','1846','1873','1891','1908','1911','1912','0037','0049','0051','0105','0117','0153','0160','0164','0165','0166','0173','0184','0207','0209','0213','0235','0241','0263','0270','0311','0322','0325','0360','0419','0451','0458','0500','0525','0652','0655','0664','0758','0776','0888','0930','0981','1060','1083','1085','1094','1156','1175','1202','1206','1235','1241','1264','1291','1300','1312','1313','1358','1401','1412','1427','1430','1458','1461','1467','1489','1499','1501','1509','1528','1541','1548','1552','1554','1559','1566','1598','1611','1659','1670','1684','1696','1700','1708','1710','1717','1726','1734','1753','1762','1769','1778','1788','1792','1815','1822','1836','1843','1870','1871','1880','1882','1898','1900','1904','1914','1915'];
+window.LOTS_IDS=new Set([]);
+window.LOTS_ORDER=[];

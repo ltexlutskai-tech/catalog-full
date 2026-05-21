@@ -294,6 +294,236 @@ BRAND_LIST = ['nike', 'adidas', 'puma', 'zara', 'h&m', 'primark', 'next', 'marks
               'pepperts', 'tchibo', 'c&a', 'gap', 'levis', 'tommy', 'diesel', 'calvin klein',
               'ralph lauren', 'guess']
 
+# ===== КЛАСИФІКАТОР ТЕГІВ З КОЛОНКИ "Категорії" =====
+# Кожному відомому тегу присвоюємо тип і канонічне значення.
+# Якщо тег невідомий — ігнорується (логуємо в кінці).
+
+TAG_TOP_CAT = {
+    'одяг': 'Одяг',
+    'взуття': 'Взуття',
+    'аксесуари': 'Аксесуари',
+    'дім та побут': 'Дім та побут',
+    'іграшки': 'Іграшки',
+    'bric a brac': 'Bric-a-Brac',
+    'bric-a-brac': 'Bric-a-Brac',
+    'agd': 'Bric-a-Brac',
+    'косметика': 'Косметика',
+}
+
+# Підкатегорія → (top, canonical subcategory)
+TAG_SUBCAT = {
+    # Одяг
+    'светри та кардигани': ('Одяг', 'Светри та кардигани'),
+    'худі та світшоти':    ('Одяг', 'Худі та світшоти'),
+    'куртки та пальта':    ('Одяг', 'Куртки та пальта'),
+    'одяг мікс':           ('Одяг', 'Одяг мікс'),
+    'кофти флісові':       ('Одяг', 'Кофти флісові'),
+    'шорти':               ('Одяг', 'Шорти'),
+    'штани та брюки':      ('Одяг', 'Штани та брюки'),
+    'футболки':            ('Одяг', 'Футболки'),
+    'майки та топи':       ('Одяг', 'Майки та топи'),
+    'купальники':          ('Одяг', 'Купальники'),
+    'нижня білизна':       ('Одяг', 'Нижня білизна'),
+    'сорочки та блузи':    ('Одяг', 'Сорочки та блузи'),
+    'колготки та легінси': ('Одяг', 'Колготки та легінси'),
+    'лосини':              ('Одяг', 'Колготки та легінси'),
+    'спідниці та плаття':  ('Одяг', 'Спідниці та плаття'),
+    'халати та піжами':    ('Одяг', 'Халати та піжами'),
+    'шкарпетки':           ('Одяг', 'Шкарпетки'),
+    'джинси':              ('Одяг', 'Джинси'),
+    'робочий одяг':        ('Одяг', 'Робочий одяг'),
+    'спец-одяг':           ('Одяг', 'Робочий одяг'),
+    'військовий одяг':     ('Одяг', 'Робочий одяг'),
+    'спортивний одяг':     ('Одяг', 'Спортивний одяг'),
+    'вітровки та штормовки': ('Одяг', 'Вітровки та штормовки'),
+    'лижний одяг':         ('Одяг', 'Куртки та пальта'),
+    'костюми':             ('Одяг', 'Костюми'),
+    'комбінезони':         ('Одяг', 'Комбінезони'),
+    'жилетки':             ('Одяг', 'Піджаки та жилети'),
+    'піджаки та жилети':   ('Одяг', 'Піджаки та жилети'),
+    # Взуття
+    'взуття мікс':            ('Взуття', 'Взуття мікс'),
+    'кросівки та кеди':       ('Взуття', 'Кросівки та кеди'),
+    'тапочки та шльопанці':   ('Взуття', 'Тапочки та шльопанці'),
+    'гумове взуття':          ('Взуття', 'Взуття гумове'),
+    'взуття гумове':          ('Взуття', 'Взуття гумове'),
+    'черевики та чоботи':     ('Взуття', 'Черевики та чоботи'),
+    'туфлі та босоніжки':     ('Взуття', 'Туфлі та босоніжки'),
+    'робоче взуття':          ('Взуття', 'Взуття робоче'),
+    'взуття робоче':          ('Взуття', 'Взуття робоче'),
+    # Аксесуари
+    'біжутерія':             ('Аксесуари', 'Біжутерія'),
+    'сумки та рюкзаки':      ('Аксесуари', 'Сумки та рюкзаки'),
+    'ремені':                ('Аксесуари', 'Сумки та рюкзаки'),
+    'шапки та головні убори':('Аксесуари', 'Шапки та головні убори'),
+    'рукавички':             ('Аксесуари', 'Шапки та головні убори'),
+    'рукавиці':              ('Аксесуари', 'Шапки та головні убори'),
+    # Дім та побут
+    'постільна білизна':  ('Дім та побут', 'Постільна білизна'),
+    'рушники':            ('Дім та побут', 'Рушники'),
+    'товари для тварин':  ('Дім та побут', 'Товари для тварин'),
+    'килими та килимки':  ('Дім та побут', 'Килими та килимки'),
+    'побутові товари':    ('Дім та побут', 'Побутові товари'),
+    'домашній текстиль':  ('Дім та побут', 'Побутові товари'),
+    'пряжа':              ('Дім та побут', 'Побутові товари'),
+    'спальні мішки':      ('Дім та побут', 'Побутові товари'),
+    # Іграшки
+    'тверді іграшки':  ('Іграшки', 'Тверді іграшки'),
+    'іграшка тверда':  ('Іграшки', 'Тверді іграшки'),
+    "м'які іграшки":   ('Іграшки', "М'які іграшки"),
+    "іграшка м'яка":   ('Іграшки', "М'які іграшки"),
+    # Bric-a-Brac
+    'bric a brac (підкат)': ('Bric-a-Brac', 'Bric-a-Brac'),
+    # Косметика
+    'косметика декоративна': ('Косметика', 'Косметика декоративна'),
+}
+
+# Сезон
+TAG_SEASON = {
+    'демісезон': 'Демісезон',
+    'зима': 'Зима',
+    'літо': 'Літо',
+    'всесезонне': 'Всесезонне',
+}
+
+# Стать / audience
+TAG_AUDIENCE = {
+    'жіноче': 'Жіноче',
+    'чоловіче': 'Чоловіче',
+    'дитяче': 'Дитяче',
+    'мікс жіноче+чоловіче': 'Мікс',
+    'мікс доросле+дитяче': 'Мікс',
+    'доросле+дитяче': 'Мікс',
+    'дорослі': 'Дорослі',
+}
+
+# Сорт
+TAG_SORT = {
+    '1-й сорт': '1й сорт', '1й сорт': '1й сорт',
+    '2-й сорт': '2й сорт', '2й сорт': '2й сорт',
+    'сток': 'Сток',
+    'екстра': 'Екстра',
+    'крем': 'Крем',
+    'мікс': 'Мікс',
+    # комбіновані — позначаємо як "Мікс" (склад різний)
+    'екстра + 1-й сорт': 'Мікс',
+    '1-й + 2-й сорт':    'Мікс',
+    'екстра+крем':       'Мікс',
+    'сток + крем':       'Мікс',
+}
+
+# Країна
+TAG_COUNTRY = {
+    'англія': 'Англія',
+    'німеччина': 'Німеччина',
+    'німеччина d': 'Німеччина',
+    'польща': 'Польща',
+    'канада': 'Канада',
+    'італія': 'Італія',
+    'шотландія': 'Шотландія',
+    'бельгія': 'Бельгія',
+    'голандія': 'Голандія',
+    'голландія': 'Голандія',
+    'україна': 'Україна',
+    'америка': 'Америка',
+}
+
+def classify_categories_column(cats_text):
+    """Парсить колонку 'Категорії' (через кому) і повертає словник атрибутів.
+    Невпізнані теги ігноруються. Повертає None для відсутніх — щоб виклик
+    знав, що треба впасти на fallback по назві."""
+    if not cats_text or cats_text == 'nan':
+        return None
+    out = {
+        'category': None, 'subcategory': None,
+        'sort': None, 'season': None, 'audience': None, 'country': None,
+    }
+    unknown = []
+    for raw in cats_text.split(','):
+        t = raw.strip()
+        if not t:
+            continue
+        key = t.lower()
+        if key in TAG_SUBCAT:
+            top, sub = TAG_SUBCAT[key]
+            # Підкатегорія завжди визначає батьківську категорію
+            out['category'] = top
+            out['subcategory'] = sub
+        elif key in TAG_TOP_CAT:
+            # Категорія ставиться тільки якщо ще немає від підкатегорії
+            if not out['category']:
+                out['category'] = TAG_TOP_CAT[key]
+        elif key in TAG_SEASON:
+            out['season'] = TAG_SEASON[key]
+        elif key in TAG_AUDIENCE:
+            out['audience'] = TAG_AUDIENCE[key]
+        elif key in TAG_SORT:
+            out['sort'] = TAG_SORT[key]
+        elif key in TAG_COUNTRY:
+            out['country'] = TAG_COUNTRY[key]
+        else:
+            unknown.append(t)
+    out['_unknown'] = unknown
+    return out
+
+# Парсер колонки "Опис" — витягує атрибути з рядків виду "✔️Сезон: X"
+def parse_description(desc_text):
+    if not desc_text or desc_text == 'nan':
+        return {}
+    out = {}
+    # Прибираємо галочки і нерозривні пробіли
+    text = desc_text.replace('✔️', '').replace('✔', '').replace('\xa0', ' ')
+    # Ловимо пари "Поле: значення" — значення до кінця рядка
+    fields = {
+        'season':   r'Сезон\s*:\s*([^\n\r]+)',
+        'sort':     r'Сорт\s*:\s*([^\n\r]+)',
+        'audience': r'Стать\s*:\s*([^\n\r]+)',
+        'qty_per_bag': r'Кількість одиниць\s*:\s*([^\n\r]+)',
+        'unit_weight': r'Вага одиниці\s*:\s*([^\n\r]+)',
+        'sizes':    r'Розміри\s*:\s*([^\n\r]+)',
+    }
+    for k, pat in fields.items():
+        m = re.search(pat, text, re.IGNORECASE)
+        if m:
+            v = m.group(1).strip().rstrip('.').strip()
+            if v:
+                out[k] = v
+    return out
+
+def normalize_desc_season(v):
+    if not v: return None
+    s = v.lower()
+    if 'демі' in s: return 'Демісезон'
+    if 'зим'  in s: return 'Зима'
+    if 'літ'  in s: return 'Літо'
+    if 'всесезон' in s: return 'Всесезонне'
+    return None
+
+def normalize_desc_sort(v):
+    if not v: return None
+    s = v.lower()
+    if 'екстр' in s and 'крем' in s: return 'Мікс'
+    if '1' in s and '2' in s and 'сорт' in s: return 'Мікс'
+    if 'екстр' in s: return 'Екстра'
+    if 'крем'  in s: return 'Крем'
+    if '1' in s and 'сорт' in s: return '1й сорт'
+    if '2' in s and 'сорт' in s: return '2й сорт'
+    if 'сток' in s: return 'Сток'
+    if 'мікс' in s: return 'Мікс'
+    return None
+
+def normalize_desc_audience(v):
+    if not v: return None
+    s = v.lower()
+    has_w = 'жін' in s
+    has_m = 'чол' in s
+    has_c = 'дит' in s or 'хлопч' in s or 'дівч' in s
+    if has_w and has_m: return 'Мікс'
+    if has_w: return 'Жіноче'
+    if has_m: return 'Чоловіче'
+    if has_c: return 'Дитяче'
+    return None
+
 def detect_attrs(name_lower):
     # Normalize quote marks: backtick `, right-single ’, prime ' → ' (so 'м’яч' / 'м`яч' / "м'яч" all match)
     name_lower = name_lower.replace('`', "'").replace('’', "'").replace('ʼ', "'")
@@ -422,11 +652,31 @@ for _, row in df1.iterrows():
 
     prod_id = id_match.group(1).zfill(4)
     # Назва — все що до (ID), не ріжемо по комі
-    name = re.sub(r'\s*\(\d{1,4}\).*$', '', nom).strip().rstrip(', ').strip()
+    before_id = nom[:id_match.start()].rstrip().rstrip(',').strip()
+    after_id  = nom[id_match.end():].lstrip().lstrip(',').strip()
 
-    # YouTube, вага та одиниця — з частин після (ID)
-    after_id = re.sub(r'^.*?\(\d{1,4}\)', '', nom)
-    parts_after = [p.strip() for p in after_id.split(',')]
+    if before_id:
+        # Звичайний випадок: "<назва> (ID), <метадані>"
+        name = before_id
+        parts_after = [p.strip() for p in after_id.split(',')]
+    else:
+        # (ID) на початку: "(ID) <назва>, <метадані>" — назва йде до першого мета-поля
+        # (youtube-посилання / вага у вигляді числа / 'шт' / 'кг')
+        raw_parts = [p.strip() for p in after_id.split(',')]
+        name_parts, parts_after = [], []
+        saw_meta = False
+        for p in raw_parts:
+            is_meta = ('youtube.com' in p or 'youtu.be' in p
+                       or p.lower() in ('шт', 'кг')
+                       or bool(re.match(r'^[\d][\d\-\.]*$', p)))
+            if is_meta:
+                saw_meta = True
+                parts_after.append(p)
+            elif not saw_meta:
+                name_parts.append(p)
+            else:
+                parts_after.append(p)
+        name = ', '.join([p for p in name_parts if p]).strip()
 
     youtube = ''
     weight = ''
@@ -442,20 +692,71 @@ for _, row in df1.iterrows():
         elif re.match(r'^[\d][\d\-\.]*$', p) and not weight:
             weight = p
 
-    price_raw = row.iloc[2]
-    akciya_raw = row.iloc[3]
-    qty_raw = row.iloc[4]
+    # ── Нова структура файлу (8 колонок) ──
+    # 0 артикул | 1 номенклатура+yt+вага | 2 опис | 3 категорії
+    # 4 ціна    | 5 акція                 | 6 шт   | 7 вага кг
+    # Підтримка старої структури (5 колонок) залишена як fallback.
+    n_cols = len(row)
+    if n_cols >= 8:
+        desc_text = str(row.iloc[2]) if pd.notna(row.iloc[2]) else ''
+        cats_text = str(row.iloc[3]) if pd.notna(row.iloc[3]) else ''
+        price_raw = row.iloc[4]
+        akciya_raw = row.iloc[5]
+        qty_raw    = row.iloc[6]
+        weight_raw = row.iloc[7]
+    else:
+        desc_text = ''
+        cats_text = ''
+        price_raw  = row.iloc[2]
+        akciya_raw = row.iloc[3]
+        qty_raw    = row.iloc[4]
+        weight_raw = None
 
     price = round(float(price_raw), 2) if pd.notna(price_raw) else None
     akciya = round(float(akciya_raw), 2) if pd.notna(akciya_raw) else None
     qty_stock = int(qty_raw) if pd.notna(qty_raw) else None
+    if pd.notna(weight_raw):
+        try:
+            weight = str(weight_raw).strip() if not isinstance(weight_raw, (int, float)) else str(weight_raw)
+        except Exception:
+            pass
 
     if price is None and akciya is None and youtube == '':
         skipped_f1 += 1
         continue
 
+    # 1) Класифікація з колонки "Категорії" (пріоритет)
+    cat_info = classify_categories_column(cats_text)
+    # 2) Атрибути з опису (фолбек для season/sort/audience)
+    desc_info = parse_description(desc_text)
+    # 3) Стара детекція по назві (фолбек для всього іншого)
     name_lower = name.lower()
-    category, subcategory, sort_val, season, audience, country, brand = detect_attrs(name_lower)
+    n_cat, n_sub, n_sort, n_season, n_aud, n_country, brand = detect_attrs(name_lower)
+
+    if cat_info and (cat_info.get('category') or cat_info.get('subcategory')):
+        category    = cat_info.get('category')    or n_cat
+        subcategory = cat_info.get('subcategory') or n_sub
+    else:
+        category, subcategory = n_cat, n_sub
+
+    sort_val = (cat_info and cat_info.get('sort')) \
+               or normalize_desc_sort(desc_info.get('sort')) \
+               or n_sort
+    season   = (cat_info and cat_info.get('season')) \
+               or normalize_desc_season(desc_info.get('season')) \
+               or n_season
+    audience = (cat_info and cat_info.get('audience')) \
+               or normalize_desc_audience(desc_info.get('audience')) \
+               or n_aud
+    country  = (cat_info and cat_info.get('country')) or n_country
+
+    # Витягнемо число одиниць у мішку з опису (якщо є) — лише для довідки
+    qty_per_bag = None
+    qpb_raw = desc_info.get('qty_per_bag', '')
+    if qpb_raw:
+        m = re.search(r'(\d+)', qpb_raw)
+        if m:
+            qty_per_bag = int(m.group(1))
 
     products.append({
         'id': prod_id, 'name': name,
@@ -465,9 +766,23 @@ for _, row in df1.iterrows():
         'unit': get_unit_from_map(prod_id, unit_f1), 'weight': weight,
         'price': price, 'akciya': akciya,
         'youtube': youtube, 'qty_stock': qty_stock,
+        'qty_per_bag': qty_per_bag,
     })
 
 print(f"[FILE1] Products: {len(products)}, skipped: {skipped_f1}")
+
+# ===== СОРТУВАННЯ: спочатку товари в наявності (qty_stock > 0) за спаданням =====
+# Усі товари без запасу (qty_stock = 0 або None) йдуть у кінець, серед них
+# зберігається стабільний порядок за id.
+def _stock_sort_key(p):
+    q = p.get('qty_stock')
+    in_stock = q is not None and q > 0
+    # Кортеж: (0|1, від'ємна кількість, id) → природний sort: спершу 0-група спадання
+    return (0 if in_stock else 1, -(q or 0), int(p['id']))
+
+products.sort(key=_stock_sort_key)
+in_stock_n = sum(1 for p in products if (p.get('qty_stock') or 0) > 0)
+print(f"  В наявності: {in_stock_n} | Без запасу: {len(products) - in_stock_n}")
 
 # ===== PARSE FILE 2 =====
 df2 = pd.read_excel(FILE2, header=None)
@@ -511,7 +826,8 @@ for _, row in df2_avail.iterrows():
 
     prod_id = id_match.group(1).zfill(4)
     name_part = nom.split(',')[0].strip()
-    prod_name = re.sub(r'\s*\(\d+\)\s*$', '', name_part).strip()
+    # Видаляємо (ID) де б він не стояв — на початку, в середині або в кінці
+    prod_name = re.sub(r'\s*\(\d+\)\s*', ' ', name_part).strip()
 
     weight_raw = row.iloc[2]
     weight = float(weight_raw) if pd.notna(weight_raw) else 0.0
@@ -603,24 +919,38 @@ for _, row in df2_avail.iterrows():
     if prod_id not in lots_data:
         # Get product info from File 1 if available
         p = prod_by_id.get(prod_id, {})
-        name_lower = prod_name.lower()
-        category, subcategory, sort_val, season, audience, country, brand = detect_attrs(name_lower)
+        # Якщо є запис у Прайсі — використовуємо вже визначені атрибути
+        # (з колонки "Категорії" + опису + fallback по назві).
+        # Інакше падаємо на стару детекцію по назві з лотового файлу.
+        if p:
+            category    = p['category']
+            subcategory = p['subcategory']
+            sort_val    = p['sort']
+            season      = p['season']
+            audience    = p['audience']
+            brand       = p.get('brand', '')
+            country     = p.get('country', '')
+        else:
+            name_lower = prod_name.lower()
+            category, subcategory, sort_val, season, audience, country, brand = detect_attrs(name_lower)
 
+        # Якщо в Прайсі назва порожня — підставляємо з файлу мішків
+        name_from_f1 = p.get('name', '') or ''
         lots_data[prod_id] = {
             'id': prod_id,
-            'name': p.get('name', prod_name),
-            # ЗАВЖДИ перераховуємо категорію/підкатегорію з назви — не зберігаємо стару
+            'name': name_from_f1 if name_from_f1 else prod_name,
             'category': category,
             'subcategory': subcategory,
             'sort': sort_val,
             'season': season,
             'audience': audience,
-            'brand': brand if brand else p.get('brand', ''),
-            'country': country if country else p.get('country', ''),
+            'brand': brand,
+            'country': country,
             'unit': 'кг',
             'price': p.get('price'),
             'akciya': p.get('akciya'),
             'youtube': p.get('youtube', ''),
+            'qty_stock': p.get('qty_stock'),
             'lots': [],
         }
 
@@ -634,6 +964,16 @@ if dup_barcodes:
 else:
     print("  ✓ No duplicate barcodes")
 
+# ===== СОРТУВАННЯ LOTS_DATA: товари з найбільшим qty_stock — на початок =====
+# JS-об'єкт зберігає порядок ключів, тому Object.keys() поверне у тому ж порядку.
+def _lots_sort_key(item):
+    pid, pd_obj = item
+    q = pd_obj.get('qty_stock')
+    in_stock = q is not None and q > 0
+    return (0 if in_stock else 1, -(q or 0), int(pid))
+
+lots_data = dict(sorted(lots_data.items(), key=_lots_sort_key))
+
 # ===== GENERATE PRODUCTS JS =====
 def product_to_js(p):
     lines = []
@@ -646,8 +986,9 @@ def product_to_js(p):
     price_str = str(p['price']) if p['price'] is not None else 'null'
     akciya_str = str(p['akciya']) if p['akciya'] is not None else 'null'
     qty_str = str(p['qty_stock']) if p['qty_stock'] is not None else 'null'
+    qpb_str = str(p['qty_per_bag']) if p.get('qty_per_bag') is not None else 'null'
     lines.append(f"    price:{price_str},akciya:{akciya_str},")
-    lines.append(f"    youtube:{js_str(p['youtube'])},qty_stock:{qty_str}")
+    lines.append(f"    youtube:{js_str(p['youtube'])},qty_stock:{qty_str},qty_per_bag:{qpb_str}")
     lines.append(f"  }}")
     return '\n'.join(lines)
 
@@ -682,22 +1023,26 @@ def prod_lots_to_js(pid, pd_obj):
     # розриває JS string і ламає LOTS_DATA цілком.
     def esc(s):
         return str(s).replace("'", "\\u2019")
-    price_s = str(pd_obj['price']) if pd_obj['price'] is not None else 'null'
-    akciya_s = str(pd_obj['akciya']) if pd_obj['akciya'] is not None else 'null'
+    price_s  = str(pd_obj['price'])     if pd_obj['price']     is not None else 'null'
+    akciya_s = str(pd_obj['akciya'])    if pd_obj['akciya']    is not None else 'null'
+    qstock_s = str(pd_obj.get('qty_stock')) if pd_obj.get('qty_stock') is not None else 'null'
     lots_js = ',\n'.join([lot_to_js(l) for l in pd_obj['lots']])
     return (f"  '{pid}':{{id:'{pid}',name:'{esc(pd_obj['name'])}',"
             f"category:'{esc(pd_obj['category'])}',subcategory:'{esc(pd_obj['subcategory'])}',"
             f"sort:'{esc(pd_obj['sort'])}',season:'{esc(pd_obj['season'])}',audience:'{esc(pd_obj['audience'])}',"
             f"brand:'{esc(pd_obj['brand'])}',country:'{esc(pd_obj['country'])}',unit:'кг',"
-            f"price:{price_s},akciya:{akciya_s},youtube:'{esc(pd_obj['youtube'])}',"
+            f"price:{price_s},akciya:{akciya_s},qty_stock:{qstock_s},youtube:'{esc(pd_obj['youtube'])}',"
             f"lots:[\n{lots_js}\n    ]}}")
 
 lots_entries = [prod_lots_to_js(pid, pd_obj) for pid, pd_obj in lots_data.items()]
 lots_js = "window.LOTS_DATA={\n" + ",\n".join(lots_entries) + "\n};"
 
-# LOTS_IDS
+# LOTS_IDS + LOTS_ORDER (порядок як у lots_data після сортування за наявністю)
+# JS Object з числовими-подібними ключами ('1001', '1913') ігнорує порядок
+# вставки і повертає їх натурально по числу. Тому окремий масив для порядку.
 lots_ids_list = list(lots_data.keys())
-lots_ids_js = "window.LOTS_IDS=new Set([" + ",".join([f"'{x}'" for x in lots_ids_list]) + "]);"
+lots_ids_js = ("window.LOTS_IDS=new Set([" + ",".join([f"'{x}'" for x in lots_ids_list]) + "]);"
+               + "\nwindow.LOTS_ORDER=[" + ",".join([f"'{x}'" for x in lots_ids_list]) + "];")
 
 # ===== ЗАПИСУЄМО ДАНІ ПРЯМО В data/*.js =====
 DATA_DIR = os.path.join(BASE_DIR, 'data')

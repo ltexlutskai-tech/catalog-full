@@ -3,7 +3,7 @@ chcp 65001 >nul
 setlocal
 
 echo === [1/5] Pulling latest from GitHub ===
-git pull --rebase || goto :fail
+git pull --rebase --autostash || goto :fail
 
 echo.
 echo === [2/5] Generating product + lot data from xlsx ===
@@ -20,7 +20,7 @@ REM optimize_images.py is non-fatal: skip if it errors
 
 echo.
 echo === [5/5] Committing and pushing ===
-git add data assets *.html sitemap.xml robots.txt favicon.svg 2025-2026-named-top5
+git add data assets *.html *.py *.bat sitemap.xml robots.txt favicon.svg 2025-2026-named-top5
 git diff --cached --quiet
 if %ERRORLEVEL% equ 0 (
     echo No changes to commit. Done.
@@ -36,6 +36,7 @@ goto :end
 :fail
 echo.
 echo *** UPDATE FAILED. See errors above. ***
+pause
 exit /b 1
 
 :end
