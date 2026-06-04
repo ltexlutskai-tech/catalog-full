@@ -309,6 +309,17 @@ window.LTEX = window.LTEX || {};
       const raw = norm(query);
       if(!raw) return items.slice(0, limit).map(p => ({ p, score: 0 }));
 
+      /* Pure-numeric query (3–6 digits) is treated as an article-number
+         lookup: return ONLY the product with that exact id (with or without
+         leading zeros). No fuzzy substring matches — that surfaces unrelated
+         products like 10220, 11022 etc. */
+      if(/^\d{3,6}$/.test(raw)){
+        const idHit = items.find(p =>
+          String(p.id) === raw || String(p.id).replace(/^0+/, '') === raw
+        );
+        return idHit ? [{ p: idHit, score: 1.0 }] : [];
+      }
+
       const tokens = tokenize(raw);
       if(!tokens.length){
         /* Pure punctuation / digits — fall back to whole-string search */
