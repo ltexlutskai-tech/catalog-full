@@ -137,6 +137,24 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     return (nums[0] + nums[1]) / 2;
   };
 
+  /* Build a clean per-lot weight label from a freeform value, e.g.
+     "25 - 33 кг." → "25-33 кг", "18,6кг" → "18,6 кг",
+     "50 кг ( в середньому)" → "50 кг", or a number 19.64 → "20 кг".
+     Two numbers render as a range only when the second is the larger bound. */
+  L.fmtWeightLabel = (raw, unit) => {
+    const u = unit || 'кг';
+    if(typeof raw === 'number'){
+      if(!(raw > 0)) return '';
+      return Math.round(raw) + ' ' + u;
+    }
+    const s = String(raw == null ? '' : raw).replace(',', '.');
+    const nums = (s.match(/\d+(?:\.\d+)?/g) || []).map(parseFloat).filter(n => !isNaN(n));
+    if(!nums.length) return '';
+    const fmt = n => (Math.round(n * 10) / 10).toString().replace('.', ',');
+    const body = (nums.length >= 2 && nums[1] > nums[0]) ? `${fmt(nums[0])}-${fmt(nums[1])}` : fmt(nums[0]);
+    return `${body} ${u}`;
+  };
+
   /* Detect the prevailing EUR→UAH rate from lot data (mode = most frequent
      rounded value). Falls back to median, then null. */
   L.detectRateFromLots = () => {
@@ -239,18 +257,45 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     p.thumbs = L.thumbsFor(p.id);
     p.image = p.images[0] || null;       // original (high-res) — for lightbox / hero
     p.thumb = p.thumbs[0] || p.image;    // small (~800px) — for cards
-    /* Average lot weight in kg.
-       Source priority: parsed details ("✔ Вага лота: 20-25 кг") → price-list
-       weight column → 0. Details usually has the explicit range, while the
-       price-list column is sometimes blank or just the upper bound. */
+    /* Average weight of ONE lot, in kg (the figure shown as "Вага лоту" and
+       used in the order pre-calculation).
+       Source priority:
+         1. Explicit "Вага лота: 20-25 кг" from the product description.
+         2. Mean of the actual per-lot weights in data/lots.js.
+         3. Default 20 kg.
+       NB: the price-list `weight` column is the TOTAL stock weight (sum of
+       every lot), so it must never be used as the per-lot figure — that was
+       the source of the inflated "556.2 кг" lot weight.
+       For 'шт' (per-piece) products weight is not meaningful: we instead show
+       the mean per-lot piece count and apply no 20 kg default. */
+    p.detailRaw = L.detailFor(p.id);
     p.detailsParsed = L.parseDetails(p.detailRaw);
     const detailWeight = p.detailsParsed && (p.detailsParsed['вага_лота'] || p.detailsParsed['вага_лоту']);
     const detailAvg = L.parseAvgWeight(detailWeight);
-    const fallbackAvg = L.parseAvgWeight(p.weight);
-    p.avgWeight = detailAvg > 0 ? detailAvg : fallbackAvg;
-    /* Also expose the human range string for UI labels */
-    p.avgWeightLabel = (detailWeight && String(detailWeight).trim()) ||
-                       (p.weight && String(p.weight).trim()) || '';
+    const unit = p.unit || 'кг';
+    /* Mean of the available lots' own weights (or piece counts for 'шт'). */
+    let lotsAvg = 0;
+    const ownLots = L.lotsForProduct(p.id);
+    if(ownLots.length){
+      const field = unit === 'шт' ? 'qty' : 'weight';
+      const vals = ownLots.map(l => Number(l[field])).filter(v => v > 0);
+      if(vals.length) lotsAvg = vals.reduce((a, b) => a + b, 0) / vals.length;
+    }
+    if(detailAvg > 0){
+      /* Description is authoritative — keep its range but normalise the label
+         (source text is freeform: "25 - 33 кг.", "50 кг ( в середньому)"). */
+      p.avgWeight = detailAvg;
+      p.avgWeightLabel = L.fmtWeightLabel(detailWeight, unit);
+    } else if(lotsAvg > 0){
+      p.avgWeight = lotsAvg;
+      p.avgWeightLabel = L.fmtWeightLabel(lotsAvg, unit);
+    } else if(unit !== 'шт'){
+      p.avgWeight = 20;
+      p.avgWeightLabel = '20 кг';
+    } else {
+      p.avgWeight = 0;
+      p.avgWeightLabel = '';
+    }
     p.priceEur = L.priceEurFor(p);
     p.priceUah = p.priceEur != null ? L.eurToUah(p.priceEur) : null;
     p.oldPriceEur = L.hasDiscount(p) ? p.price : null;
@@ -258,7 +303,6 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     p.discount = L.discountPct(p);
     p.inStock = L.inStock(p);
     p.slug = L.slug(p.name) + '-' + p.id;
-    p.detailRaw = L.detailFor(p.id);
     p._enriched = true;
     return p;
   };

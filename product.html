@@ -58,7 +58,7 @@
 })();
 </script>
 <script src="assets/icons.js"></script>
-<script src="assets/utils.js?v=20260520a"></script>
+<script src="assets/utils.js?v=20260610a"></script>
 <script src="assets/wishlist.js"></script>
 <script src="assets/lib/fuse.min.js?v=20260519a"></script>
 <script src="assets/search.js?v=20260604a"></script>
@@ -124,7 +124,7 @@
   pushFact('Бренд', p.brand || details['бренд']);
   pushFact('К-сть одиниць', details['кількість_одиниць']);
   pushFact('Вага одиниці', details['вага_одиниці']);
-  pushFact('Вага лоту', `${p.weight || details['вага_лота'] || ''} ${p.unit || 'кг'}`.trim());
+  pushFact('Вага лоту', p.avgWeightLabel);
   pushFact('Категорія', p.subcat || p.category);
 
   const isAkciya = L.hasDiscount(p);
@@ -548,7 +548,7 @@
     lines.push(`Товар: ${p.name}`);
     lines.push(`Артикул: ${String(p.id).padStart(4,'0')}`);
     if(p.priceUah) lines.push(`Ціна: ${L.formatUah(p.priceUah)}/${p.unit||'кг'}`);
-    if(p.weight) lines.push(`Вага лоту: ${p.weight} ${p.unit||'кг'}`);
+    if(p.avgWeightLabel) lines.push(`Вага лоту: ${p.avgWeightLabel}`);
     if(p.season) lines.push(`Сезон: ${p.season}`);
     if(p.sort) lines.push(`Сорт: ${p.sort}`);
     return lines.join('\n');
