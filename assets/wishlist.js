@@ -111,8 +111,8 @@ window.LTEX = window.LTEX || {};
         }
         const p = products.find(pp => String(pp.id) === String(it.id));
         if(!p) continue;
-        const w = (p.avgWeight != null) ? p.avgWeight : (parseFloat(String(p.weight).replace(',', '.')) || 0);
-        kg += (w || 1) * Number(it.qty);
+        if(p.unit === 'шт') continue;            /* per-piece lots have no kg weight */
+        kg += L.lotMultiplier(p) * Number(it.qty);
       }
       return Math.round(kg * 10) / 10;
     },
@@ -128,8 +128,7 @@ window.LTEX = window.LTEX || {};
         const p = products.find(pp => String(pp.id) === String(it.id));
         if(!p) continue;
         const eur = p.priceEur ?? L.priceEurFor(p) ?? 0;
-        const w = (p.avgWeight != null) ? p.avgWeight : (parseFloat(String(p.weight).replace(',', '.')) || 0);
-        const multiplier = p.unit === 'кг' ? (w || 1) : 1;
+        const multiplier = L.lotMultiplier(p);
         uah += L.eurToUah(eur) * multiplier * Number(it.qty);
       }
       return Math.round(uah);
@@ -146,8 +145,7 @@ window.LTEX = window.LTEX || {};
         const p = products.find(pp => String(pp.id) === String(it.id));
         if(!p) continue;
         const price = p.priceEur ?? L.priceEurFor(p) ?? 0;
-        const w = (p.avgWeight != null) ? p.avgWeight : (parseFloat(String(p.weight).replace(',', '.')) || 0);
-        const multiplier = p.unit === 'кг' ? (w || 1) : 1;
+        const multiplier = L.lotMultiplier(p);
         eur += price * multiplier * Number(it.qty);
       }
       return Math.round(eur * 100) / 100;

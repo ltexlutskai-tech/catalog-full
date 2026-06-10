@@ -58,8 +58,8 @@
 })();
 </script>
 <script src="assets/icons.js"></script>
-<script src="assets/utils.js?v=20260610a"></script>
-<script src="assets/wishlist.js"></script>
+<script src="assets/utils.js?v=20260610b"></script>
+<script src="assets/wishlist.js?v=20260610b"></script>
 <script src="assets/lib/fuse.min.js?v=20260519a"></script>
 <script src="assets/search.js?v=20260604a"></script>
 <script src="assets/order-modal.js?v=20260518e"></script>
@@ -239,11 +239,11 @@
               <button class="btn btn-outline btn-sm" id="qMinus" type="button" aria-label="Зменшити">−</button>
               <input type="number" id="qInput" value="1" min="1" max="99" step="1" style="width:4rem;text-align:center;padding:.5rem;border:1px solid var(--border);border-radius:var(--radius-md);font-weight:600">
               <button class="btn btn-outline btn-sm" id="qPlus" type="button" aria-label="Збільшити">+</button>
-              <span class="text-sm text-muted" id="qLabel">${p.unit === 'кг' ? 'лот' : 'шт'}${p.avgWeight > 0 && p.unit === 'кг' ? ` (${(p.avgWeightLabel||'').replace(/\s*кг\s*$/i,'').trim() || p.avgWeight.toFixed(0)} кг)` : ''}</span>
+              <span class="text-sm text-muted" id="qLabel">${p.avgWeight > 0 ? `лот (${(p.avgWeightLabel||'').replace(/\s*(кг|шт)\s*$/i,'').trim() || p.avgWeight.toFixed(0)} ${L.lotUnit(p)})` : (p.unit === 'кг' ? 'лот' : 'шт')}</span>
             </div>
             <div class="flex-1" style="min-width:140px">
               <p class="text-sm text-muted">Сума: <span id="qHint" class="text-xs"></span></p>
-              <p class="font-bold text-lg" style="color:var(--red-600)" id="qTotal">${L.formatUah((p.priceUah || 0) * (p.unit === 'кг' && p.avgWeight ? p.avgWeight : 1))}</p>
+              <p class="font-bold text-lg" style="color:var(--red-600)" id="qTotal">${L.formatUah((p.priceUah || 0) * L.lotMultiplier(p))}</p>
             </div>
           </div>
           <div class="flex gap-2" style="margin-top:1rem">
@@ -409,21 +409,22 @@
     if(e.key === 'ArrowRight') document.getElementById('lbNext').click();
   });
 
-  /* Quantity + CTA — for unit='кг' qty means LOTS (× avgWeight), for 'шт' it's pieces. */
+  /* Quantity + CTA — qty is the number of LOTS for both units. A lot is a
+     sack: 'кг' → multiply by avg lot weight, 'шт' → by avg pieces per lot. */
   const qIn = document.getElementById('qInput');
   const qTot = document.getElementById('qTotal');
   const qHint = document.getElementById('qHint');
-  const isPerKg = p.unit === 'кг';
+  const lotUnit = L.lotUnit(p);
   const avgW = (p.avgWeight != null && p.avgWeight > 0) ? p.avgWeight : 0;
-  const avgWLabel = (p.avgWeightLabel || '').replace(/\s*кг\s*$/i,'').trim();
+  const avgWLabel = (p.avgWeightLabel || '').replace(/\s*(кг|шт)\s*$/i,'').trim();
   function updateTotal(){
     const v = Math.max(1, parseInt(qIn.value) || 1);
-    const multiplier = isPerKg ? (avgW || 1) : 1;
+    const multiplier = avgW || 1;
     qTot.textContent = L.formatUah((p.priceUah || 0) * multiplier * v);
     if(qHint){
-      if(isPerKg && avgW > 0){
+      if(avgW > 0){
         const wText = avgWLabel || avgW.toFixed(0);
-        qHint.textContent = `(${v} × ${wText} кг × ${L.formatUah(p.priceUah || 0)}/кг)`;
+        qHint.textContent = `(${v} × ${wText} ${lotUnit} × ${L.formatUah(p.priceUah || 0)}/${lotUnit})`;
       } else {
         qHint.textContent = '';
       }
@@ -484,7 +485,8 @@
       const name = document.getElementById('qfName').value.trim();
       const note = document.getElementById('qfNote').value.trim();
       const hp = document.getElementById('qfHp')?.value || '';
-      const preset = `Товар: ${p.name}\nАртикул: ${String(p.id).padStart(4,'0')}\nКількість: ${qIn.value} ${p.unit || 'кг'}\nСума: ${qTot.textContent}`;
+      const qtyUnit = p.avgWeight > 0 ? `лот (${avgWLabel || avgW.toFixed(0)} ${lotUnit})` : (p.unit || 'кг');
+      const preset = `Товар: ${p.name}\nАртикул: ${String(p.id).padStart(4,'0')}\nКількість: ${qIn.value} ${qtyUnit}\nСума: ${qTot.textContent}`;
       const statusEl = document.getElementById('qfStatus');
       const submitBtn = document.getElementById('qfSubmit');
       const setStatus = (kind, msg) => {

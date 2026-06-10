@@ -155,6 +155,14 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     return `${body} ${u}`;
   };
 
+  /* The order is always priced per LOT (a sack/bag), never per single piece.
+     `lotMultiplier` converts the per-unit price (per kg or per piece) into the
+     per-lot price: kg → avg weight, шт → avg pieces per lot. Falls back to 1
+     so a product with no known lot size still prices as a single unit. */
+  L.lotMultiplier = (p) => (p && p.avgWeight > 0) ? p.avgWeight : 1;
+  /* Unit the price is quoted in ('кг' or 'шт'). */
+  L.lotUnit = (p) => (p && p.unit === 'шт') ? 'шт' : 'кг';
+
   /* Detect the prevailing EUR→UAH rate from lot data (mode = most frequent
      rounded value). Falls back to median, then null. */
   L.detectRateFromLots = () => {
@@ -257,23 +265,20 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
     p.thumbs = L.thumbsFor(p.id);
     p.image = p.images[0] || null;       // original (high-res) — for lightbox / hero
     p.thumb = p.thumbs[0] || p.image;    // small (~800px) — for cards
-    /* Average weight of ONE lot, in kg (the figure shown as "Вага лоту" and
-       used in the order pre-calculation).
-       Source priority:
-         1. Explicit "Вага лота: 20-25 кг" from the product description.
-         2. Mean of the actual per-lot weights in data/lots.js.
-         3. Default 20 kg.
-       NB: the price-list `weight` column is the TOTAL stock weight (sum of
-       every lot), so it must never be used as the per-lot figure — that was
-       the source of the inflated "556.2 кг" lot weight.
-       For 'шт' (per-piece) products weight is not meaningful: we instead show
-       the mean per-lot piece count and apply no 20 kg default. */
+    /* Size of ONE lot, used both as the "Вага лоту" fact and as the order
+       pre-calculation multiplier. A lot is always a whole sack/bag — never a
+       single piece — so the price (per kg or per piece) is multiplied by the
+       lot size to get the lot total.
+         • 'кг' products → `avgWeight` is the lot's weight in kg.
+         • 'шт' products → `avgWeight` is the lot's piece count (e.g. 12/25
+           pairs per bag), rounded to a whole number.
+       NB: the price-list `weight` column is the TOTAL stock figure (sum of
+       every lot), so it must never be used as the per-lot value — that was the
+       source of the inflated "556.2 кг" / "1052 шт" lot sizes. */
     p.detailRaw = L.detailFor(p.id);
     p.detailsParsed = L.parseDetails(p.detailRaw);
-    const detailWeight = p.detailsParsed && (p.detailsParsed['вага_лота'] || p.detailsParsed['вага_лоту']);
-    const detailAvg = L.parseAvgWeight(detailWeight);
     const unit = p.unit || 'кг';
-    /* Mean of the available lots' own weights (or piece counts for 'шт'). */
+    /* Mean of the available lots (weight in kg, or piece count for 'шт'). */
     let lotsAvg = 0;
     const ownLots = L.lotsForProduct(p.id);
     if(ownLots.length){
@@ -281,20 +286,30 @@ if(typeof navigator !== 'undefined' && 'serviceWorker' in navigator
       const vals = ownLots.map(l => Number(l[field])).filter(v => v > 0);
       if(vals.length) lotsAvg = vals.reduce((a, b) => a + b, 0) / vals.length;
     }
-    if(detailAvg > 0){
-      /* Description is authoritative — keep its range but normalise the label
-         (source text is freeform: "25 - 33 кг.", "50 кг ( в середньому)"). */
-      p.avgWeight = detailAvg;
-      p.avgWeightLabel = L.fmtWeightLabel(detailWeight, unit);
-    } else if(lotsAvg > 0){
-      p.avgWeight = lotsAvg;
-      p.avgWeightLabel = L.fmtWeightLabel(lotsAvg, unit);
-    } else if(unit !== 'шт'){
-      p.avgWeight = 20;
-      p.avgWeightLabel = '20 кг';
+    if(unit === 'шт'){
+      /* Average pieces per lot. Source priority: actual lots → "Кількість
+         одиниць" from the description ("26 пар/мішок", "12шт", "20-25шт") → 0.
+         Rounded, because a lot holds a whole number of pieces. */
+      const kstAvg = L.parseAvgWeight(p.detailsParsed && p.detailsParsed['кількість_одиниць']);
+      const per = Math.round(lotsAvg > 0 ? lotsAvg : kstAvg);
+      p.avgWeight = per > 0 ? per : 0;
+      p.avgWeightLabel = per > 0 ? (per + ' шт') : '';
     } else {
-      p.avgWeight = 0;
-      p.avgWeightLabel = '';
+      /* Per-lot weight in kg. Source priority: description "Вага лота"
+         (authoritative; freeform text like "25 - 33 кг.") → mean of the actual
+         lots → 20 kg default. */
+      const detailWeight = p.detailsParsed && (p.detailsParsed['вага_лота'] || p.detailsParsed['вага_лоту']);
+      const detailAvg = L.parseAvgWeight(detailWeight);
+      if(detailAvg > 0){
+        p.avgWeight = detailAvg;
+        p.avgWeightLabel = L.fmtWeightLabel(detailWeight, 'кг');
+      } else if(lotsAvg > 0){
+        p.avgWeight = lotsAvg;
+        p.avgWeightLabel = L.fmtWeightLabel(lotsAvg, 'кг');
+      } else {
+        p.avgWeight = 20;
+        p.avgWeightLabel = '20 кг';
+      }
     }
     p.priceEur = L.priceEurFor(p);
     p.priceUah = p.priceEur != null ? L.eurToUah(p.priceEur) : null;
