@@ -2,362 +2,52 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#16a34a">
-<title>L-TEX — Секонд-хенд та сток гуртом</title>
-<meta name="description" content="Секонд-хенд та сток гуртом від 10 кг. Англія, Німеччина, Канада, Польща. Каталог, наявні лоти, відеоогляди.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="L-TEX">
-<meta property="og:locale" content="uk_UA">
-<meta property="og:title" content="L-TEX — Секонд-хенд та сток гуртом від 10 кг">
-<meta property="og:description" content="Гуртовий продаж секонд-хенду і стоку: одяг, взуття, аксесуари. Англія · Німеччина · Канада · Польща.">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/design-system.css">
-<link rel="stylesheet" href="assets/components.css?v=20260518e">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>L-TEX — каталог переїхав на ltex.com.ua</title>
+<link rel="canonical" href="https://ltex.com.ua/catalog">
+<meta http-equiv="refresh" content="0; url=https://ltex.com.ua/catalog">
+<meta property="og:title" content="L-TEX — каталог переїхав">
+<meta property="og:description" content="Новий сайт: ltex.com.ua/catalog">
+<meta property="og:url" content="https://ltex.com.ua/catalog">
 <style>
-.hero{
-  position:relative;overflow:hidden;
-  background:linear-gradient(135deg,var(--green-700) 0%,var(--green-600) 50%,var(--green-900) 100%);
-  color:#fff;
-  padding:5rem 1rem 6rem;
-  text-align:center;
-}
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  pointer-events:none;
-}
-.hero__inner{position:relative;max-width:48rem;margin:0 auto}
-.hero__badge{
-  display:inline-block;
-  background:rgba(255,255,255,.15);
-  border:1px solid rgba(255,255,255,.3);
-  padding:.4rem 1rem;border-radius:var(--radius-full);
-  font-size:.8rem;font-weight:700;
-  letter-spacing:.05em;text-transform:uppercase;
-  margin-bottom:1.5rem;
-}
-.hero h1{
-  font-size:clamp(2rem,5vw,3.25rem);
-  font-weight:800;line-height:1.1;
-  color:#fff;margin-bottom:1.25rem;
-}
-.hero h1 .accent{color:#fef3c7;display:inline-block}
-.hero p{font-size:1.075rem;opacity:.92;margin-bottom:2rem;line-height:1.6}
-.hero__btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-.btn-hero-main{
-  background:#fef3c7;color:var(--green-900);
-  padding:.875rem 1.75rem;border-radius:var(--radius-md);
-  font-weight:700;font-size:1rem;
-  box-shadow:var(--shadow-lg);
-  transition:transform var(--transition),box-shadow var(--transition);
-}
-.btn-hero-main:hover{transform:translateY(-2px);box-shadow:var(--shadow-xl)}
-.btn-hero-sec{
-  background:rgba(255,255,255,.15);color:#fff;
-  border:2px solid rgba(255,255,255,.5);
-  padding:.75rem 1.625rem;border-radius:var(--radius-md);
-  font-weight:600;
-  transition:background var(--transition);
-}
-.btn-hero-sec:hover{background:rgba(255,255,255,.25)}
-.hero__stats{
-  display:flex;gap:2.25rem;justify-content:center;flex-wrap:wrap;
-  margin-top:3rem;
-}
-.hero__stat-num{font-size:2rem;font-weight:800;color:#fef3c7}
-.hero__stat-label{font-size:.8rem;opacity:.85;margin-top:.25rem}
-
-.section{padding:4rem 0}
-.section h2{font-size:1.75rem;font-weight:800;margin-bottom:.5rem}
-.section .subtitle{color:var(--gray-500);margin-bottom:2.25rem}
-
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
-.cat-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:var(--radius-xl);
-  padding:1.5rem 1.25rem;
-  display:flex;flex-direction:column;align-items:center;gap:.75rem;
-  text-align:center;
-  transition:all var(--transition);
-}
-.cat-card:hover{
-  border-color:var(--primary);
-  transform:translateY(-3px);
-  box-shadow:var(--shadow-md);
-}
-.cat-card .emoji{font-size:2.25rem}
-.cat-card .label{font-weight:700;font-size:1rem}
-.cat-card .count{color:var(--gray-500);font-size:.8rem}
-
-.adv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem}
-.adv-card{display:flex;gap:1rem;align-items:flex-start}
-.adv-icon{
-  width:2.75rem;height:2.75rem;flex-shrink:0;
-  border-radius:var(--radius-lg);
-  background:var(--green-50);color:var(--primary);
-  display:flex;align-items:center;justify-content:center;
-}
-.adv-title{font-weight:700;margin-bottom:.25rem}
-.adv-text{color:var(--gray-500);font-size:.9rem;line-height:1.55}
-
-.lots-cta{
-  background:linear-gradient(135deg,var(--green-50),var(--green-100));
-  text-align:center;
-  padding:4rem 1rem;
-  border-radius:var(--radius-2xl);
-}
-.lots-cta h2{color:var(--green-900);font-size:1.75rem;font-weight:800;margin-bottom:.5rem}
-.lots-cta p{color:var(--green-700);margin-bottom:1.5rem}
-
-.contacts-block{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);padding:2rem;text-align:center}
-.contact-list{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-top:1.25rem}
-.contact-item{
-  display:inline-flex;align-items:center;gap:.5rem;
-  background:var(--green-50);
-  padding:.625rem 1rem;border-radius:var(--radius-md);
-  font-weight:600;color:var(--green-900);font-size:.9rem;
-  transition:background var(--transition);
-}
-.contact-item:hover{background:var(--green-100)}
+  html,body{margin:0;padding:0;background:#f8fafc;color:#0f172a;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  main{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+  .card{max-width:520px}
+  h1{font-size:1.5rem;margin:0 0 12px;color:#0f172a}
+  p{color:#475569;line-height:1.55;margin:8px 0}
+  a.btn{display:inline-block;margin-top:14px;padding:12px 20px;background:#16a34a;color:#fff;border-radius:10px;text-decoration:none;font-weight:600}
+  a.btn:hover{background:#15803d}
+  a.plain{color:#16a34a;text-decoration:none}
+  a.plain:hover{text-decoration:underline}
 </style>
+<script>
+(function(){
+  var dest = 'https://ltex.com.ua/catalog';
+  try {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs){
+        regs.forEach(function(r){ try { r.unregister(); } catch(e){} });
+      }).catch(function(){});
+    }
+    if (window.caches && caches.keys) {
+      caches.keys().then(function(keys){
+        keys.forEach(function(k){ try { caches.delete(k); } catch(e){} });
+      }).catch(function(){});
+    }
+  } catch(e){}
+  try { location.replace(dest); } catch(e) { location.href = dest; }
+})();
+</script>
 </head>
 <body>
-
-<header data-ltex-header></header>
-
-<section class="hero">
-  <div class="hero__inner">
-    <span class="hero__badge">🇬🇧 Англія · 🇩🇪 Німеччина · 🇨🇦 Канада · 🇵🇱 Польща</span>
-    <h1>Секонд-хенд та сток<br><span class="accent">гуртом від 10 кг</span></h1>
-    <p>Великий вибір якісних товарів для вашого бізнесу: одяг, взуття, аксесуари, дім та побут. Доставка по всій Україні. Каталог оновлюється щодня.</p>
-    <div class="hero__btns">
-      <a href="catalog.html" class="btn-hero-main">🛍️ Переглянути каталог</a>
-      <a href="lots.html" class="btn-hero-sec">📦 Наявні лоти</a>
-    </div>
-    <div class="hero__stats">
-      <div>
-        <div class="hero__stat-num" id="statCatalog">700+</div>
-        <div class="hero__stat-label">позицій у каталозі</div>
-      </div>
-      <div>
-        <div class="hero__stat-num" id="statLots">480+</div>
-        <div class="hero__stat-label">відеооглядів лотів</div>
-      </div>
-      <div>
-        <div class="hero__stat-num">від 10 кг</div>
-        <div class="hero__stat-label">мінімальне замовлення</div>
-      </div>
-    </div>
+<main>
+  <div class="card">
+    <h1>Каталог L-TEX переїхав</h1>
+    <p>Новий сайт — <a class="plain" href="https://ltex.com.ua/catalog">ltex.com.ua/catalog</a>.</p>
+    <p>Якщо браузер не перенаправив автоматично, натисніть кнопку нижче.</p>
+    <a class="btn" href="https://ltex.com.ua/catalog">Перейти в каталог</a>
   </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <h2>Категорії товарів</h2>
-    <p class="subtitle">Натисніть на категорію щоб переглянути товари</p>
-    <div class="cat-grid" id="catGrid"></div>
-  </div>
-</section>
-
-<section class="section" style="background:var(--gray-50)" id="about">
-  <div class="container">
-    <h2 style="text-align:center">Чому обирають L-TEX</h2>
-    <p class="subtitle" style="text-align:center">Секонд-хенд та сток від європейських постачальників</p>
-    <div class="adv-grid">
-      <div class="adv-card">
-        <div class="adv-icon" data-icon="shieldCheck"></div>
-        <div>
-          <div class="adv-title">Перевірені постачальники</div>
-          <div class="adv-text">Англія, Німеччина, Польща, Канада, Італія, Шотландія</div>
-        </div>
-      </div>
-      <div class="adv-card">
-        <div class="adv-icon" data-icon="video"></div>
-        <div>
-          <div class="adv-title">Відео кожного лота</div>
-          <div class="adv-text">Перед купівлею можна переглянути вміст мішка на YouTube</div>
-        </div>
-      </div>
-      <div class="adv-card">
-        <div class="adv-icon" data-icon="package"></div>
-        <div>
-          <div class="adv-title">Від 10 кг</div>
-          <div class="adv-text">Мінімальне замовлення від 10 кг. Опт та дрібний опт</div>
-        </div>
-      </div>
-      <div class="adv-card">
-        <div class="adv-icon" data-icon="zap"></div>
-        <div>
-          <div class="adv-title">Щоденне оновлення</div>
-          <div class="adv-text">Каталог та наявність лотів оновлюються щодня</div>
-        </div>
-      </div>
-      <div class="adv-card">
-        <div class="adv-icon" data-icon="truck"></div>
-        <div>
-          <div class="adv-title">Швидка доставка</div>
-          <div class="adv-text">Нова Пошта, власна доставка або самовивіз з Луцька. 1–3 дні</div>
-        </div>
-      </div>
-      <div class="adv-card">
-        <div class="adv-icon" data-icon="check"></div>
-        <div>
-          <div class="adv-title">Без передоплати</div>
-          <div class="adv-text">При доставці нашим транспортом — оплата при отриманні</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <div class="flex items-center justify-between" style="margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem">
-      <div>
-        <h2>Свіжі надходження</h2>
-        <p class="subtitle" style="margin-bottom:0">Найновіші товари у каталозі</p>
-      </div>
-      <a href="catalog.html?sort=newest" class="btn btn-outline">Усі новинки →</a>
-    </div>
-    <div class="products-grid" id="newGrid"></div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <div class="lots-cta">
-      <span class="icon icon-lg" style="color:var(--green-700);margin-bottom:.75rem;display:inline-block" data-icon="package"></span>
-      <h2>Наявні лоти на складі</h2>
-      <p>Конкретні мішки з відеооглядом, вагою та ціною в гривнях</p>
-      <a href="lots.html" class="btn btn-primary btn-lg">Переглянути наявні лоти</a>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="contacts">
-  <div class="container">
-    <div class="contacts-block">
-      <h2 style="text-align:center;margin-bottom:.5rem">Контакти</h2>
-      <p style="color:var(--gray-500)">с. Піддубці, Луцький р-н, Волинська обл.</p>
-      <div class="contact-list" id="contactList"></div>
-    </div>
-  </div>
-</section>
-
-<footer data-ltex-footer></footer>
-
-<script>
-/* Cache-bust data files on every page load — GitHub Pages CDN and the
-   browser both cache /data/*.js for several minutes, so fresh uploads
-   were invisible until Ctrl+Shift+R. document.write preserves the
-   synchronous load order of subsequent <script> tags. */
-(function(){ var v = Date.now();
-  ['data/meta.js','data/images.js','data/details.js','data/products.js']
-    .forEach(function(s){ document.write('<script src="' + s + '?v=' + v + '"><' + '/script>'); });
-})();
-</script>
-<script src="assets/icons.js"></script>
-<script src="assets/utils.js?v=20260610b"></script>
-<script src="assets/wishlist.js?v=20260610b"></script>
-<script src="assets/lib/fuse.min.js?v=20260519a"></script>
-<script src="assets/search.js?v=20260604a"></script>
-<script src="assets/video-modal.js?v=20260518f"></script>
-<script src="assets/share.js"></script>
-<script src="assets/seo.js"></script>
-<script src="assets/header.js?v=20260518e"></script>
-<script>
-(() => {
-  const L = window.LTEX;
-  const ICONS = window.ICONS;
-
-  /* Render data-icon placeholders (some are .adv-icon containers) */
-  document.querySelectorAll('[data-icon]').forEach(el => {
-    const n = el.dataset.icon;
-    if(ICONS[n]) el.innerHTML = ICONS[n]({size:24});
-  });
-
-  /* Stats */
-  const all = L.getProducts();
-  document.getElementById('statCatalog').textContent = all.length + '+';
-  document.getElementById('statLots').textContent = all.filter(p => p.youtube).length + '+';
-
-  /* SEO */
-  L.SEO.setMeta({
-    title: 'L-TEX — Секонд-хенд та сток гуртом від 10 кг',
-    description: `Гуртовий продаж секонд-хенду і стоку: одяг, взуття, аксесуари, дім та побут. Англія · Німеччина · Канада · Польща. ${all.length}+ позицій у каталозі, відеоогляди лотів. Доставка по Україні, від ${L.CONFIG.MIN_ORDER_KG} кг.`,
-    keywords: 'секонд-хенд гуртом, сток гуртом, мікс одягу, оптом, Англія, Німеччина, Канада, Польща, Луцьк',
-    type: 'website',
-    url: '/',
-  });
-  L.SEO.setBreadcrumbs([{ name: 'Головна', url: '/' }]);
-  L.SEO.setItemList(all.slice(0, 24), 'Каталог L-TEX');
-
-  /* Categories grid */
-  const counts = L.topCatCounts();
-  const emoji = {
-    'Одяг':'👕','Взуття':'👟','Аксесуари':'👜','Дім та побут':'🏠',
-    'Іграшки':'🧸','Косметика':'💄','Bric-a-Brac':'🎁'
-  };
-  document.getElementById('catGrid').innerHTML = L.TOP_CATS.map(c => {
-    const cnt = counts.get(c) || 0;
-    if(!cnt) return '';
-    return `<a class="cat-card" href="${L.catalogHref({cat:c})}">
-      <span class="emoji" aria-hidden="true">${emoji[c]||'📦'}</span>
-      <span class="label">${L.escapeHtml(c)}</span>
-      <span class="count">${cnt} ${cnt === 1 ? 'товар' : 'товарів'}</span>
-    </a>`;
-  }).join('');
-
-  /* New arrivals — top 8 by id */
-  const fresh = [...all].sort((a,b) => parseInt(b.id) - parseInt(a.id)).slice(0, 8);
-  function renderFresh(){
-    document.getElementById('newGrid').innerHTML = fresh.map(p => {
-      const isAk = L.hasDiscount(p);
-      return `<article class="product-card ${isAk?'akciya':''}" data-id="${p.id}">
-        <a href="${L.productHref(p.id)}">
-          <div class="product-card__media">
-            ${p.image
-              ? `<img class="product-card__img" ${L.imgAttrs(p.thumb, p.image, p.name)}>`
-              : `<div class="product-card__media-empty"><span class="icon icon-lg">${ICONS.video()}</span></div>`}
-            <div class="product-card__badges">
-              ${p.isNew ? `<span class="tag tag-new">NEW</span>` : ''}
-              ${isAk ? `<span class="tag tag-sale">SALE</span>` : ''}
-            </div>
-            ${p.youtube ? `<button class="product-card__video" type="button" data-video="${L.escapeHtml(L.youtubeWatchUrl(p.youtube))}" data-video-title="${L.escapeHtml(p.name)}" aria-label="Переглянути відео"><span class="icon icon-sm">${ICONS.play({size:12})}</span>Відео</button>` : ''}
-          </div>
-        </a>
-        <div class="product-card__body">
-          <a href="${L.productHref(p.id)}" class="product-card__title">${L.escapeHtml(p.name)}</a>
-          <div class="product-card__tags">
-            ${p.sort ? `<span class="badge-pill">${L.escapeHtml(p.sort)}</span>` : ''}
-            ${p.season ? `<span class="badge-pill">${L.escapeHtml(p.season)}</span>` : ''}
-          </div>
-          <div class="product-card__price-block">
-            <div class="product-card__price">${L.formatUah(p.priceUah || 0)}<span class="unit">/${p.unit||'кг'}</span></div>
-            <div class="product-card__price-eur">${L.formatEur(p.priceEur || 0)}</div>
-          </div>
-        </div>
-      </article>`;
-    }).join('');
-  }
-  renderFresh();
-  window.addEventListener('ltex:rate-changed', renderFresh);
-
-  /* Contacts */
-  const cl = document.getElementById('contactList');
-  cl.innerHTML = `
-    <a class="contact-item" href="${L.CONFIG.TELEGRAM}" target="_blank" rel="noopener"><span class="icon icon-sm">${ICONS.send()}</span> Telegram @L_TEX</a>
-    ${L.CONFIG.PHONES.map(p => `<a class="contact-item" href="tel:${p.tel}"><span class="icon icon-sm">${ICONS.phone()}</span> ${p.display}</a>`).join('')}
-    <a class="contact-item" href="mailto:${L.CONFIG.EMAIL}"><span class="icon icon-sm">${ICONS.mail()}</span> ${L.CONFIG.EMAIL}</a>
-  `;
-})();
-</script>
+</main>
 </body>
 </html>

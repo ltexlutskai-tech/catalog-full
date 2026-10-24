@@ -1,41 +1,26 @@
-/* L-TEX Service Worker — bypass aggressive caching for data files.
+/* L-TEX legacy catalog service worker — self-destruct.
+   The old catalog is permanently redirected to https://ltex.com.ua/catalog.
+   This replaces the earlier SW: on activation it clears every cache,
+   unregisters itself and sends open tabs to the new site. */
 
-   GitHub Pages serves /data/*.js with Cache-Control: max-age=600 and the
-   browser caches the parent HTML page too — so a freshly uploaded photo
-   appears only after a hard reload (Ctrl+Shift+R). This worker watches
-   all fetches and, for /data/*.js and /admin.html, always re-fetches
-   from the network with cache:'no-store'.
+self.addEventListener('install', function(){ self.skipWaiting(); });
 
-   Everything else (images, fonts, CSS, JS bundles) falls through to the
-   browser cache — those rarely change, so we keep the speed-up.
-*/
-
-const VERSION = 'ltex-sw-v3';
-
-self.addEventListener('install',  (e) => { self.skipWaiting(); });
-self.addEventListener('activate', (e) => { e.waitUntil(self.clients.claim()); });
-
-self.addEventListener('fetch', (event) => {
-  const req = event.request;
-  if(req.method !== 'GET') return;
-
-  let url;
-  try { url = new URL(req.url); }
-  catch(e){ return; }
-
-  /* Only intercept same-origin requests */
-  if(url.origin !== self.location.origin) return;
-
-  const path = url.pathname;
-  const isDataJs = /\/data\/[^/]+\.js$/i.test(path);
-  const isAdminHtml = /\/admin\.html$/i.test(path);
-  const isMainHtml = /\/(catalog|lots|product|index|cart|wishlist)\.html$/i.test(path) || path.endsWith('/');
-
-  /* For these targets, always go to the network. */
-  if(isDataJs || isAdminHtml || isMainHtml){
-    event.respondWith(
-      fetch(req, { cache: 'no-store' })
-        .catch(() => fetch(req))  // fall back to default cache if offline
-    );
-  }
+self.addEventListener('activate', function(event){
+  event.waitUntil((async function(){
+    try {
+      var keys = await caches.keys();
+      await Promise.all(keys.map(function(k){ return caches.delete(k); }));
+    } catch(err){}
+    try { await self.clients.claim(); } catch(err){}
+    try { await self.registration.unregister(); } catch(err){}
+    try {
+      var wins = await self.clients.matchAll({ type: 'window' });
+      wins.forEach(function(c){
+        try { c.navigate('https://ltex.com.ua/catalog'); } catch(err){}
+      });
+    } catch(err){}
+  })());
 });
+
+/* No fetch handler: let the browser go to network for every request so
+   the new redirect pages are served without SW interference. */

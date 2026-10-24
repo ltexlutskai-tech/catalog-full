@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>L-TEX — каталог переїхав на ltex.com.ua</title>
+<link rel="canonical" href="https://ltex.com.ua/catalog">
+<meta http-equiv="refresh" content="0; url=https://ltex.com.ua/catalog">
+<meta property="og:title" content="L-TEX — каталог переїхав">
+<meta property="og:description" content="Новий сайт: ltex.com.ua/catalog">
+<meta property="og:url" content="https://ltex.com.ua/catalog">
+<style>
+  html,body{margin:0;padding:0;background:#f8fafc;color:#0f172a;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  main{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+  .card{max-width:520px}
+  h1{font-size:1.5rem;margin:0 0 12px;color:#0f172a}
+  p{color:#475569;line-height:1.55;margin:8px 0}
+  a.btn{display:inline-block;margin-top:14px;padding:12px 20px;background:#16a34a;color:#fff;border-radius:10px;text-decoration:none;font-weight:600}
+  a.btn:hover{background:#15803d}
+  a.plain{color:#16a34a;text-decoration:none}
+  a.plain:hover{text-decoration:underline}
+</style>
+<script>
+(function(){
+  var dest = 'https://ltex.com.ua/catalog';
+  try {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs){
+        regs.forEach(function(r){ try { r.unregister(); } catch(e){} });
+      }).catch(function(){});
+    }
+    if (window.caches && caches.keys) {
+      caches.keys().then(function(keys){
+        keys.forEach(function(k){ try { caches.delete(k); } catch(e){} });
+      }).catch(function(){});
+    }
+  } catch(e){}
+  try { location.replace(dest); } catch(e) { location.href = dest; }
+})();
+</script>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>Каталог L-TEX переїхав</h1>
+    <p>Новий сайт — <a class="plain" href="https://ltex.com.ua/catalog">ltex.com.ua/catalog</a>.</p>
+    <p>Якщо браузер не перенаправив автоматично, натисніть кнопку нижче.</p>
+    <a class="btn" href="https://ltex.com.ua/catalog">Перейти в каталог</a>
+  </div>
+</main>
+</body>
+</html>
